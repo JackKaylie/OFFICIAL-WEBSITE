@@ -1,0 +1,58 @@
+body {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    text-align: center;
+}
+
+header h1 {
+    font-size: 4rem;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.9),
+        0 0 20px rgba(0, 191, 255, 0.7),
+        0 0 30px rgba(0, 191, 255, 0.5);
+    margin: 2rem 0;
+    animation: glowPulse 2.5s ease-in-out infinite;
+    line-height: 4rem;
+    transform-origin: center center;
+    will-change: transform, text-shadow;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+main {
+    text-align: center;
+}
+
+
+main p {
+    font-size: 1.5rem;
+    color: #ffffff;
+    text-shadow:
+        0 0 5px rgba(0, 191, 255, 0.8),
+        0 0 10px rgba(0, 191, 255, 0.6);
+    margin-bottom: 1rem;
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: scale(1) translateZ(0);
+        text-shadow:
+            0 0 10px rgba(255, 255, 255, 0.9),
+            0 0 20px rgba(0, 191, 255, 0.7),
+            0 0 30px rgba(0, 191, 255, 0.5);
+    }
+    50% {
+        transform: scale(1.01) translateZ(0);
+        text-shadow:
+            0 0 15px rgba(255, 255, 255, 1),
+            0 0 30px rgba(0, 191, 255, 0.9),
+            0 0 45px rgba(0, 191, 255, 0.7);
+    }
+}
+
