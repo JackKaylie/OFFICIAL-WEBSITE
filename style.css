@@ -1,7 +1,14 @@
 body {
-    background-color: #000000;
-    color: #FFFFFF;
-    font-family: Arial, sans-serif;
+    background-color: #000;
+    color: #fff;
+    font-family: sans-serif;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
 header {
@@ -37,6 +44,83 @@ main p {
         0 0 5px rgba(0, 191, 255, 0.8),
         0 0 10px rgba(0, 191, 255, 0.6);
     margin-bottom: 1rem;
+}
+
+/* The SVG container overlays perfectly on your background rings */
+.menu-svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+/* Base style for each wedge slice */
+.menu-slice {
+    fill: rgba(30, 30, 35, 0.6); /* Sleek dark grey background matching your image */
+    stroke: rgba(255, 255, 255, 0.1); /* Subtle divider lines between slices */
+    stroke-width: 2;
+    cursor: pointer;
+    transition: fill 0.3s ease, filter 0.3s ease;
+}
+
+/* Hover effect: The entire slice lights up neon cyan */
+.slice-link:hover .menu-slice {
+    fill: rgba(0, 243, 255, 0.25); /* Translucent neon glow fill */
+    stroke: #00f3ff; /* Bright glowing border line */
+    filter: drop-shadow(0 0 8px #00f3ff);
+}
+
+/* Styling the text labels inside the slices */
+.slice-text {
+    fill: #88888e; /* Muted text by default */
+    font-size: 18px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none; /* Allows cursor to pass through to the slice underneath */
+    transition: fill 0.3s ease;
+}
+
+/* Text lights up white when the slice is hovered */
+.slice-link:hover .slice-text {
+    fill: #ffffff;
+}
+
+/* Ensure central logo sits perfectly centered above the slices */
+.menu-center {
+    position: absolute;
+    width: 140px;       /* Sets a strict size for the center gap */
+    height: 140px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers it perfectly over the SVG intersection */
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.menu-center img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Keeps it from stretching weirdly */
+    border-radius: 50%; /* Ensures it stays a perfect circle */
+    transition: transform 0.3s ease;
+}
+
+/* Subtly pops the logo when hovered */
+.menu-center img:hover {
+    transform: scale(1.05);
+}
+
+.radial-container {
+    position: relative;
+    width: 450px;   /* Shrinks the entire wheel down to a normal size */
+    height: 450px;  /* Keeps it a perfect square */
+    margin: 80px auto; /* Adds space on top and centers it horizontally */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 @keyframes glowPulse {
