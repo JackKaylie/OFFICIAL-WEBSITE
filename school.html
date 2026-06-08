@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="WEBSITE LOGO.png">
+    <title>SCHOOL</title>
+    <style>
+        /* Base Theme Settings */
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Back Navigation Button */
+        .back-btn {
+            align-self: flex-start;
+            max-width: 1200px;
+            margin: 0 auto 40px auto;
+            width: 100%;
+        }
+
+        .back-btn a {
+            color: #00bfff;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px solid #00bfff;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn a:hover {
+            background: rgba(0, 191, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+        }
+
+        /* Main Container */
+        .school-container {
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .header-subtitle {
+            color: #00bfff;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        /* Grid Layout for Courses/Modules */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Individual Course Card */
+        .course-card {
+            background: #111111;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid #222222;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            border-color: #00bfff;
+        }
+
+        .course-code {
+            color: #888888;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-0: 0;
+        }
+
+        .course-name {
+            font-size: 1.25rem;
+            margin: 5px 0 15px 0;
+            color: #ffffff;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: rgba(0, 191, 255, 0.15);
+            color: #00bfff;
+        }
+
+        .status-completed {
+            background: rgba(46, 204, 113, 0.15);
+            color: #2ecc71;
+        }
+
+        /* Quick Links Inside Card */
+        .course-links {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .course-links a {
+            color: #ffffff;
+            font-size: 0.85rem;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .course-links a:hover {
+            color: #00bfff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Back -->
+    <div class="back-btn">
+        <a href="index.html">← BACK TO CORE</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="school-container">
+        <h1 class="header-title">Academics</h1>
+        <p class="header-subtitle">FAIRVIEW HIGHSCHOOL - GRADUATED</p>
+        <p class="more-info">Cumulative GPA (Weighted) - 3.851</p>
+        <p class="more-info">Cumulative GPA (Unweighted) - 3.438</p>
+        <p class="header-subtitle">YEAR 1 - SEMESTER 1</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">9TH ENGLISH LA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">PIB GEOMETRY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">PHYSICAL SCIENCE</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">POTTERY SCULPTURE 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">SPANISH 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">WELLNESS IN ACTION</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 7 -->
+            <div class="course-card">
+                <h3 class="course-name">WORLD GEOGRAPHY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+        </div>
+
+        <p class="header-subtitle">YEAR 1 - SEMESTER 2</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">9TH ENGLISH LA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">BUSINESS MARKETING ESSENTIALS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">PIB GEOMETRY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">PHYSICAL SCIENCE</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">SPANISH 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">US GOVERNMENT</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+        </div>
+
+        <p class="header-subtitle">YEAR 2 - SEMESTER 1</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">10TH ENGLISH LA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">PIB ALG 2/3</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">PIB BIO 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">HS SPANISH 2</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">TEEN CHOICES</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">WORLD HISTORY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+        </div>
+
+        <p class="header-subtitle">YEAR 2 - SEMESTER 2</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">10TH ENGLISH LA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">PIB ALG 2/3</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">PIB BIO 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">SPANISH 2</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">WEB DESIGN FOUNDATIONS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">WELLNESS IN ACTION</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            
+            <!-- Course 7 -->
+            <div class="course-card">
+                <h3 class="course-name">WORLD HISTORY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+        </div>
+
+                <p class="header-subtitle">YEAR 3 - SEMESTER 1</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">11TH ENGLISH LA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">DIGITAL ART & DESIGN 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">IB AP ELEM FUNCTIONS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: C</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">IB/AP PHYSICS 1 HL</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: C</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">IB/AP COMP SCI JAVA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">US HISTORY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+        </div>
+
+        <p class="header-subtitle">YEAR 3 - SEMESTER 2</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">11TH ENGLISH LA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: C</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">AP PRECALCULUS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: C</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">DIGITAL ART & DESIGN 2</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">IB/AP PHYSICS 1 HL</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">IB/AP COMP SCI JAVA</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">US HISTORY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: C</h3>
+            </div>
+
+        </div>
+        <p class="header-subtitle">YEAR 4 - SEMESTER 1</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">ADVISORY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">AP STATISTICS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">CHEMISTRY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">PERSONAL FINANCE</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">SENIOR LIT/COMP/COMM</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">TEAM SPORTS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+        </div>
+
+        <p class="header-subtitle">YEAR 4 - SEMESTER 2</p>
+
+        <div class="course-grid">
+            
+            <!-- Course 1 -->
+            <div class="course-card">
+                <h3 class="course-name">ADVISORY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 2 -->
+            <div class="course-card">
+                <h3 class="course-name">AP STATISTICS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 3 -->
+            <div class="course-card">
+                <h3 class="course-name">CHEMISTRY</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: A</h3>
+            </div>
+
+            <!-- Course 4 -->
+            <div class="course-card">
+                <h3 class="course-name">GENERAL PSYCHOLOGY 1</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 5 -->
+            <div class="course-card">
+                <h3 class="course-name">SENIOR LIT/COMP/COMM</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: B</h3>
+            </div>
+
+            <!-- Course 6 -->
+            <div class="course-card">
+                <h3 class="course-name">TEAM SPORTS</h3>
+                <span class="status-badge status-completed">Completed</span>
+                <h3 class="grade">Grade: C</h3>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
