@@ -113,6 +113,23 @@ main p {
     transform: scale(1.05);
 }
 
+.menu-hole {
+    fill: #000;
+    stroke: rgba(255, 255, 255, 0.12);
+    stroke-width: 4;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.4));
+}
+
+.slice-text {
+    fill: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none; /* Allows cursor to pass through to the slice underneath */
+    transition: fill 0.3s ease;
+}
+
 .radial-container {
     position: relative;
     width: 450px;   /* Shrinks the entire wheel down to a normal size */
@@ -145,14 +162,14 @@ main p {
     position: absolute;
     top: 20px;
     left: 20px;
-    color: #00f3ff;
+    color: #00bfff;
     text-decoration: none;
     font-family: monospace;
     font-weight: bold;
     font-size: 0.9rem;
     padding: 8px 16px;
     border: 1px solid rgba(0, 243, 255, 0.3);
-    border-radius: 4px;
+    border-radius: 999px;
     transition: all 0.3s ease;
 }
 

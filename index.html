@@ -16,20 +16,34 @@
         <div class="radial-container">
             <!-- The interactive SVG Pie Slices -->
         <svg class="menu-svg" viewBox="0 0 500 500">
-            <a href="school.html" class="slice-link">
+            <defs>
+                <path id="path-school" d="M 105 250 A 145 145 0 0 1 395 250" />
+                <path id="path-projects" d="M 170 320 A 140 140 0 0 0 250 430" />
+                <path id="path-music" d="M 330 320 A 140 140 0 0 1 250 430" />
+                <path id="path-projects-inner" d="M 250 142 A 145 145 0 1 1 249.9 142" />
+            </defs>
+
+            <a href="pages/school.html" class="slice-link">
                 <path class="menu-slice" d="M 250 250 L 466.5 125 A 250 250 0 0 0 33.5 125 Z" />
-                <text x="250" y="90" class="slice-text">School</text>
             </a>
 
-            <a href="#projects" class="slice-link">
+            <a href="/pages/socials.html" class="slice-link">
                 <path class="menu-slice" d="M 250 250 L 33.5 125 A 250 250 0 0 0 250 500 Z" />
-                <text x="140" y="340" class="slice-text">Projects</text>
             </a>
 
-            <a href="music.html" class="slice-link">
+            <a href="/pages/music.html" class="slice-link">
                 <path class="menu-slice" d="M 250 250 L 250 500 A 250 250 0 0 0 466.5 125 Z" />
-                <text x="360" y="340" class="slice-text">Music</text>
             </a>
+
+            <circle class="menu-hole" cx="250" cy="250" r="90" />
+
+            <text class="slice-text" x="250" y="120" text-anchor="middle" dy="-6">School</text>
+            <text class="slice-text">
+                <textPath href="#path-projects-inner" startOffset="70%" text-anchor="middle">Socials</textPath>
+            </text>
+            <text class="slice-text">
+                <textPath href="#path-projects-inner" startOffset="31%" text-anchor="middle">Music</textPath>
+            </text>
         </svg>
         </div>
     </main>

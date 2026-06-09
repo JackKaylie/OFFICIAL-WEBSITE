@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="WEBSITE LOGO.png">
+    <link rel="icon" type="image/png" href="../WEBSITE LOGO.png">
     <title>SCHOOL</title>
     <style>
         /* Base Theme Settings */
@@ -34,7 +34,7 @@
             letter-spacing: 1px;
             border: 1px solid #00bfff;
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 999px;
             transition: all 0.3s ease;
         }
 
@@ -117,8 +117,37 @@
         }
 
         .status-completed {
+            display: none;
             background: rgba(46, 204, 113, 0.15);
             color: #2ecc71;
+        }
+
+        .grade {
+            font-size: 1rem;
+            margin-top: 12px;
+            color: #ffffff;
+        }
+
+        .grade-letter {
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 0.25rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+        }
+
+        .grade-letter.grade-a {
+            color: #2ecc71;
+            text-shadow: 0 0 12px rgba(46, 204, 113, 0.8);
+        }
+
+        .grade-letter.grade-b {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        .grade-letter.grade-c {
+            color: #e74c3c;
+            text-shadow: 0 0 12px rgba(231, 76, 60, 0.8);
         }
 
         /* Quick Links Inside Card */
@@ -144,7 +173,7 @@
 
     <!-- Navigation Back -->
     <div class="back-btn">
-        <a href="index.html">← BACK TO CORE</a>
+        <a href="../index.html">← BACK TO CORE</a>
     </div>
 
     <!-- Main Content -->
@@ -373,7 +402,7 @@
 
             <!-- Course 2 -->
             <div class="course-card">
-                <h3 class="course-name">DIGITAL ART & DESIGN 1</h3>
+                <h3 class="course-name">DIGITAL ART &amp; DESIGN 1</h3>
                 <span class="status-badge status-completed">Completed</span>
                 <h3 class="grade">Grade: A</h3>
             </div>
@@ -428,7 +457,7 @@
 
             <!-- Course 3 -->
             <div class="course-card">
-                <h3 class="course-name">DIGITAL ART & DESIGN 2</h3>
+                <h3 class="course-name">DIGITAL ART &amp; DESIGN 2</h3>
                 <span class="status-badge status-completed">Completed</span>
                 <h3 class="grade">Grade: A</h3>
             </div>
@@ -551,6 +580,17 @@
 
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.grade').forEach(el => {
+            const content = el.textContent.trim();
+            const match = content.match(/Grade:\s*([ABC])/i);
+            if (match) {
+                const letter = match[1].toUpperCase();
+                el.innerHTML = `Grade:<span class="grade-letter grade-${letter.toLowerCase()}">${letter}</span>`;
+            }
+        });
+    </script>
 
 </body>
 </html>
