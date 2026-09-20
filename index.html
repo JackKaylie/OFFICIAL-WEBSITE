@@ -8,6 +8,45 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="dragon dragon-left" aria-hidden="true">
+        <div class="dragon-figure">
+            <span class="wing wing-back"></span>
+            <span class="wing wing-front"></span>
+            <span class="neck"></span>
+            <span class="dragon-head">
+                <span class="horn horn-left"></span>
+                <span class="horn horn-right"></span>
+                <span class="eye"></span>
+                <span class="snout"></span>
+                <span class="mouth">
+                    <span class="teeth"></span>
+                    <span class="flame"></span>
+                </span>
+                <span class="jaw"></span>
+            </span>
+        </div>
+    </div>
+
+    <div class="dragon dragon-right" aria-hidden="true">
+        <div class="dragon-figure">
+            <span class="wing wing-back"></span>
+            <span class="wing wing-front"></span>
+            <span class="neck"></span>
+            <span class="dragon-head">
+                <span class="horn horn-left"></span>
+                <span class="horn horn-right"></span>
+                <span class="eye"></span>
+                <span class="snout"></span>
+                <span class="mouth">
+                    <span class="teeth"></span>
+                    <span class="flame"></span>
+                </span>
+                <span class="jaw"></span>
+            </span>
+        </div>
+    </div>
+
     <header>
         <h1>WELCOME</h1>
     </header>
@@ -15,12 +54,30 @@
         <p>This website showcases Jack Kaylie's projects and achievements</p>
         <div class="radial-container">
             <!-- The interactive SVG Pie Slices -->
-        <svg class="menu-svg" viewBox="0 0 500 500">
+        <svg class="menu-svg" viewBox="-6 -6 512 512" preserveAspectRatio="xMidYMid meet">
             <defs>
-                <path id="path-school" d="M 105 250 A 145 145 0 0 1 395 250" />
-                <path id="path-projects" d="M 170 320 A 140 140 0 0 0 250 430" />
-                <path id="path-music" d="M 330 320 A 140 140 0 0 1 250 430" />
-                <path id="path-projects-inner" d="M 250 142 A 145 145 0 1 1 249.9 142" />
+                <linearGradient id="metal-slice" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#4b5360" />
+                    <stop offset="0.16" stop-color="#171c24" />
+                    <stop offset="0.48" stop-color="#080c12" />
+                    <stop offset="0.72" stop-color="#242b35" />
+                    <stop offset="1" stop-color="#05070b" />
+                </linearGradient>
+                <linearGradient id="metal-slice-hover" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#66717f" />
+                    <stop offset="0.2" stop-color="#252d38" />
+                    <stop offset="0.55" stop-color="#0d121a" />
+                    <stop offset="0.82" stop-color="#343d4a" />
+                    <stop offset="1" stop-color="#090c12" />
+                </linearGradient>
+                <radialGradient id="metal-hole" cx="38%" cy="30%" r="75%">
+                    <stop offset="0" stop-color="#2d3540" />
+                    <stop offset="0.5" stop-color="#0c1118" />
+                    <stop offset="1" stop-color="#020407" />
+                </radialGradient>
+                <path id="path-school" d="M 130.4 181 A 138 138 0 0 1 369.6 181" />
+                <path id="path-socials" d="M 130.4 319 A 138 138 0 0 0 250 388" />
+                <path id="path-music" d="M 250 388 A 138 138 0 0 0 369.6 319" />
             </defs>
 
             <a href="pages/school.html" class="slice-link">
@@ -36,19 +93,92 @@
             </a>
 
             <circle class="menu-hole" cx="250" cy="250" r="90" />
+            <circle class="wheel-rim" cx="250" cy="250" r="247" />
+            <circle class="wheel-rim-inner" cx="250" cy="250" r="224" />
 
-            <text class="slice-text" x="250" y="120" text-anchor="middle" dy="-6">School</text>
             <text class="slice-text">
-                <textPath href="#path-projects-inner" startOffset="70%" text-anchor="middle">Socials</textPath>
+                <textPath href="#path-school" startOffset="50%" text-anchor="middle">School</textPath>
             </text>
             <text class="slice-text">
-                <textPath href="#path-projects-inner" startOffset="31%" text-anchor="middle">Music</textPath>
+                <textPath href="#path-socials" startOffset="50%" text-anchor="middle">Social</textPath>
+            </text>
+            <text class="slice-text">
+                <textPath href="#path-music" startOffset="50%" text-anchor="middle">Music</textPath>
             </text>
         </svg>
+        <div class="core-energy" aria-hidden="true">
+            <span class="core-arrow"></span>
+        </div>
         </div>
     </main>
     <footer>
         <p></p>
     </footer>
+    <script>
+        const coreArrow = document.querySelector('.core-arrow');
+        const coreEnergy = document.querySelector('.core-energy');
+        const cursorGlow = document.querySelector('.cursor-glow');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let targetArrowAngle = 0;
+        let currentArrowAngle = 0;
+
+        function getArrowAngle(pointerX, pointerY) {
+            const coreBounds = coreEnergy.getBoundingClientRect();
+            const centerX = coreBounds.left + coreBounds.width / 2;
+            const centerY = coreBounds.top + coreBounds.height / 2;
+            return Math.atan2(pointerY - centerY, pointerX - centerX);
+        }
+
+        function aimCoreArrow(pointerX, pointerY) {
+            targetArrowAngle = getArrowAngle(pointerX, pointerY);
+            if (reducedMotion.matches) {
+                currentArrowAngle = targetArrowAngle;
+            }
+        }
+
+        function moveCursorGlow(pointerX, pointerY) {
+            cursorGlow.style.left = `${pointerX}px`;
+            cursorGlow.style.top = `${pointerY}px`;
+            cursorGlow.classList.add('is-visible');
+        }
+
+        function hideCursorGlow() {
+            cursorGlow.classList.remove('is-visible');
+        }
+
+        function animateArrow() {
+            const angleDifference = Math.atan2(
+                Math.sin(targetArrowAngle - currentArrowAngle),
+                Math.cos(targetArrowAngle - currentArrowAngle)
+            );
+            currentArrowAngle += angleDifference * 0.18;
+
+            coreArrow.style.setProperty('--arrow-angle', `${currentArrowAngle}rad`);
+            requestAnimationFrame(animateArrow);
+        }
+
+        window.addEventListener('pointermove', (event) => {
+            moveCursorGlow(event.clientX, event.clientY);
+            if (!reducedMotion.matches) {
+                aimCoreArrow(event.clientX, event.clientY);
+            }
+        });
+
+        document.addEventListener('pointerout', (event) => {
+            if (!event.relatedTarget) {
+                hideCursorGlow();
+            }
+        });
+
+        window.addEventListener('blur', hideCursorGlow);
+
+        window.addEventListener('resize', () => {
+            aimCoreArrow(window.innerWidth / 2, window.innerHeight / 2);
+        });
+
+        aimCoreArrow(window.innerWidth / 2, window.innerHeight / 2);
+        currentArrowAngle = targetArrowAngle;
+        animateArrow();
+    </script>
 </body>
 </html>
