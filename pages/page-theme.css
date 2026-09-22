@@ -1,0 +1,267 @@
+:root {
+    --page-bg: #030406;
+    --page-panel: rgba(8, 12, 19, 0.78);
+    --page-line: rgba(217, 194, 154, 0.28);
+    --page-gold: #d9c29a;
+    --page-ice: #d8e0e4;
+    --page-blue: #7897bd;
+}
+
+.custom-cursor {
+    --cursor-x: -100px;
+    --cursor-y: -100px;
+    position: fixed !important;
+    top: var(--cursor-y);
+    left: var(--cursor-x);
+    width: 34px;
+    height: 34px;
+    z-index: 20;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.custom-cursor.is-visible {
+    opacity: 1;
+}
+
+.cursor-aura,
+.cursor-core {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border: 1px solid rgba(217, 194, 154, 0.7);
+    box-shadow: 0 0 8px rgba(217, 194, 154, 0.6), inset 0 0 8px rgba(104, 144, 190, 0.25);
+}
+
+.cursor-aura {
+    border-radius: 50%;
+    opacity: 0.5;
+    transform: scale(1.45);
+}
+
+.cursor-core {
+    width: 10px;
+    height: 10px;
+    inset: 12px;
+    border-radius: 50%;
+    background: #f5e3b4;
+    box-shadow: 0 0 6px rgba(255, 244, 198, 1), 0 0 14px rgba(217, 194, 154, 0.9);
+}
+
+.custom-cursor.is-clicking {
+    transform: translate(-50%, -50%) rotate(45deg) scale(1.3);
+}
+
+.custom-cursor.is-clicking .cursor-aura {
+    opacity: 0.9;
+}
+
+@media (pointer: fine) {
+    html,
+    html * {
+        cursor: none !important;
+    }
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body.subpage {
+    background:
+        radial-gradient(ellipse at 50% 20%, rgba(51, 72, 126, 0.18), transparent 34%),
+        radial-gradient(ellipse at 12% 72%, rgba(117, 49, 42, 0.09), transparent 28%),
+        radial-gradient(ellipse at 88% 82%, rgba(22, 48, 91, 0.18), transparent 32%),
+        linear-gradient(145deg, #030406 0%, #090b10 52%, #010203 100%);
+    background-size: 140% 140%, 135% 135%, 140% 140%, 100% 100%;
+    background-position: 0% 0%, 0% 0%, 100% 100%, center;
+    color: var(--page-ice);
+    display: block;
+    font-family: 'Trebuchet MS', sans-serif;
+    height: auto;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    padding: 0;
+    position: relative;
+    touch-action: auto;
+    animation: subpageAtmosphere 32s ease-in-out infinite alternate;
+}
+
+body.subpage::before,
+body.subpage::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+body.subpage::before {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+    background-size: 72px 72px;
+    opacity: 0.42;
+    mix-blend-mode: soft-light;
+}
+
+body.subpage::after {
+    background: radial-gradient(ellipse at center, transparent 34%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+@keyframes subpageAtmosphere {
+    0% { background-position: 0% 0%, 0% 0%, 100% 100%, center; }
+    100% { background-position: 18% 12%, 26% 20%, 82% 72%, center; }
+}
+
+body.subpage > *:not(.custom-cursor) {
+    position: relative;
+    z-index: 1;
+}
+
+body.subpage.page-entering > *:not(.custom-cursor) {
+    animation: pageContentIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+body.subpage.page-leaving > *:not(.custom-cursor) {
+    animation: pageContentOut 0.32s ease-in both;
+    pointer-events: none;
+}
+
+@keyframes pageContentIn {
+    from { opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(5px); }
+    to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+@keyframes pageContentOut {
+    from { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    to { opacity: 0; transform: translateY(-10px) scale(1.01); filter: blur(4px); }
+}
+
+body.subpage header {
+    padding: 28px 28px 0;
+}
+
+body.subpage .back-home-btn,
+body.subpage .back-btn a {
+    background: rgba(5, 8, 13, 0.68);
+    border: 1px solid var(--page-line);
+    border-radius: 3px;
+    box-shadow: 0 0 22px rgba(91, 125, 167, 0.13);
+    color: var(--page-gold);
+    display: inline-flex;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    padding: 11px 15px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+body.subpage .back-home-btn:hover,
+body.subpage .back-btn a:hover {
+    background: rgba(217, 194, 154, 0.08);
+    border-color: rgba(217, 194, 154, 0.72);
+    box-shadow: 0 0 24px rgba(217, 194, 154, 0.2);
+    transform: translateY(-2px);
+}
+
+body.subpage .back-btn {
+    margin: 0 auto 38px;
+    max-width: 1100px;
+    padding: 28px 28px 0;
+    width: auto;
+}
+
+body.subpage .content-sections,
+body.subpage .school-container,
+body.subpage .socials-container,
+body.subpage .portfolio-section {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 32px 28px 90px;
+}
+
+body.subpage .header-title,
+body.subpage .section-header h2 {
+    color: var(--page-ice);
+    font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
+    letter-spacing: 0.12em;
+    text-shadow: 0 0 18px rgba(216, 224, 228, 0.28), 0 0 34px rgba(91, 125, 167, 0.22);
+}
+
+body.subpage .header-subtitle,
+body.subpage .track-genre {
+    color: var(--page-gold);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.16em;
+    text-shadow: 0 0 12px rgba(217, 194, 154, 0.3);
+}
+
+body.subpage .course-grid,
+body.subpage .socials-grid {
+    gap: 18px;
+}
+
+body.subpage .course-card,
+body.subpage .social-card,
+body.subpage .track-container {
+    background: linear-gradient(145deg, rgba(19, 25, 35, 0.84), rgba(4, 7, 12, 0.9));
+    border: 1px solid rgba(217, 194, 154, 0.22);
+    border-radius: 4px;
+    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.38), inset 0 0 24px rgba(91, 125, 167, 0.06);
+}
+
+body.subpage .course-card:hover,
+body.subpage .social-card:hover,
+body.subpage .track-container:hover {
+    border-color: rgba(217, 194, 154, 0.7);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.46), 0 0 24px rgba(217, 194, 154, 0.14);
+}
+
+body.subpage .course-name,
+body.subpage .track-title,
+body.subpage .social-name {
+    color: var(--page-ice);
+}
+
+body.subpage .grade-letter.grade-a,
+body.subpage .status-active,
+body.subpage .social-handle {
+    color: var(--page-gold);
+}
+
+body.subpage .neon-line {
+    background: linear-gradient(90deg, transparent, var(--page-gold), transparent);
+    box-shadow: 0 0 12px rgba(217, 194, 154, 0.48);
+    height: 1px;
+}
+
+body.subpage footer {
+    color: rgba(217, 194, 154, 0.68);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.16em;
+    text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.subpage {
+        animation: none;
+    }
+
+    body.subpage.page-entering > *,
+    body.subpage.page-leaving > * {
+        animation: none;
+    }
+
+    .custom-cursor {
+        transition: none;
+    }
+}
