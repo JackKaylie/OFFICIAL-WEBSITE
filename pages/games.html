@@ -205,6 +205,39 @@
             border-radius: 3px;
             padding: 3px 5px;
         }
+
+        .typing-font-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .typing-font-label {
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(216, 224, 228, 0.6);
+        }
+
+        .typing-font-select {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--page-gold);
+            background: rgba(5, 8, 13, 0.5);
+            border: 1px solid rgba(217, 194, 154, 0.28);
+            border-radius: 4px;
+            padding: 7px 10px;
+            cursor: pointer;
+        }
+
+        .typing-font-select:hover {
+            border-color: rgba(217, 194, 154, 0.6);
+        }
     </style>
     <link rel="stylesheet" href="page-theme.css">
 </head>
@@ -234,6 +267,29 @@
                     <span class="stat-value" id="typing-time">0.0s</span>
                     <span class="stat-label">TIME</span>
                 </div>
+            </div>
+
+            <div class="typing-font-row">
+                <label class="typing-font-label" for="typing-font">FONT</label>
+                <select class="typing-font-select" id="typing-font">
+                    <optgroup label="Easy — clear, unambiguous glyphs">
+                        <option value="Consolas, 'Courier New', monospace">Consolas</option>
+                        <option value="'Courier New', Courier, monospace" selected>Courier New</option>
+                        <option value="'Lucida Console', Monaco, monospace">Lucida Console</option>
+                    </optgroup>
+                    <optgroup label="Medium — standard, everyday fonts">
+                        <option value="Arial, Helvetica, sans-serif">Arial</option>
+                        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                        <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    </optgroup>
+                    <optgroup label="Hard — decorative, lower legibility">
+                        <option value="Papyrus, fantasy">Papyrus</option>
+                        <option value="Impact, 'Arial Narrow', sans-serif">Impact (Condensed)</option>
+                        <option value="'Brush Script MT', cursive">Brush Script MT</option>
+                        <option value="'Segoe Script', 'Brush Script MT', cursive">Segoe Script</option>
+                    </optgroup>
+                </select>
             </div>
 
             <div class="typing-options typing-word-count" id="typing-word-count">
@@ -374,6 +430,7 @@
         };
         const wordCountRadios = [...document.querySelectorAll('input[name="word-count"]')];
         const customWordCountInput = document.getElementById('custom-word-count');
+        const fontSelect = document.getElementById('typing-font');
 
         let currentPassage = '';
         let startTime = null;
@@ -413,6 +470,11 @@
             timeEl.textContent = '0.0s';
             loadPassage();
             inputEl.focus();
+            hideCustomCursor();
+        }
+
+        function hideCustomCursor() {
+            window.dispatchEvent(new Event('typing-test:hide-cursor'));
         }
 
         function updateTimer() {
@@ -450,6 +512,7 @@
             if (!startTime && typedValue.length > 0) {
                 startTime = Date.now();
                 timerInterval = window.setInterval(updateTimer, 100);
+                hideCustomCursor();
             }
 
             totalTyped = typedValue.length;
@@ -517,10 +580,54 @@
             applyWordCount();
         });
 
+        fontSelect.addEventListener('change', () => {
+            passageEl.style.fontFamily = fontSelect.value;
+        });
+        passageEl.style.fontFamily = fontSelect.value;
+
         resetTest();
     </script>
 
     <script src="page-motion.js"></script>
+    <script>
+        // deferred the same way page-motion.js is, so our pointermove listener registers
+        // after its listener and can override the cursor's "is-visible" class on the same event
+        function initializeCursorSuppression() {
+            let suppressed = false;
+            let originX = null;
+            let originY = null;
+            const MOVE_THRESHOLD = 12;
+
+            window.addEventListener('typing-test:hide-cursor', () => {
+                suppressed = true;
+                originX = null;
+                originY = null;
+                document.querySelector('.custom-cursor')?.classList.remove('is-visible');
+            });
+
+            window.addEventListener('pointermove', (event) => {
+                if (!suppressed) return;
+
+                if (originX === null) {
+                    originX = event.clientX;
+                    originY = event.clientY;
+                }
+
+                if (Math.hypot(event.clientX - originX, event.clientY - originY) > MOVE_THRESHOLD) {
+                    suppressed = false;
+                    return;
+                }
+
+                document.querySelector('.custom-cursor')?.classList.remove('is-visible');
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCursorSuppression, { once: true });
+        } else {
+            initializeCursorSuppression();
+        }
+    </script>
 
 </body>
 </html>
