@@ -5,53 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CORE</title>
     <link rel="icon" type="image/png" href="WEBSITE LOGO.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-loading">
     <div class="cursor-glow" aria-hidden="true"></div>
-    <div class="dragon dragon-left" aria-hidden="true">
-        <div class="dragon-figure">
-            <span class="wing wing-back"></span>
-            <span class="wing wing-front"></span>
-            <span class="neck"></span>
-            <span class="dragon-head">
-                <span class="horn horn-left"></span>
-                <span class="horn horn-right"></span>
-                <span class="eye"></span>
-                <span class="snout"></span>
-                <span class="mouth">
-                    <span class="teeth"></span>
-                    <span class="flame"></span>
-                </span>
-                <span class="jaw"></span>
-            </span>
-        </div>
-    </div>
-
-    <div class="dragon dragon-right" aria-hidden="true">
-        <div class="dragon-figure">
-            <span class="wing wing-back"></span>
-            <span class="wing wing-front"></span>
-            <span class="neck"></span>
-            <span class="dragon-head">
-                <span class="horn horn-left"></span>
-                <span class="horn horn-right"></span>
-                <span class="eye"></span>
-                <span class="snout"></span>
-                <span class="mouth">
-                    <span class="teeth"></span>
-                    <span class="flame"></span>
-                </span>
-                <span class="jaw"></span>
-            </span>
-        </div>
-    </div>
+    <canvas id="background-grid" aria-hidden="true"></canvas>
 
     <header>
-        <h1>WELCOME</h1>
+        <h1 class="welcome-title" aria-label="WELCOME">
+            <span>W</span><span>E</span><span>L</span><span>C</span><span>O</span><span>M</span><span>E</span>
+        </h1>
     </header>
     <main>
-        <p>This website showcases Jack Kaylie's projects and achievements</p>
+        <p class="welcome-subtitle" aria-label="This website showcases Jack Kaylie's projects and achievements">
+            <span>This</span> <span>website</span> <span>showcases</span> <span>Jack</span> <span>Kaylie's</span> <span>projects</span> <span>and</span> <span>achievements</span>
+        </p>
         <div class="radial-container">
             <!-- The interactive SVG Pie Slices -->
         <svg class="menu-svg" viewBox="-6 -6 512 512" preserveAspectRatio="xMidYMid meet">
@@ -80,34 +51,29 @@
                 <path id="path-music" d="M 250 388 A 138 138 0 0 0 369.6 319" />
             </defs>
 
-            <a href="pages/school.html" class="slice-link">
+            <a href="pages/school.html" class="slice-link" data-title="SCHOOL" data-info="Projects, progress, and academic work">
                 <path class="menu-slice" d="M 250 250 L 466.5 125 A 250 250 0 0 0 33.5 125 Z" />
             </a>
 
-            <a href="/pages/socials.html" class="slice-link">
+            <a href="/pages/socials.html" class="slice-link" data-title="SOCIAL" data-info="Connections, profiles, and contact points">
                 <path class="menu-slice" d="M 250 250 L 33.5 125 A 250 250 0 0 0 250 500 Z" />
             </a>
 
-            <a href="/pages/music.html" class="slice-link">
+            <a href="/pages/music.html" class="slice-link" data-title="MUSIC" data-info="Original tracks, beats, and sound experiments">
                 <path class="menu-slice" d="M 250 250 L 250 500 A 250 250 0 0 0 466.5 125 Z" />
             </a>
 
             <circle class="menu-hole" cx="250" cy="250" r="90" />
             <circle class="wheel-rim" cx="250" cy="250" r="247" />
             <circle class="wheel-rim-inner" cx="250" cy="250" r="224" />
-
-            <text class="slice-text">
-                <textPath href="#path-school" startOffset="50%" text-anchor="middle">School</textPath>
-            </text>
-            <text class="slice-text">
-                <textPath href="#path-socials" startOffset="50%" text-anchor="middle">Social</textPath>
-            </text>
-            <text class="slice-text">
-                <textPath href="#path-music" startOffset="50%" text-anchor="middle">Music</textPath>
-            </text>
+            <g id="wheel-labels"></g>
         </svg>
         <div class="core-energy" aria-hidden="true">
             <span class="core-arrow"></span>
+        </div>
+        <div id="wheel-info" aria-live="polite">
+            <strong></strong>
+            <span></span>
         </div>
         </div>
     </main>
@@ -115,12 +81,450 @@
         <p></p>
     </footer>
     <script>
+        const gridCanvas = document.getElementById('background-grid');
+        const gridContext = gridCanvas.getContext('2d');
+        const gridPointer = { x: -1000, y: -1000 };
+        const gridNodes = [];
+        const ambientObjects = [];
+        const gridSpacing = 64;
+        let gridColumns = 0;
+        let gridRows = 0;
+        const gridMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        function resizeBackgroundGrid() {
+            const scale = Math.min(window.devicePixelRatio || 1, 1.5);
+            gridCanvas.width = window.innerWidth * scale;
+            gridCanvas.height = window.innerHeight * scale;
+            gridCanvas.style.width = `${window.innerWidth}px`;
+            gridCanvas.style.height = `${window.innerHeight}px`;
+            gridContext.setTransform(scale, 0, 0, scale, 0, 0);
+            gridNodes.length = 0;
+            ambientObjects.length = 0;
+            gridColumns = Math.ceil(window.innerWidth / gridSpacing) + 2;
+            gridRows = Math.ceil(window.innerHeight / gridSpacing) + 2;
+
+            for (let row = 0; row < gridRows; row += 1) {
+                const y = (row - 1) * gridSpacing;
+                for (let column = 0; column < gridColumns; column += 1) {
+                    const x = (column - 1) * gridSpacing;
+                    gridNodes.push({ x, y, homeX: x, homeY: y, vx: 0, vy: 0, phase: Math.random() * Math.PI * 2 });
+                }
+            }
+
+            for (let index = 0; index < 52; index += 1) {
+                ambientObjects.push({
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * window.innerHeight,
+                    radius: 1.2 + Math.random() * 3.2,
+                    depth: 0.25 + Math.random() * 0.75,
+                    phase: Math.random() * Math.PI * 2,
+                    cross: Math.random() > 0.78
+                });
+            }
+        }
+
+        function drawBackgroundGrid(time) {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            gridContext.clearRect(0, 0, width, height);
+            gridContext.lineWidth = 1;
+
+            const ambientGradient = gridContext.createRadialGradient(width * 0.5, height * 0.42, 0, width * 0.5, height * 0.42, width * 0.72);
+            ambientGradient.addColorStop(0, 'rgba(45, 72, 160, 0.08)');
+            ambientGradient.addColorStop(0.46, 'rgba(20, 36, 92, 0.025)');
+            ambientGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            gridContext.fillStyle = ambientGradient;
+            gridContext.fillRect(0, 0, width, height);
+
+            const redCloud = gridContext.createRadialGradient(width * 0.16, height * 0.3, 0, width * 0.16, height * 0.3, width * 0.42);
+            redCloud.addColorStop(0, 'rgba(190, 38, 32, 0.055)');
+            redCloud.addColorStop(1, 'rgba(255, 54, 35, 0)');
+            gridContext.fillStyle = redCloud;
+            gridContext.fillRect(0, 0, width, height);
+
+            const blueCloud = gridContext.createRadialGradient(width * 0.78, height * 0.62, 0, width * 0.78, height * 0.62, width * 0.46);
+            blueCloud.addColorStop(0, 'rgba(37, 78, 204, 0.065)');
+            blueCloud.addColorStop(1, 'rgba(47, 101, 255, 0)');
+            gridContext.fillStyle = blueCloud;
+            gridContext.fillRect(0, 0, width, height);
+
+            if (gridPointer.x > -500) {
+                const pointerGlow = gridContext.createRadialGradient(gridPointer.x, gridPointer.y, 0, gridPointer.x, gridPointer.y, 250);
+                pointerGlow.addColorStop(0, 'rgba(255, 112, 52, 0.18)');
+                pointerGlow.addColorStop(0.32, 'rgba(92, 126, 255, 0.08)');
+                pointerGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                gridContext.fillStyle = pointerGlow;
+                gridContext.fillRect(0, 0, width, height);
+            }
+
+            for (const object of ambientObjects) {
+                const drift = Math.sin(time * 0.00035 * object.depth + object.phase) * 18 * object.depth;
+                const starAlpha = 0.18 + object.depth * 0.28;
+                gridContext.fillStyle = `rgba(169, 198, 255, ${starAlpha})`;
+                gridContext.beginPath();
+                gridContext.arc(object.x + drift, object.y, object.radius * object.depth, 0, Math.PI * 2);
+                gridContext.fill();
+
+                if (object.cross) {
+                    gridContext.strokeStyle = `rgba(218, 231, 255, ${starAlpha * 0.72})`;
+                    gridContext.lineWidth = 1;
+                    gridContext.beginPath();
+                    gridContext.moveTo(object.x + drift - 7, object.y);
+                    gridContext.lineTo(object.x + drift + 7, object.y);
+                    gridContext.moveTo(object.x + drift, object.y - 7);
+                    gridContext.lineTo(object.x + drift, object.y + 7);
+                    gridContext.stroke();
+                }
+            }
+
+            for (const node of gridNodes) {
+                const dx = node.homeX - gridPointer.x;
+                const dy = node.homeY - gridPointer.y;
+                const distance = Math.hypot(dx, dy) || 1;
+                const influence = Math.max(0, 1 - distance / 270);
+                const push = influence * influence * 48;
+                const targetX = node.homeX + (dx / distance) * push;
+                const targetY = node.homeY + (dy / distance) * push;
+                node.vx += (targetX - node.x) * 0.075;
+                node.vy += (targetY - node.y) * 0.075;
+                node.vx *= 0.8;
+                node.vy *= 0.8;
+                node.x += node.vx;
+                node.y += node.vy;
+            }
+
+            for (let row = 0; row < gridRows - 1; row += 1) {
+                for (let column = 0; column < gridColumns - 1; column += 1) {
+                    const topLeft = gridNodes[row * gridColumns + column];
+                    const topRight = gridNodes[row * gridColumns + column + 1];
+                    const bottomLeft = gridNodes[(row + 1) * gridColumns + column];
+                    const bottomRight = gridNodes[(row + 1) * gridColumns + column + 1];
+                    const centerX = (topLeft.x + topRight.x + bottomLeft.x + bottomRight.x) * 0.25;
+                    const centerY = (topLeft.y + topRight.y + bottomLeft.y + bottomRight.y) * 0.25;
+                    const distance = Math.hypot(centerX - gridPointer.x, centerY - gridPointer.y) || 1;
+                    const influence = Math.max(0, 1 - distance / 240);
+                    const pulse = 0.5 + Math.sin(time * 0.001 + row * 0.7 + column * 0.45) * 0.5;
+                    const alpha = 0.055 + influence * 0.16 + pulse * 0.018;
+                    const firstTriangle = (row + column) % 2 === 0;
+                    gridContext.beginPath();
+                    if (firstTriangle) {
+                        gridContext.moveTo(topLeft.x, topLeft.y);
+                        gridContext.lineTo(topRight.x, topRight.y);
+                        gridContext.lineTo(bottomRight.x, bottomRight.y);
+                        gridContext.closePath();
+                        gridContext.moveTo(topLeft.x, topLeft.y);
+                        gridContext.lineTo(bottomRight.x, bottomRight.y);
+                        gridContext.lineTo(bottomLeft.x, bottomLeft.y);
+                    } else {
+                        gridContext.moveTo(topLeft.x, topLeft.y);
+                        gridContext.lineTo(topRight.x, topRight.y);
+                        gridContext.lineTo(bottomLeft.x, bottomLeft.y);
+                        gridContext.closePath();
+                        gridContext.moveTo(topRight.x, topRight.y);
+                        gridContext.lineTo(bottomRight.x, bottomRight.y);
+                        gridContext.lineTo(bottomLeft.x, bottomLeft.y);
+                    }
+                    gridContext.closePath();
+                    gridContext.fillStyle = `rgba(${firstTriangle ? '64, 99, 188' : '37, 62, 128'}, ${alpha})`;
+                    gridContext.fill();
+                    gridContext.strokeStyle = `rgba(103, 148, 255, ${alpha * 1.35})`;
+                    gridContext.stroke();
+                }
+            }
+
+            if (!gridMotion.matches) {
+                requestAnimationFrame(drawBackgroundGrid);
+            }
+        }
+
+        window.addEventListener('pointermove', (event) => {
+            gridPointer.x = event.clientX;
+            gridPointer.y = event.clientY;
+        });
+        window.addEventListener('pointerleave', () => {
+            gridPointer.x = -1000;
+            gridPointer.y = -1000;
+        });
+        window.addEventListener('resize', resizeBackgroundGrid);
+        resizeBackgroundGrid();
+        drawBackgroundGrid(0);
+
+        const parallaxTarget = { x: 0, y: 0 };
+        const parallaxCurrent = { x: 0, y: 0 };
+
+        function animateParallax() {
+            parallaxCurrent.x += (parallaxTarget.x - parallaxCurrent.x) * 0.08;
+            parallaxCurrent.y += (parallaxTarget.y - parallaxCurrent.y) * 0.08;
+            document.body.style.setProperty('--parallax-x', `${parallaxCurrent.x.toFixed(2)}px`);
+            document.body.style.setProperty('--parallax-y', `${parallaxCurrent.y.toFixed(2)}px`);
+            requestAnimationFrame(animateParallax);
+        }
+
+        window.addEventListener('pointermove', (event) => {
+            if (gridMotion.matches) return;
+            parallaxTarget.x = ((event.clientX / window.innerWidth) - 0.5) * 18;
+            parallaxTarget.y = ((event.clientY / window.innerHeight) - 0.5) * 14;
+        });
+        animateParallax();
+        window.setTimeout(() => document.body.classList.remove('page-loading'), 1500);
+
+        if (false) {
+        const dragonSceneConfigs = [
+            { container: document.getElementById('dragon-scene-left'), tint: 0x5e8fff, glow: 0x8ed8ff, flame: 0xff7138, offset: -150 },
+            { container: document.getElementById('dragon-scene-right'), tint: 0x7aa5ff, glow: 0xb8ecff, flame: 0xff9b42, offset: -150 }
+        ];
+
+        function dragonMaterial(color, roughness, metalness, emissive) {
+            return new THREE.MeshStandardMaterial({ color, roughness, metalness, emissive, emissiveIntensity: emissive ? 0.8 : 0 });
+        }
+
+        function limbBetween(start, end, radius, material) {
+            const direction = new THREE.Vector3().subVectors(end, start);
+            const limb = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius * 1.14, direction.length(), 10), material);
+            limb.position.copy(start).add(end).multiplyScalar(0.5);
+            limb.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+            return limb;
+        }
+
+        function dragonWing(material, side) {
+            const shape = new THREE.Shape();
+            shape.moveTo(0, 0);
+            shape.lineTo(45, 68);
+            shape.lineTo(88, 94);
+            shape.lineTo(70, 45);
+            shape.lineTo(112, 55);
+            shape.lineTo(54, 10);
+            shape.lineTo(18, -10);
+            shape.closePath();
+            const wing = new THREE.Mesh(new THREE.ShapeGeometry(shape), material);
+            wing.position.set(-8, 17, side * 17);
+            wing.rotation.set(side * 0.22, side * 0.14, side * -0.12);
+            return wing;
+        }
+
+        function buildDragon(config) {
+            const root = new THREE.Group();
+            const body = dragonMaterial(0x172541, 0.29, 0.8, config.tint);
+            const belly = dragonMaterial(0x526c9b, 0.42, 0.4, 0x071020);
+            const horn = dragonMaterial(0xdce9ff, 0.22, 0.85, config.glow);
+            const eye = dragonMaterial(0xffffff, 0.12, 0.25, config.glow);
+            const mouth = dragonMaterial(0x080a12, 0.8, 0.1, 0x000000);
+            const wingMat = new THREE.MeshStandardMaterial({ color: 0x263d72, roughness: 0.35, metalness: 0.55, side: THREE.DoubleSide, emissive: 0x0b1530, emissiveIntensity: 0.5 });
+            const wings = [];
+
+            const torso = new THREE.Mesh(new THREE.SphereGeometry(30, 24, 18), body);
+            torso.scale.set(1.7, 0.85, 0.9);
+            torso.position.set(-22, 4, 0);
+            root.add(torso);
+
+            const chest = new THREE.Mesh(new THREE.SphereGeometry(22, 22, 16), belly);
+            chest.scale.set(1.12, 0.9, 0.95);
+            chest.position.set(5, 5, 0);
+            root.add(chest);
+
+            const neck = new THREE.Mesh(new THREE.CylinderGeometry(9, 15, 43, 18), body);
+            neck.position.set(25, 28, 0);
+            neck.rotation.z = -0.55;
+            root.add(neck);
+
+            const head = new THREE.Mesh(new THREE.SphereGeometry(18, 24, 18), body);
+            head.scale.set(1.3, 0.85, 0.92);
+            head.position.set(48, 47, 0);
+            root.add(head);
+
+            const muzzle = new THREE.Mesh(new THREE.CapsuleGeometry(7, 24, 8, 14), belly);
+            muzzle.scale.set(1.35, 0.7, 0.8);
+            muzzle.rotation.z = -Math.PI / 2;
+            muzzle.position.set(68, 42, 0);
+            root.add(muzzle);
+
+            const jaw = new THREE.Mesh(new THREE.BoxGeometry(28, 7, 13), belly);
+            jaw.position.set(70, 35, 0);
+            jaw.rotation.z = -0.08;
+            root.add(jaw);
+
+            const mouthLine = new THREE.Mesh(new THREE.BoxGeometry(25, 2.2, 13.4), mouth);
+            mouthLine.position.set(70, 39, 0);
+            root.add(mouthLine);
+
+            for (const side of [-1, 1]) {
+                const tooth = new THREE.Mesh(new THREE.ConeGeometry(1.8, 8, 8), horn);
+                tooth.position.set(66, 37, side * 5);
+                tooth.rotation.z = Math.PI;
+                root.add(tooth);
+            }
+
+            const tail = new THREE.Mesh(new THREE.ConeGeometry(16, 84, 18), body);
+            tail.position.set(-78, -3, 0);
+            tail.rotation.z = -1.47;
+            tail.scale.set(1, 1, 0.72);
+            root.add(tail);
+
+            for (const side of [-1, 1]) {
+                const wing = dragonWing(wingMat, side);
+                root.add(wing);
+                wings.push(wing);
+                root.add(limbBetween(new THREE.Vector3(-28, -12, side * 14), new THREE.Vector3(-38, -36, side * 16), 6.5, body));
+                root.add(limbBetween(new THREE.Vector3(-38, -36, side * 16), new THREE.Vector3(-21, -47, side * 16), 5, body));
+                const foot = new THREE.Mesh(new THREE.SphereGeometry(7, 12, 8), belly);
+                foot.scale.set(1.35, 0.35, 0.9);
+                foot.position.set(-16, -49, side * 16);
+                root.add(foot);
+                const hornSpike = new THREE.Mesh(new THREE.ConeGeometry(3.8, 22, 10), horn);
+                hornSpike.position.set(39, 65, side * 9);
+                hornSpike.rotation.z = side * 0.36;
+                root.add(hornSpike);
+            }
+
+            const eyeMesh = new THREE.Mesh(new THREE.SphereGeometry(3.4, 14, 12), eye);
+            eyeMesh.position.set(58, 53, 13);
+            root.add(eyeMesh);
+
+            const spineMat = dragonMaterial(0x91b7ff, 0.3, 0.7, config.glow);
+            for (let index = 0; index < 7; index += 1) {
+                const spine = new THREE.Mesh(new THREE.ConeGeometry(4 - index * 0.25, 13 - index * 0.7, 6), spineMat);
+                spine.position.set(-50 + index * 13, 27 + Math.sin(index * 0.7) * 4, 0);
+                spine.rotation.z = Math.PI;
+                root.add(spine);
+            }
+
+            const flame = new THREE.Group();
+            const firePoints = [
+                new THREE.Vector3(70, 41, 0),
+                new THREE.Vector3(110, 39, 0),
+                new THREE.Vector3(165, 31, 0),
+                new THREE.Vector3(230, 16, 0),
+                new THREE.Vector3(300, -4, 0),
+                new THREE.Vector3(342, -20, 0)
+            ];
+            const outerFire = new THREE.MeshBasicMaterial({ color: config.flame, transparent: true, opacity: 0.94, depthWrite: false });
+            const innerFire = new THREE.MeshBasicMaterial({ color: 0xfff4b0, transparent: true, opacity: 0.96, depthWrite: false });
+            const firePath = new THREE.CatmullRomCurve3(firePoints);
+            flame.add(new THREE.Mesh(new THREE.TubeGeometry(firePath, 48, 7, 12, false), new THREE.MeshBasicMaterial({ color: config.flame, transparent: true, opacity: 0.82, depthWrite: false })));
+            flame.add(new THREE.Mesh(new THREE.TubeGeometry(firePath, 48, 3.2, 10, false), new THREE.MeshBasicMaterial({ color: 0xffef9b, transparent: true, opacity: 0.9, depthWrite: false })));
+            for (let index = 0; index < firePoints.length - 1; index += 1) {
+                const start = firePoints[index];
+                const end = firePoints[index + 1];
+                const direction = new THREE.Vector3().subVectors(end, start);
+                const radius = Math.max(1.7, 9 - index * 1.65);
+                const segment = new THREE.Mesh(new THREE.ConeGeometry(radius, direction.length(), 12), outerFire);
+                segment.position.copy(start).add(end).multiplyScalar(0.5);
+                segment.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+                flame.add(segment);
+                const innerStart = start.clone().add(new THREE.Vector3(0, 0, 3));
+                const innerEnd = end.clone().add(new THREE.Vector3(0, 0, 3));
+                const innerDirection = new THREE.Vector3().subVectors(innerEnd, innerStart);
+                const innerSegment = new THREE.Mesh(new THREE.ConeGeometry(radius * 0.46, innerDirection.length(), 10), innerFire);
+                innerSegment.position.copy(innerStart).add(innerEnd).multiplyScalar(0.5);
+                innerSegment.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), innerDirection.normalize());
+                flame.add(innerSegment);
+            }
+            const flare = new THREE.Mesh(new THREE.SphereGeometry(9, 14, 10), new THREE.MeshBasicMaterial({ color: 0xffbf57, transparent: true, opacity: 0.48, depthWrite: false }));
+            flare.position.set(78, 40, 0);
+            flame.add(flare);
+            root.add(flame);
+            root.scale.setScalar(1.08);
+            return { root, flame, wings };
+        }
+
+        dragonSceneConfigs.forEach((config) => {
+            const scene = new THREE.Scene();
+            const camera = new THREE.OrthographicCamera(-360, 360, 150, -150, 0.1, 1000);
+            camera.position.set(0, 0, 420);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(720, 300, false);
+            renderer.outputColorSpace = THREE.SRGBColorSpace;
+            config.container.appendChild(renderer.domElement);
+            const dragon = buildDragon(config);
+            dragon.root.position.set(config.offset, -48, 0);
+            scene.add(dragon.root, new THREE.HemisphereLight(0xcfe2ff, 0x080b14, 2.1));
+            const key = new THREE.DirectionalLight(0xffffff, 3.2);
+            key.position.set(90, 120, 180);
+            scene.add(key);
+            const rim = new THREE.PointLight(config.glow, 3.5, 360, 2);
+            rim.position.set(-80, 80, 90);
+            scene.add(rim);
+            const fireLight = new THREE.PointLight(config.flame, 4, 300, 2);
+            fireLight.position.set(150, 38, 30);
+            scene.add(fireLight);
+
+            function animateDragon(now) {
+                const time = now * 0.001;
+                const wingMotion = Math.sin(time * 3.5) * 0.18;
+                dragon.root.position.y = -48 + Math.sin(time * 1.3) * 4;
+                dragon.root.rotation.y = Math.sin(time * 0.8) * 0.13;
+                dragon.root.rotation.z = -0.08 + Math.sin(time * 1.5) * 0.035;
+                dragon.wings.forEach((wing, index) => { wing.rotation.y = (index % 2 === 0 ? 1 : -1) * (0.2 + wingMotion); });
+                dragon.flame.scale.set(1, 1, 1);
+                fireLight.intensity = 3.4;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animateDragon);
+            }
+
+            requestAnimationFrame(animateDragon);
+        });
+        }
+    </script>
+    <script>
         const coreArrow = document.querySelector('.core-arrow');
         const coreEnergy = document.querySelector('.core-energy');
         const cursorGlow = document.querySelector('.cursor-glow');
+        const wheelLabels = document.getElementById('wheel-labels');
+        const wheelInfo = document.getElementById('wheel-info');
+        const wheelInfoTitle = wheelInfo.querySelector('strong');
+        const wheelInfoText = wheelInfo.querySelector('span');
+        const sliceLinks = [...document.querySelectorAll('.slice-link')];
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
         let targetArrowAngle = 0;
         let currentArrowAngle = 0;
+
+        function positionWheelLabels() {
+            const centerX = 250;
+            const centerY = 250;
+            const radius = 170;
+            const labelData = [
+                { text: 'School', angle: -Math.PI / 2 },
+                { text: 'Social', angle: (150 * Math.PI) / 180 },
+                { text: 'Music', angle: (30 * Math.PI) / 180 }
+            ];
+
+            wheelLabels.innerHTML = '';
+
+            labelData.forEach(({ text, angle }) => {
+                const textNode = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+
+                textNode.setAttribute('x', x.toFixed(2));
+                textNode.setAttribute('y', y.toFixed(2));
+                textNode.setAttribute('text-anchor', 'middle');
+                textNode.setAttribute('dominant-baseline', 'middle');
+                textNode.setAttribute('class', 'wheel-label');
+                textNode.textContent = text;
+                wheelLabels.appendChild(textNode);
+            });
+        }
+
+
+        function showSliceInfo(link) {
+            wheelInfoTitle.textContent = link.dataset.title;
+            wheelInfoText.textContent = link.dataset.info;
+            wheelInfo.classList.add('is-active');
+        }
+
+        function clearSliceInfo() {
+            wheelInfoTitle.textContent = '';
+            wheelInfoText.textContent = '';
+            wheelInfo.classList.remove('is-active');
+        }
+
+        sliceLinks.forEach((link) => {
+            link.addEventListener('pointerenter', () => showSliceInfo(link));
+            link.addEventListener('pointerleave', clearSliceInfo);
+            link.addEventListener('focus', () => showSliceInfo(link));
+            link.addEventListener('blur', clearSliceInfo);
+        });
 
         function getArrowAngle(pointerX, pointerY) {
             const coreBounds = coreEnergy.getBoundingClientRect();
@@ -173,9 +577,11 @@
         window.addEventListener('blur', hideCursorGlow);
 
         window.addEventListener('resize', () => {
+            positionWheelLabels();
             aimCoreArrow(window.innerWidth / 2, window.innerHeight / 2);
         });
 
+        positionWheelLabels();
         aimCoreArrow(window.innerWidth / 2, window.innerHeight / 2);
         currentArrowAngle = targetArrowAngle;
         animateArrow();
