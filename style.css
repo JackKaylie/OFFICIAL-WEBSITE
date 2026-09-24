@@ -242,7 +242,7 @@ main {
 .hud-panel {
     position: fixed;
     top: clamp(18px, 3vh, 34px);
-    right: clamp(18px, 3vw, 44px);
+    left: clamp(18px, 3vw, 44px);
     z-index: 6;
     padding: 14px 20px 16px;
     text-align: right;
@@ -253,6 +253,82 @@ main {
     box-shadow: 0 0 1px rgba(217, 194, 154, 0.4), 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 0 18px rgba(104, 144, 190, 0.06);
     pointer-events: none;
     animation: hudPanelPulse 4.5s ease-in-out infinite;
+}
+
+.account-panel {
+    position: fixed;
+    top: clamp(18px, 3vh, 34px);
+    right: clamp(18px, 3vw, 44px);
+    z-index: 6;
+    min-width: 188px;
+    padding: 14px 18px 16px;
+    text-align: right;
+    background: linear-gradient(160deg, rgba(12, 16, 24, 0.58), rgba(6, 8, 13, 0.32));
+    border: 1px solid rgba(217, 194, 154, 0.28);
+    border-radius: 2px;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 1px rgba(217, 194, 154, 0.4), 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 0 18px rgba(104, 144, 190, 0.06);
+}
+
+.account-panel::before,
+.account-panel::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: rgba(217, 194, 154, 0.75);
+    border-style: solid;
+}
+
+.account-panel::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1.5px 0 0 1.5px;
+}
+
+.account-panel::after {
+    right: -1px;
+    bottom: -1px;
+    border-width: 0 1.5px 1.5px 0;
+}
+
+.account-kicker,
+.account-status,
+.account-link {
+    display: block;
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+}
+
+.account-kicker {
+    color: rgba(217, 194, 154, 0.62);
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.36em;
+}
+
+.account-status {
+    margin-top: 7px;
+    color: #f1e7cf;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+}
+
+.account-link {
+    margin-top: 10px;
+    color: rgba(216, 224, 228, 0.72);
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.account-link:hover,
+.account-link:focus-visible {
+    color: #f5e3b4;
+    text-shadow: 0 0 12px rgba(217, 194, 154, 0.75);
 }
 
 .hud-panel::before,
@@ -361,7 +437,8 @@ body.is-idle .hud-kicker::after {
 }
 
 @media (max-width: 640px) {
-    .hud-panel {
+    .hud-panel,
+    .account-panel {
         display: none;
     }
 }

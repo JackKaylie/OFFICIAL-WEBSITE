@@ -238,6 +238,75 @@
         .typing-font-select:hover {
             border-color: rgba(217, 194, 154, 0.6);
         }
+
+        .account-panel {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 0 auto 18px;
+            padding: 14px 18px;
+            text-align: left;
+            background: rgba(5, 8, 13, 0.64);
+            border: 1px solid var(--page-line);
+            border-radius: 4px;
+        }
+
+        .account-copy {
+            min-width: 0;
+        }
+
+        .account-status,
+        .account-history {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.08em;
+            color: rgba(216, 224, 228, 0.7);
+        }
+
+        .account-history {
+            margin-top: 5px;
+            color: var(--page-gold);
+        }
+
+        .account-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .account-button {
+            padding: 9px 12px;
+            border: 1px solid var(--page-line);
+            border-radius: 3px;
+            color: var(--page-gold);
+            background: rgba(5, 8, 13, 0.68);
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .account-button:hover,
+        .account-button:focus-visible {
+            border-color: rgba(217, 194, 154, 0.72);
+            background: rgba(217, 194, 154, 0.08);
+        }
+
+        @media (max-width: 640px) {
+            .account-panel {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .account-actions {
+                justify-content: flex-start;
+            }
+        }
     </style>
     <link rel="stylesheet" href="page-theme.css">
 </head>
@@ -252,6 +321,17 @@
     <div class="games-container school-container">
         <h1 class="header-title">Games</h1>
         <p class="header-subtitle">GAME DEV PROJECTS &amp; PLAYABLE BUILDS</p>
+
+        <section class="account-panel" id="account-panel" aria-label="Typing test account">
+            <div class="account-copy">
+                <p class="account-status" id="account-status">SIGNED OUT - LOCAL PROGRESS ONLY</p>
+                <p class="account-history" id="account-history">0 COMPLETED RUNS SAVED</p>
+            </div>
+            <div class="account-actions">
+                <button class="account-button" id="google-sign-in" type="button">SIGN IN WITH GOOGLE</button>
+                <button class="account-button" id="google-sign-out" type="button" hidden>SIGN OUT</button>
+            </div>
+        </section>
 
         <div class="typing-test course-card" id="typing-test">
             <div class="typing-stats">
@@ -309,14 +389,26 @@
             </div>
 
             <div class="typing-options" id="typing-options">
-                <label class="typing-option" data-option="numbers">
-                    <input type="checkbox" id="opt-numbers"> Numbers
+                <label class="typing-option is-active" data-option="numbers">
+                    <input type="checkbox" id="opt-numbers" checked> Numbers
                 </label>
-                <label class="typing-option" data-option="punctuation">
-                    <input type="checkbox" id="opt-punctuation"> Punctuation
+                <label class="typing-option is-active" data-option="punctuation">
+                    <input type="checkbox" id="opt-punctuation" checked> Punctuation
                 </label>
-                <label class="typing-option" data-option="symbols">
-                    <input type="checkbox" id="opt-symbols"> Symbols &amp; Brackets
+                <label class="typing-option is-active" data-option="symbols">
+                    <input type="checkbox" id="opt-symbols" checked> Symbols &amp; Brackets
+                </label>
+            </div>
+
+            <div class="typing-options" id="typing-case-options">
+                <label class="typing-option" data-case="normal">
+                    <input type="radio" name="case-mode" value="normal"> NO CAPS
+                </label>
+                <label class="typing-option is-active" data-case="some">
+                    <input type="radio" name="case-mode" value="some" checked> SOME CAPS
+                </label>
+                <label class="typing-option" data-case="all">
+                    <input type="radio" name="case-mode" value="all"> ALL CAPS
                 </label>
             </div>
 
@@ -337,6 +429,10 @@
         </div>
     </div>
 
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
     <script>
         const wordBank = [
             'time', 'year', 'people', 'way', 'day', 'man', 'thing', 'woman', 'life', 'child',
@@ -386,6 +482,7 @@
 
         function generateWords(options) {
             const tokens = [];
+            const caseMode = options.caseMode || 'normal';
             let capitalizeNext = true;
 
             for (let i = 0; i < wordCount; i += 1) {
@@ -400,7 +497,17 @@
                     word = wrapWithSymbols(word);
                 }
 
-                if (capitalizeNext) {
+                if (caseMode === 'all') {
+                    word = word.toUpperCase();
+                } else if (caseMode === 'some') {
+                    const mixedCaseChance = Math.random();
+                    if (capitalizeNext || mixedCaseChance < 0.28) {
+                        word = word.toUpperCase();
+                    } else {
+                        word = word.toLowerCase();
+                    }
+                    capitalizeNext = false;
+                } else if (capitalizeNext) {
                     word = word.charAt(0).toUpperCase() + word.slice(1);
                     capitalizeNext = false;
                 }
@@ -428,9 +535,26 @@
             punctuation: document.getElementById('opt-punctuation'),
             symbols: document.getElementById('opt-symbols')
         };
+        const defaultSettings = {
+            numbers: true,
+            punctuation: true,
+            symbols: true,
+            caseMode: 'some',
+            wordCount: '25',
+            customWordCount: '25',
+            font: "'Courier New', Courier, monospace"
+        };
+        const caseModeRadios = [...document.querySelectorAll('input[name="case-mode"]')];
         const wordCountRadios = [...document.querySelectorAll('input[name="word-count"]')];
         const customWordCountInput = document.getElementById('custom-word-count');
         const fontSelect = document.getElementById('typing-font');
+        const accountStatusEl = document.getElementById('account-status');
+        const accountHistoryEl = document.getElementById('account-history');
+        const signInButton = document.getElementById('google-sign-in');
+        const signOutButton = document.getElementById('google-sign-out');
+        const localStateKey = 'core-typing-test-state';
+        let currentUser = null;
+        let localState = { settings: {}, runs: [] };
 
         let currentPassage = '';
         let startTime = null;
@@ -439,12 +563,97 @@
         let totalTyped = 0;
         let totalCorrect = 0;
 
-        function getSelectedOptions() {
+        function getSettings() {
+            const selectedWordCount = wordCountRadios.find((radio) => radio.checked);
+            const selectedCaseMode = caseModeRadios.find((radio) => radio.checked);
             return {
                 numbers: optionCheckboxes.numbers.checked,
                 punctuation: optionCheckboxes.punctuation.checked,
-                symbols: optionCheckboxes.symbols.checked
+                symbols: optionCheckboxes.symbols.checked,
+                caseMode: selectedCaseMode?.value || 'some',
+                wordCount: selectedWordCount?.value || '25',
+                customWordCount: customWordCountInput.value,
+                font: fontSelect.value
             };
+        }
+
+        function updateHistoryLabel() {
+            const runCount = localState.runs.length;
+            accountHistoryEl.textContent = `${runCount} COMPLETED RUN${runCount === 1 ? '' : 'S'} SAVED`;
+        }
+
+        function saveLocalState() {
+            localState.settings = getSettings();
+            localStorage.setItem(localStateKey, JSON.stringify(localState));
+            updateHistoryLabel();
+            if (currentUser && window.coreFirestore) {
+                window.coreFirestore.collection('users').doc(currentUser.uid).set({ settings: localState.settings }, { merge: true }).catch(() => {});
+            }
+        }
+
+        function applySettings(settings) {
+            const mergedSettings = { ...defaultSettings, ...settings };
+
+            Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
+                checkbox.checked = mergedSettings[key] === true;
+                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+            });
+
+            const defaultCaseMode = mergedSettings.caseMode || 'some';
+            const savedCaseMode = caseModeRadios.find((radio) => radio.value === defaultCaseMode) || caseModeRadios.find((radio) => radio.value === 'some');
+            savedCaseMode.checked = true;
+            caseModeRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
+
+            const savedWordCount = wordCountRadios.find((radio) => radio.value === mergedSettings.wordCount) || wordCountRadios.find((radio) => radio.value === '25');
+            savedWordCount.checked = true;
+            customWordCountInput.value = mergedSettings.customWordCount || '25';
+            fontSelect.value = mergedSettings.font || fontSelect.value;
+            passageEl.style.fontFamily = fontSelect.value;
+        }
+
+        function loadLocalState() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(localStateKey) || '{}');
+                localState = {
+                    settings: saved.settings || {},
+                    runs: Array.isArray(saved.runs) ? saved.runs.slice(0, 25) : []
+                };
+            } catch {
+                localState = { settings: {}, runs: [] };
+            }
+
+            const settings = {
+                numbers: defaultSettings.numbers,
+                punctuation: defaultSettings.punctuation,
+                symbols: defaultSettings.symbols,
+                caseMode: defaultSettings.caseMode,
+                wordCount: defaultSettings.wordCount,
+                customWordCount: defaultSettings.customWordCount,
+                font: defaultSettings.font
+            };
+            applySettings(settings);
+            updateHistoryLabel();
+        }
+
+        function saveCompletedRun() {
+            const elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
+            const run = {
+                wpm: Number(wpmEl.textContent) || 0,
+                accuracy: Number.parseInt(accuracyEl.textContent, 10) || 0,
+                time: Number(elapsed.toFixed(1)),
+                completedAt: new Date().toISOString(),
+                settings: getSettings()
+            };
+            localState.runs.unshift(run);
+            localState.runs = localState.runs.slice(0, 25);
+            saveLocalState();
+            if (currentUser && window.coreFirestore) {
+                window.coreFirestore.collection('users').doc(currentUser.uid).collection('typingRuns').add(run).catch(() => {});
+            }
+        }
+
+        function getSelectedOptions() {
+            return getSettings();
         }
 
         function loadPassage() {
@@ -526,6 +735,7 @@
                 clearInterval(timerInterval);
                 updateTimer();
                 inputEl.blur();
+                saveCompletedRun();
             }
         });
 
@@ -547,6 +757,15 @@
         Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
             checkbox.addEventListener('change', () => {
                 checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+                saveLocalState();
+                resetTest();
+            });
+        });
+
+        caseModeRadios.forEach((radio) => {
+            radio.addEventListener('change', () => {
+                caseModeRadios.forEach((option) => option.closest('.typing-option').classList.toggle('is-active', option.checked));
+                saveLocalState();
                 resetTest();
             });
         });
@@ -565,6 +784,7 @@
             }
 
             resetTest();
+            saveLocalState();
         }
 
         wordCountRadios.forEach((radio) => {
@@ -582,10 +802,77 @@
 
         fontSelect.addEventListener('change', () => {
             passageEl.style.fontFamily = fontSelect.value;
+            saveLocalState();
         });
         passageEl.style.fontFamily = fontSelect.value;
 
+        loadLocalState();
         resetTest();
+
+        function initializeGoogleSignIn() {
+            const config = window.CORE_FIREBASE_CONFIG;
+            if (!config) {
+                accountStatusEl.textContent = 'SIGNED OUT - LOCAL PROGRESS ONLY';
+                signInButton.title = 'Add Firebase configuration to enable Google sign-in';
+                signInButton.addEventListener('click', () => {
+                    accountStatusEl.textContent = 'ADD FIREBASE CONFIGURATION TO ENABLE SIGN-IN';
+                });
+                return;
+            }
+
+            try {
+                firebase.initializeApp(config);
+                const auth = firebase.auth();
+                const firestore = firebase.firestore();
+                window.coreFirestore = firestore;
+                const provider = new firebase.auth.GoogleAuthProvider();
+
+                signInButton.addEventListener('click', () => {
+                    auth.signInWithPopup(provider).catch(() => {
+                        accountStatusEl.textContent = 'SIGN-IN FAILED - PLEASE TRY AGAIN';
+                    });
+                });
+
+                signOutButton.addEventListener('click', () => auth.signOut());
+
+                auth.onAuthStateChanged(async (user) => {
+                    currentUser = user;
+                    signInButton.hidden = Boolean(user);
+                    signOutButton.hidden = !user;
+
+                    if (!user) {
+                        accountStatusEl.textContent = 'SIGNED OUT - LOCAL PROGRESS ONLY';
+                        return;
+                    }
+
+                    accountStatusEl.textContent = `SIGNED IN - ${user.displayName || user.email}`;
+                    try {
+                        const snapshot = await firestore.collection('users').doc(user.uid).get();
+                        const cloudSettings = snapshot.exists ? snapshot.data().settings : null;
+                        if (cloudSettings) {
+                            localState.settings = { ...localState.settings, ...cloudSettings };
+                            applySettings(localState.settings);
+                            saveLocalState();
+                            resetTest();
+                        } else {
+                            await firestore.collection('users').doc(user.uid).set({ settings: getSettings() }, { merge: true });
+                        }
+
+                        const runsSnapshot = await firestore.collection('users').doc(user.uid)
+                            .collection('typingRuns').orderBy('completedAt', 'desc').limit(25).get();
+                        localState.runs = runsSnapshot.docs.map((runDoc) => runDoc.data());
+                        localStorage.setItem(localStateKey, JSON.stringify(localState));
+                        updateHistoryLabel();
+                    } catch {
+                        accountStatusEl.textContent = 'SIGNED IN - CLOUD SYNC UNAVAILABLE';
+                    }
+                });
+            } catch {
+                accountStatusEl.textContent = 'FIREBASE CONFIGURATION ERROR';
+            }
+        }
+
+        initializeGoogleSignIn();
     </script>
 
     <script src="page-motion.js"></script>
