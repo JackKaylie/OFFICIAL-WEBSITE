@@ -245,7 +245,7 @@ main {
     left: clamp(18px, 3vw, 44px);
     z-index: 6;
     padding: 14px 20px 16px;
-    text-align: right;
+    text-align: left;
     background: linear-gradient(160deg, rgba(12, 16, 24, 0.58), rgba(6, 8, 13, 0.32));
     border: 1px solid rgba(217, 194, 154, 0.28);
     border-radius: 2px;
