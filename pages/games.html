@@ -239,74 +239,6 @@
             border-color: rgba(217, 194, 154, 0.6);
         }
 
-        .account-panel {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin: 0 auto 18px;
-            padding: 14px 18px;
-            text-align: left;
-            background: rgba(5, 8, 13, 0.64);
-            border: 1px solid var(--page-line);
-            border-radius: 4px;
-        }
-
-        .account-copy {
-            min-width: 0;
-        }
-
-        .account-status,
-        .account-history {
-            margin: 0;
-            font-family: 'Courier New', monospace;
-            font-size: 0.68rem;
-            letter-spacing: 0.08em;
-            color: rgba(216, 224, 228, 0.7);
-        }
-
-        .account-history {
-            margin-top: 5px;
-            color: var(--page-gold);
-        }
-
-        .account-actions {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 8px;
-        }
-
-        .account-button {
-            padding: 9px 12px;
-            border: 1px solid var(--page-line);
-            border-radius: 3px;
-            color: var(--page-gold);
-            background: rgba(5, 8, 13, 0.68);
-            font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            font-weight: 700;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .account-button:hover,
-        .account-button:focus-visible {
-            border-color: rgba(217, 194, 154, 0.72);
-            background: rgba(217, 194, 154, 0.08);
-        }
-
-        @media (max-width: 640px) {
-            .account-panel {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .account-actions {
-                justify-content: flex-start;
-            }
-        }
     </style>
     <link rel="stylesheet" href="page-theme.css">
 </head>
@@ -321,17 +253,6 @@
     <div class="games-container school-container">
         <h1 class="header-title">Games</h1>
         <p class="header-subtitle">GAME DEV PROJECTS &amp; PLAYABLE BUILDS</p>
-
-        <section class="account-panel" id="account-panel" aria-label="Typing test account">
-            <div class="account-copy">
-                <p class="account-status" id="account-status">SIGNED OUT - LOCAL PROGRESS ONLY</p>
-                <p class="account-history" id="account-history">0 COMPLETED RUNS SAVED</p>
-            </div>
-            <div class="account-actions">
-                <button class="account-button" id="google-sign-in" type="button">SIGN IN WITH GOOGLE</button>
-                <button class="account-button" id="google-sign-out" type="button" hidden>SIGN OUT</button>
-            </div>
-        </section>
 
         <div class="typing-test course-card" id="typing-test">
             <div class="typing-stats">
@@ -548,10 +469,6 @@
         const wordCountRadios = [...document.querySelectorAll('input[name="word-count"]')];
         const customWordCountInput = document.getElementById('custom-word-count');
         const fontSelect = document.getElementById('typing-font');
-        const accountStatusEl = document.getElementById('account-status');
-        const accountHistoryEl = document.getElementById('account-history');
-        const signInButton = document.getElementById('google-sign-in');
-        const signOutButton = document.getElementById('google-sign-out');
         const localStateKey = 'core-typing-test-state';
         let currentUser = null;
         let localState = { settings: {}, runs: [] };
@@ -578,8 +495,6 @@
         }
 
         function updateHistoryLabel() {
-            const runCount = localState.runs.length;
-            accountHistoryEl.textContent = `${runCount} COMPLETED RUN${runCount === 1 ? '' : 'S'} SAVED`;
         }
 
         function saveLocalState() {
@@ -811,41 +726,18 @@
 
         function initializeGoogleSignIn() {
             const config = window.CORE_FIREBASE_CONFIG;
-            if (!config) {
-                accountStatusEl.textContent = 'SIGNED OUT - LOCAL PROGRESS ONLY';
-                signInButton.title = 'Add Firebase configuration to enable Google sign-in';
-                signInButton.addEventListener('click', () => {
-                    accountStatusEl.textContent = 'ADD FIREBASE CONFIGURATION TO ENABLE SIGN-IN';
-                });
-                return;
-            }
+            if (!config) return;
 
             try {
                 firebase.initializeApp(config);
                 const auth = firebase.auth();
                 const firestore = firebase.firestore();
                 window.coreFirestore = firestore;
-                const provider = new firebase.auth.GoogleAuthProvider();
-
-                signInButton.addEventListener('click', () => {
-                    auth.signInWithPopup(provider).catch(() => {
-                        accountStatusEl.textContent = 'SIGN-IN FAILED - PLEASE TRY AGAIN';
-                    });
-                });
-
-                signOutButton.addEventListener('click', () => auth.signOut());
 
                 auth.onAuthStateChanged(async (user) => {
                     currentUser = user;
-                    signInButton.hidden = Boolean(user);
-                    signOutButton.hidden = !user;
 
-                    if (!user) {
-                        accountStatusEl.textContent = 'SIGNED OUT - LOCAL PROGRESS ONLY';
-                        return;
-                    }
-
-                    accountStatusEl.textContent = `SIGNED IN - ${user.displayName || user.email}`;
+                    if (!user) return;
                     try {
                         const snapshot = await firestore.collection('users').doc(user.uid).get();
                         const cloudSettings = snapshot.exists ? snapshot.data().settings : null;
@@ -863,13 +755,9 @@
                         localState.runs = runsSnapshot.docs.map((runDoc) => runDoc.data());
                         localStorage.setItem(localStateKey, JSON.stringify(localState));
                         updateHistoryLabel();
-                    } catch {
-                        accountStatusEl.textContent = 'SIGNED IN - CLOUD SYNC UNAVAILABLE';
-                    }
+                    } catch {}
                 });
-            } catch {
-                accountStatusEl.textContent = 'FIREBASE CONFIGURATION ERROR';
-            }
+            } catch {}
         }
 
         initializeGoogleSignIn();
