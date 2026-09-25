@@ -128,7 +128,7 @@
                     <path class="menu-slice" d="M 250 250 L 73.2 73.2 A 250 250 0 0 1 426.8 73.2 Z" />
                 </a>
 
-                <a href="pages/games.html" class="slice-link" data-title="GAMES" data-info="Game dev projects and playable builds">
+                <a href="pages/games.html" class="slice-link" data-title="GAMES" data-info="Playable builds, prototypes, and interactive experiments">
                     <path class="menu-slice" d="M 250 250 L 426.8 73.2 A 250 250 0 0 1 426.8 426.8 Z" />
                 </a>
 
@@ -149,10 +149,6 @@
         </svg>
         <div class="core-energy" aria-hidden="true">
             <span class="core-arrow"></span>
-        </div>
-        <div id="wheel-info" aria-live="polite">
-            <strong></strong>
-            <span></span>
         </div>
         </div>
     </main>
@@ -824,9 +820,6 @@
         const coreEnergy = document.querySelector('.core-energy');
         const wheelRotor = document.getElementById('wheel-rotor');
         const wheelLabels = document.getElementById('wheel-labels');
-        const wheelInfo = document.getElementById('wheel-info');
-        const wheelInfoTitle = wheelInfo.querySelector('strong');
-        const wheelInfoText = wheelInfo.querySelector('span');
         const sliceLinks = [...document.querySelectorAll('.slice-link')];
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
         let targetArrowAngle = 0;
@@ -894,23 +887,7 @@
         }
 
 
-        function showSliceInfo(link) {
-            wheelInfoTitle.textContent = link.dataset.title;
-            wheelInfoText.textContent = link.dataset.info;
-            wheelInfo.classList.add('is-active');
-        }
-
-        function clearSliceInfo() {
-            wheelInfoTitle.textContent = '';
-            wheelInfoText.textContent = '';
-            wheelInfo.classList.remove('is-active');
-        }
-
         sliceLinks.forEach((link) => {
-            link.addEventListener('pointerenter', () => showSliceInfo(link));
-            link.addEventListener('pointerleave', clearSliceInfo);
-            link.addEventListener('focus', () => showSliceInfo(link));
-            link.addEventListener('blur', clearSliceInfo);
         });
 
         function getArrowAngle(pointerX, pointerY) {
