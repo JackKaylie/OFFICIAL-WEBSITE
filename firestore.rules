@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+	match /databases/{database}/documents {
+		function isDrawingAdmin() {
+			return request.auth != null
+				&& request.auth.uid == 'YG3rLqNo5jMz4muX0kxZkwumL443';
+		}
+
+		match /users/{userId} {
+			allow read, write: if request.auth != null && request.auth.uid == userId;
+
+			match /typingRuns/{runId} {
+				allow read, write: if request.auth != null && request.auth.uid == userId;
+			}
+		}
+
+		match /drawingReferences/{referenceId} {
+			allow read: if true;
+			allow create, update, delete: if isDrawingAdmin();
+		}
+	}
+}

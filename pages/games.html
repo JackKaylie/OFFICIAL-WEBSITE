@@ -24,6 +24,27 @@
             text-align: center;
         }
 
+        button.game-card {
+            width: 100%;
+            color: inherit;
+            font: inherit;
+            cursor: pointer;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        button.game-card:hover,
+        button.game-card:focus-visible {
+            transform: translateY(-3px);
+            border-color: rgba(217, 194, 154, 0.7);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.46), 0 0 24px rgba(217, 194, 154, 0.14);
+        }
+
+        button.game-card:focus-visible,
+        .game-back:focus-visible {
+            outline: 2px solid var(--page-gold);
+            outline-offset: 4px;
+        }
+
         .game-card h3 {
             margin: 0 0 8px;
             letter-spacing: 1px;
@@ -33,6 +54,331 @@
             margin: 0;
             color: rgba(216, 224, 228, 0.68);
             font-size: 0.9rem;
+        }
+
+        .drawing-library {
+            padding: 28px;
+            text-align: left;
+        }
+
+        .drawing-library-top,
+        .drawing-browser-controls,
+        .drawing-auth-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .drawing-library-title {
+            margin: 22px 0 6px;
+            color: var(--page-ice);
+            font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 0.08em;
+        }
+
+        .drawing-status,
+        .drawing-admin-note {
+            color: rgba(216, 224, 228, 0.65);
+            font-size: 0.85rem;
+        }
+
+        .drawing-status {
+            min-height: 1.4em;
+        }
+
+        .drawing-browser-controls {
+            justify-content: flex-start;
+            margin: 20px 0;
+        }
+
+        .drawing-view-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .drawing-view-tab {
+            min-height: 38px;
+            padding: 8px 12px;
+            color: rgba(216, 224, 228, 0.7);
+            background: rgba(5, 8, 13, 0.68);
+            border: 1px solid rgba(217, 194, 154, 0.24);
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .drawing-view-tab[aria-selected="true"] {
+            color: var(--page-gold);
+            border-color: rgba(217, 194, 154, 0.72);
+            background: rgba(217, 194, 154, 0.08);
+        }
+
+        .drawing-view-tab:focus-visible,
+        .drawing-complete:focus-visible {
+            outline: 2px solid var(--page-gold);
+            outline-offset: 3px;
+        }
+
+        .drawing-control-label,
+        .drawing-upload-label {
+            display: grid;
+            gap: 7px;
+            color: rgba(216, 224, 228, 0.72);
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .drawing-select,
+        .drawing-upload-input {
+            min-height: 38px;
+            color: var(--page-ice);
+            background: rgba(5, 8, 13, 0.76);
+            border: 1px solid rgba(217, 194, 154, 0.3);
+            border-radius: 3px;
+            padding: 8px 10px;
+        }
+
+        .drawing-select:focus-visible,
+        .drawing-upload-input:focus-visible,
+        .drawing-check:focus-visible {
+            outline: 2px solid var(--page-gold);
+            outline-offset: 3px;
+        }
+
+        .drawing-reference-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 14px;
+        }
+
+        .drawing-reference-card {
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid rgba(217, 194, 154, 0.2);
+            border-radius: 4px;
+            background: rgba(5, 8, 13, 0.54);
+        }
+
+        .drawing-reference-open {
+            display: block;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            padding: 0;
+            overflow: hidden;
+            border: 0;
+            background: #080b10;
+            cursor: pointer;
+        }
+
+        .drawing-reference-open img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 0.25s ease;
+        }
+
+        .drawing-reference-open:hover img {
+            transform: scale(1.035);
+        }
+
+        .drawing-reference-info {
+            padding: 12px;
+        }
+
+        .drawing-reference-info h3 {
+            margin: 0 0 5px;
+            color: var(--page-ice);
+            font-size: 0.95rem;
+            overflow-wrap: anywhere;
+        }
+
+        .drawing-reference-meta,
+        .drawing-reference-source {
+            margin: 0;
+            color: rgba(216, 224, 228, 0.6);
+            font-size: 0.76rem;
+            overflow-wrap: anywhere;
+        }
+
+        .drawing-reference-source {
+            display: inline-block;
+            margin-top: 7px;
+            color: var(--page-gold);
+        }
+
+        .drawing-complete {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 32px;
+            margin-top: 10px;
+            padding: 6px 9px;
+            color: rgba(216, 224, 228, 0.76);
+            background: rgba(5, 8, 13, 0.68);
+            border: 1px solid rgba(217, 194, 154, 0.24);
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .drawing-complete input {
+            accent-color: var(--page-gold);
+        }
+
+        .drawing-complete:has(input:checked) {
+            color: var(--page-gold);
+            border-color: rgba(217, 194, 154, 0.72);
+            background: rgba(217, 194, 154, 0.08);
+        }
+
+        .drawing-completion-status {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--page-gold);
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .drawing-upload-section {
+            margin-top: 28px;
+            padding-top: 22px;
+            border-top: 1px solid rgba(217, 194, 154, 0.2);
+        }
+
+        .drawing-upload-section h3 {
+            margin: 0 0 8px;
+            color: var(--page-ice);
+            font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
+            font-size: 1rem;
+        }
+
+        .drawing-upload-form {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 16px;
+        }
+
+        .drawing-upload-wide {
+            grid-column: 1 / -1;
+        }
+
+        .drawing-upload-check {
+            display: flex;
+            align-items: flex-start;
+            gap: 9px;
+            color: rgba(216, 224, 228, 0.7);
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        .drawing-check {
+            flex: 0 0 auto;
+            margin-top: 3px;
+            accent-color: var(--page-gold);
+        }
+
+        .drawing-upload-button,
+        .drawing-sign-in,
+        .drawing-sign-out,
+        .drawing-random,
+        .drawing-delete {
+            min-height: 38px;
+            color: var(--page-gold);
+            background: rgba(5, 8, 13, 0.68);
+            border: 1px solid var(--page-line);
+            border-radius: 3px;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .drawing-upload-button:disabled {
+            cursor: wait;
+            opacity: 0.6;
+        }
+
+        .drawing-delete {
+            min-height: 30px;
+            margin-top: 10px;
+            padding: 5px 8px;
+            color: #ffaaaa;
+            border-color: rgba(255, 138, 138, 0.35);
+        }
+
+        .drawing-admin-uid {
+            color: var(--page-gold);
+            overflow-wrap: anywhere;
+        }
+
+        .drawing-dialog {
+            width: min(94vw, 1100px);
+            max-width: none;
+            max-height: 92vh;
+            padding: 14px;
+            color: var(--page-ice);
+            background: #080b10;
+            border: 1px solid rgba(217, 194, 154, 0.45);
+            border-radius: 4px;
+        }
+
+        .drawing-dialog::backdrop {
+            background: rgba(0, 0, 0, 0.86);
+        }
+
+        body.drawing-dialog-open,
+        body.drawing-dialog-open * {
+            cursor: auto !important;
+        }
+
+        body.drawing-dialog-open button,
+        body.drawing-dialog-open a,
+        body.drawing-dialog-open input,
+        body.drawing-dialog-open select {
+            cursor: pointer !important;
+        }
+
+        body.drawing-dialog-open .custom-cursor {
+            opacity: 0 !important;
+            visibility: hidden;
+        }
+
+        .drawing-dialog img {
+            display: block;
+            max-width: 100%;
+            max-height: calc(92vh - 90px);
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .drawing-dialog-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding-top: 12px;
         }
 
         .typing-test {
@@ -121,7 +467,8 @@
             color: rgba(216, 224, 228, 0.5);
         }
 
-        .typing-restart {
+        .typing-restart,
+        .game-back {
             font-family: 'Courier New', monospace;
             font-size: 0.65rem;
             font-weight: 700;
@@ -136,11 +483,18 @@
             transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
         }
 
-        .typing-restart:hover {
+        .typing-restart:hover,
+        .game-back:hover {
             background: rgba(217, 194, 154, 0.08);
             border-color: rgba(217, 194, 154, 0.72);
             box-shadow: 0 0 24px rgba(217, 194, 154, 0.2);
             transform: translateY(-2px);
+        }
+
+        .game-back-row {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
         }
 
         .typing-options {
@@ -239,6 +593,27 @@
             border-color: rgba(217, 194, 154, 0.6);
         }
 
+        @media (max-width: 600px) {
+            .drawing-library {
+                padding: 20px 16px;
+            }
+
+            .drawing-library-top,
+            .drawing-browser-controls,
+            .drawing-auth-controls {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .drawing-upload-form {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .drawing-upload-wide {
+                grid-column: auto;
+            }
+        }
+
     </style>
     <link rel="stylesheet" href="page-theme.css">
 </head>
@@ -254,7 +629,91 @@
         <h1 class="header-title">Games</h1>
         <p class="header-subtitle">GAME DEV PROJECTS &amp; PLAYABLE BUILDS</p>
 
-        <div class="typing-test course-card" id="typing-test">
+        <section class="game-selection" id="game-selection" aria-label="Select a game">
+            <div class="game-grid course-grid">
+                <button class="game-card course-card" id="select-typing-test" type="button" aria-controls="typing-test">
+                    <h3 class="course-name">TYPING TEST</h3>
+                    <p>Test your speed and accuracy with a customizable typing challenge.</p>
+                </button>
+                <button class="game-card course-card" id="select-drawing-library" type="button" aria-controls="drawing-library">
+                    <h3 class="course-name">DRAWING REFERENCES</h3>
+                    <p>Browse curated references and build your drawing practice library.</p>
+                </button>
+                <div class="game-card course-card">
+                    <h3 class="course-name">MORE COMING SOON</h3>
+                    <p>More playable builds and prototypes are on the way.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="drawing-library course-card" id="drawing-library" aria-labelledby="drawing-library-title" hidden>
+            <div class="drawing-library-top">
+                <button class="game-back" id="drawing-back" type="button">← ALL GAMES</button>
+                <div class="drawing-auth-controls">
+                    <span class="drawing-status" id="drawing-auth-status" aria-live="polite">Connecting to the reference library...</span>
+                    <button class="drawing-sign-in" id="drawing-sign-in" type="button" hidden>Sign in with Google</button>
+                    <button class="drawing-sign-out" id="drawing-sign-out" type="button" hidden>Sign out</button>
+                </div>
+            </div>
+
+            <h2 class="drawing-library-title" id="drawing-library-title" tabindex="-1">Drawing References</h2>
+            <p class="drawing-status" id="drawing-library-status" aria-live="polite">Loading references...</p>
+
+            <div class="drawing-browser-controls">
+                <div class="drawing-view-tabs" role="tablist" aria-label="Drawing references">
+                    <button class="drawing-view-tab" id="drawing-tab-library" type="button" role="tab" aria-selected="true" aria-controls="drawing-reference-grid">Library</button>
+                    <button class="drawing-view-tab" id="drawing-tab-completed" type="button" role="tab" aria-selected="false" aria-controls="drawing-reference-grid">Completed Drawings</button>
+                </div>
+                <button class="drawing-random" id="drawing-random" type="button">Random reference</button>
+            </div>
+
+            <div class="drawing-reference-grid" id="drawing-reference-grid"></div>
+
+            <section class="drawing-upload-section" id="drawing-upload-section" hidden aria-labelledby="drawing-upload-title">
+                <h3 id="drawing-upload-title">Add references</h3>
+                <p class="drawing-admin-note" id="drawing-admin-note"></p>
+                <form class="drawing-upload-form" id="drawing-upload-form" hidden>
+                    <label class="drawing-upload-label">
+                        License / permission
+                        <select class="drawing-select" id="drawing-license" required>
+                            <option value="Created by me">Created by me</option>
+                            <option value="Public domain">Public domain</option>
+                            <option value="CC BY">CC BY</option>
+                            <option value="CC BY-SA">CC BY-SA</option>
+                            <option value="Permission granted">Permission granted</option>
+                            <option value="Other">Other (document source)</option>
+                        </select>
+                    </label>
+                    <label class="drawing-upload-label drawing-upload-wide">
+                        Source URL (optional)
+                        <input class="drawing-upload-input" id="drawing-source" type="url" maxlength="1000" placeholder="https://...">
+                    </label>
+                    <label class="drawing-upload-label drawing-upload-wide">
+                        Image files (JPEG, PNG, or WebP; up to 10 MB each)
+                        <input class="drawing-upload-input" id="drawing-files" type="file" accept="image/jpeg,image/png,image/webp" multiple required>
+                    </label>
+                    <label class="drawing-upload-check drawing-upload-wide">
+                        <input class="drawing-check" id="drawing-rights-confirmation" type="checkbox" required>
+                        <span>I have the rights or permission to publish these images and have recorded the correct source and license.</span>
+                    </label>
+                    <button class="drawing-upload-button drawing-upload-wide" id="drawing-upload-button" type="submit">Upload references</button>
+                </form>
+                <p class="drawing-status" id="drawing-upload-status" aria-live="polite"></p>
+            </section>
+
+            <dialog class="drawing-dialog" id="drawing-dialog" aria-label="Drawing reference">
+                <img id="drawing-dialog-image" alt="">
+                <div class="drawing-dialog-footer">
+                    <span id="drawing-dialog-caption"></span>
+                    <button class="game-back" id="drawing-dialog-close" type="button">Close</button>
+                </div>
+            </dialog>
+        </section>
+
+        <div class="typing-test course-card" id="typing-test" hidden>
+            <div class="game-back-row">
+                <button class="game-back" id="game-back" type="button">← ALL GAMES</button>
+            </div>
             <div class="typing-stats">
                 <div class="typing-stat">
                     <span class="stat-value" id="typing-wpm">0</span>
@@ -342,17 +801,12 @@
             </div>
         </div>
 
-        <div class="game-grid course-grid">
-            <div class="game-card course-card">
-                <h3 class="course-name">MORE COMING SOON</h3>
-                <p>More playable builds and prototypes are on the way.</p>
-            </div>
-        </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
     <script src="firebase-config.js"></script>
     <script>
         const wordBank = [
@@ -451,6 +905,10 @@
         const accuracyEl = document.getElementById('typing-accuracy');
         const timeEl = document.getElementById('typing-time');
         const restartBtn = document.getElementById('typing-restart');
+        const gameSelectionEl = document.getElementById('game-selection');
+        const typingTestEl = document.getElementById('typing-test');
+        const selectTypingTestBtn = document.getElementById('select-typing-test');
+        const gameBackBtn = document.getElementById('game-back');
         const optionCheckboxes = {
             numbers: document.getElementById('opt-numbers'),
             punctuation: document.getElementById('opt-punctuation'),
@@ -658,6 +1116,19 @@
         passageEl.addEventListener('focus', () => inputEl.focus());
         restartBtn.addEventListener('click', resetTest);
 
+        selectTypingTestBtn.addEventListener('click', () => {
+            gameSelectionEl.hidden = true;
+            typingTestEl.hidden = false;
+            resetTest();
+        });
+
+        gameBackBtn.addEventListener('click', () => {
+            clearInterval(timerInterval);
+            inputEl.blur();
+            typingTestEl.hidden = true;
+            gameSelectionEl.hidden = false;
+        });
+
         // Tab jumps straight to Restart so Tab + Enter restarts without needing to click the text
         function jumpToRestartOnTab(event) {
             if (event.key === 'Tab' && !event.shiftKey) {
@@ -722,7 +1193,7 @@
         passageEl.style.fontFamily = fontSelect.value;
 
         loadLocalState();
-        resetTest();
+        loadPassage();
 
         function initializeGoogleSignIn() {
             const config = window.CORE_FIREBASE_CONFIG;
@@ -763,6 +1234,7 @@
         initializeGoogleSignIn();
     </script>
 
+    <script src="drawing-references.js"></script>
     <script src="page-motion.js"></script>
     <script>
         // deferred the same way page-motion.js is, so our pointermove listener registers

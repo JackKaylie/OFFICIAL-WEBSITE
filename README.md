@@ -1,30 +1,21 @@
 # OFFICIAL-WEBSITE
 The official website of Jack Kaylie
 
-## Google sign-in and typing test sync
+## Firebase setup
 
-The typing test works immediately with browser-local storage. To enable Google sign-in and cross-device sync:
+The typing test works immediately with browser-local storage. To enable Google sign-in and cross-device sync, configure the Firebase web app in `pages/firebase-config.js`, enable Google under Authentication, create a Firestore database, and add your hosted domain (and `localhost` when developing) to the authorized domains.
 
-1. Create a Firebase project and add a Web app.
-2. In Authentication, enable the Google provider.
-3. Create a Firestore database.
-4. Copy the Web app configuration into `pages/firebase-config.js`.
-5. Add `localhost` to the Firebase Authentication authorized domains.
-6. Serve this folder through a local web server. Google popup sign-in will not work reliably from a `file://` URL.
+Serve this folder through a local web server or its HTTPS hosted URL. Firebase authentication and uploads will not work reliably from a `file://` URL.
 
-Use these Firestore rules so each signed-in user can access only their own settings and runs:
+## Drawing reference library
 
-```text
-rules_version = '2';
-service cloud.firestore {
-	match /databases/{database}/documents {
-		match /users/{userId} {
-			allow read, write: if request.auth != null && request.auth.uid == userId;
+Images are stored in Firebase Storage; source, license, and completion status are stored in Firestore. The public can browse the reference library and completed drawings, while only the configured admin can upload or remove images and update completion status.
 
-			match /typingRuns/{runId} {
-				allow read, write: if request.auth != null && request.auth.uid == userId;
-			}
-		}
-	}
-}
-```
+1. In Firebase Console, enable Google sign-in, create Firestore, and enable Firebase Storage for this project.
+2. Open the site through its hosted URL or a local web server, then go to Games > Drawing References and sign in with Google.
+3. Copy your UID from the admin setup message or Firebase Authentication > Users. Set `window.CORE_DRAWING_ADMIN_UID` in `pages/firebase-config.js` to that UID.
+4. Make sure the admin UID in both `firestore.rules` and `storage.rules` matches the config value.
+5. Publish the contents of `firestore.rules` in Firebase Console > Firestore Database > Rules, and `storage.rules` in Firebase Console > Storage > Rules.
+6. Reload the page. The admin upload form will be available for JPEG, PNG, or WebP images up to 10 MB each. Add a license/permission and source URL where applicable. Use the Library and Completed Drawings tabs to track finished drawings.
+
+The rule files preserve per-user access for typing-test settings and runs, allow public reads of the reference library, and restrict reference writes/deletes to the one admin UID. Do not replace the admin checks with unrestricted authenticated or public writes.

@@ -8,3 +8,5 @@ window.CORE_FIREBASE_CONFIG = {
 	appId: '1:478413150563:web:0a684f5047937ccc775b56',
 	measurementId: 'G-7T57DZ33S5'
 };
+
+window.CORE_DRAWING_ADMIN_UID = 'YG3rLqNo5jMz4muX0kxZkwumL443';
