@@ -3,292 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUSIC</title>
+    <meta name="theme-color" content="#080a0b">
+    <title>AUDIO ARCHIVE | GREMLIN</title>
     <link rel="icon" type="image/png" href="../WEBSITE LOGO.png">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="page-theme.css">
+    <link rel="stylesheet" href="music.css">
 </head>
-<body class="subpage">
-
-    <header>
-        <!-- Simple navigation link to get back to the main radial menu homepage -->
-        <a href="../index.html" class="back-home-btn">← BACK TO CORE</a>
+<body class="subpage music-body">
+    <header class="music-header">
+        <a href="../index.html" class="back-home-btn">&larr; BACK TO CORE</a>
+        <span class="music-header-mark">GREMLIN / AUDIO INDEX</span>
     </header>
 
-    <main class="content-sections">
-        <p>My artist name is GREMLIN on all streaming platforms</p>
-        <!-- MUSIC SHOWCASE -->
-        <section class="portfolio-section">
-            <div class="section-header">
-                <h2>RELEASED TRACKS</h2>
-                <div class="neon-line"></div>
+    <main class="music-page" id="music-app">
+        <section class="music-intro" aria-labelledby="music-title">
+            <p class="music-kicker">FIELD RECORDINGS / BEATS / RELEASES</p>
+            <h1 id="music-title">AUDIO<br><span>ARCHIVE</span></h1>
+            <div class="music-intro-bottom">
+                <p>GREMLIN. Tracks, sketches, and finished work.</p>
+                <p class="music-artist-note">AVAILABLE ON STREAMING PLATFORMS</p>
             </div>
-            <div class="track-container">
-                <!-- Album Cover Art -->
-                <img src="../SONG COVER.png" alt="Potential Cover Art" class="track-cover">
-                
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">POTENTIAL</h2>
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/netanyahu.wav" type="audio/wav">
-                        Your browser does not support the audio element.
-                    </audio>
+        </section>
+
+        <section class="music-library" aria-label="Music library">
+            <div class="music-library-heading">
+                <div>
+                    <p class="music-kicker">CATALOG</p>
+                    <h2>Listen in</h2>
+                </div>
+                <p id="music-library-status" class="music-status" role="status" aria-live="polite">Connecting to the archive...</p>
+            </div>
+
+            <div class="music-toolbar">
+                <div class="music-tabs" role="tablist" aria-label="Filter tracks">
+                    <button class="music-tab is-active" id="music-tab-all" type="button" role="tab" aria-selected="true" data-category="all">ALL</button>
+                    <button class="music-tab" id="music-tab-released" type="button" role="tab" aria-selected="false" data-category="released">RELEASED</button>
+                    <button class="music-tab" id="music-tab-unreleased" type="button" role="tab" aria-selected="false" data-category="unreleased">UNRELEASED</button>
+                </div>
+                <label class="music-search-label">
+                    <span>SEARCH TRACKS</span>
+                    <input id="music-search" type="search" placeholder="Title..." autocomplete="off">
+                </label>
+            </div>
+
+            <div class="music-track-list" id="music-track-list" aria-live="polite"></div>
+        </section>
+
+        <section class="music-admin" id="music-admin" hidden aria-labelledby="music-admin-title">
+            <div class="music-admin-heading">
+                <div>
+                    <p class="music-kicker">PRIVATE CONTROLS</p>
+                    <h2 id="music-admin-title">Archive management</h2>
+                </div>
+                <div class="music-auth-controls">
+                    <span id="music-auth-status" class="music-status" role="status" aria-live="polite">Checking admin access...</span>
+                    <button class="music-button music-button-quiet" id="music-sign-out" type="button" hidden>Sign out</button>
                 </div>
             </div>
 
-            <div class="track-container">
-                <!-- Album Cover Art -->
-                <img src="../HALCYON ART.jpg" alt="Potential Cover Art" class="track-cover">
-                
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">HALCYON</h2>
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/RNADOM 1.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
+            <div class="music-migration" id="music-migration" hidden>
+                <div>
+                    <h3>Move the current catalog</h3>
+                    <p>Copy the existing tracks and cover art from this site into Firebase Storage. This only imports each existing file once.</p>
                 </div>
+                <button class="music-button" id="music-import-legacy" type="button">Import existing tracks</button>
             </div>
-            <div class="section-header">
-                <h2>UNRELEASED TRACKS</h2>
-                <div class="neon-line"></div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">MALEFIC</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/MALEFIC.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
+
+            <form class="music-upload-form" id="music-upload-form" hidden>
+                <div class="music-form-heading">
+                    <h3>Add a track</h3>
+                    <p>Audio and artwork upload directly to Firebase Storage.</p>
                 </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">INTERCALATION</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/INTERCALATION_3.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
+                <div class="music-form-grid">
+                    <label class="music-field music-field-wide">
+                        <span>TRACK TITLE</span>
+                        <input name="title" type="text" maxlength="100" required placeholder="Name this track">
+                    </label>
+                    <label class="music-field">
+                        <span>SECTION</span>
+                        <select name="category" required>
+                            <option value="unreleased">Unreleased</option>
+                            <option value="released">Released</option>
+                        </select>
+                    </label>
+                    <label class="music-field">
+                        <span>AUDIO FILE</span>
+                        <input name="audio" type="file" accept=".mp3,.wav,.m4a,.ogg,audio/mpeg,audio/wav,audio/mp4,audio/ogg" required>
+                        <small>MP3, WAV, M4A, or OGG. Up to 100 MB.</small>
+                    </label>
+                    <label class="music-field music-field-wide">
+                        <span>COVER ART <em>OPTIONAL</em></span>
+                        <input name="cover" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                        <small>JPEG, PNG, or WebP. Up to 10 MB.</small>
+                    </label>
                 </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/SANDMAN A$AP ROCKY TYPE BEAT_2.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
+                <div class="music-form-actions">
+                    <p id="music-upload-status" class="music-status music-upload-feedback" role="status" aria-live="polite"></p>
+                    <button class="music-button" id="music-upload-button" type="submit">Upload track</button>
                 </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">HELL SHELL REMIX</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/HELL SHELL REMAKE.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/SCP067.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/PURPLEDEMON.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/jessie won.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/BLAH BLAH.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/NEW BEAT 8-6-2025.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">HOMIXIDE GANG TYPE BEAT</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/HOMIXIDE GANG TYPE BEAT.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">NOSTALGIC SYNTHEWAVE</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/NOSTALGIC SYNTHEWAVE.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/OFF THE YART.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/B STUDENT ACTIVITIES.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/D STUDENT ACTIVITIES.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/F STUDENT ACTIVITIES.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/MESSING WITH VITAL 2.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/RANDOM NEW.wav" type="audio/wav">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">UNNAMED</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/new 2.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <div class="track-container">
-                <!-- Track Details & Player -->
-                <div class="track-info">
-                    <h2 class="track-title">FREDDIE DREDD TYPE BEAT</h2>
-                    
-                    <!-- Native Audio Player -->
-                    <audio controls class="custom-audio">
-                        <source src="../SONGS/NEWSONG_FREDDIE.mp3" type="audio/mpeg">
-                        Your browser does not support the audio element.
-                    </audio>
-                </div>
-            </div>
-            <script src="page-motion.js"></script>
+            </form>
+        </section>
+
+        <section class="music-admin-gate" id="music-admin-gate" aria-label="Administrator sign in">
+            <p id="music-gate-status">Admin? Sign in to add or manage tracks.</p>
+            <button class="music-button music-button-quiet" id="music-sign-in" type="button">Admin sign in</button>
         </section>
     </main>
-    <footer>
-        <p>SYSTEM / AUDIO ARCHIVE</p>
+
+    <footer class="music-footer">
+        <span>SYSTEM / AUDIO ARCHIVE</span>
+        <span id="music-footer-count">0 TRACKS INDEXED</span>
     </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="music.js"></script>
+    <script src="page-motion.js"></script>
 </body>
 </html>

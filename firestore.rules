@@ -18,5 +18,10 @@ service cloud.firestore {
 			allow read: if true;
 			allow create, update, delete: if isDrawingAdmin();
 		}
+
+		match /musicTracks/{trackId} {
+			allow read: if true;
+			allow create, update, delete: if isDrawingAdmin();
+		}
 	}
 }

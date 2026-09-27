@@ -13,5 +13,19 @@ service firebase.storage {
 				&& request.resource.contentType.matches('image/(jpeg|png|webp)');
 			allow delete: if isDrawingAdmin();
 		}
+
+		match /music/{trackId}/{fileName} {
+			allow read: if true;
+			allow create, update: if isDrawingAdmin()
+				&& (
+					(fileName.matches('audio\\.(mp3|wav|m4a|ogg)')
+						&& request.resource.size <= 100 * 1024 * 1024
+						&& request.resource.contentType.matches('audio/(mpeg|wav|x-wav|mp4|ogg)'))
+					|| (fileName.matches('cover\\.(jpg|jpeg|png|webp)')
+						&& request.resource.size <= 10 * 1024 * 1024
+						&& request.resource.contentType.matches('image/(jpeg|png|webp)'))
+				);
+			allow delete: if isDrawingAdmin();
+		}
 	}
 }

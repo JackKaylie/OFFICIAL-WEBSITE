@@ -19,3 +19,15 @@ Images are stored in Firebase Storage; source, license, and completion status ar
 6. Reload the page. The admin upload form will be available for JPEG, PNG, or WebP images up to 10 MB each. Add a license/permission and source URL where applicable. Use the Library and Completed Drawings tabs to track finished drawings.
 
 The rule files preserve per-user access for typing-test settings and runs, allow public reads of the reference library, and restrict reference writes/deletes to the one admin UID. Do not replace the admin checks with unrestricted authenticated or public writes.
+
+## Music library
+
+Music files are stored in Firebase Storage under `music/`; track titles, release status, and file URLs are stored in the `musicTracks` Firestore collection. The music page is public-read, while uploads, edits, and deletes require the configured site admin Google account.
+
+1. In Firebase Console, make sure Cloud Firestore and Firebase Storage are enabled for the project. Choose a Storage bucket location near your audience. Google may require the project to be on the Blaze billing plan to create or use a Storage bucket; check the Firebase Console for the current project requirements and pricing.
+2. Enable Google sign-in in Firebase Authentication, and add your hosted website domain (and `localhost` for local development) to the authorized domains.
+3. Publish `firestore.rules` in Firebase Console > Firestore Database > Rules and `storage.rules` in Firebase Console > Storage > Rules. These rules make music readable by visitors but keep writes limited to the existing admin UID.
+4. Open `pages/music.html` through the hosted site or a local web server, sign in using the Google account whose UID matches `CORE_DRAWING_ADMIN_UID`, and use the admin panel. The one-time importer copies the current `SONGS/` tracks and their existing artwork into Storage. New tracks can then be added from the upload form without editing the page or redeploying.
+5. After checking playback on the hosted site, you can remove the old audio and cover files from the repository if you no longer want them there. Do not remove the files until the import has completed and you have verified the tracks play.
+
+The music page accepts MP3, WAV, M4A, and OGG audio up to 100 MB, and JPEG, PNG, or WebP artwork up to 10 MB. MP3 is recommended for faster playback and lower bandwidth. Tracks marked “Unreleased” are still public and playable; do not upload anything that must remain private.
