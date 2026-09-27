@@ -5,6 +5,14 @@
         tabs: [...document.querySelectorAll('.music-tab')],
         search: document.getElementById('music-search'),
         trackList: document.getElementById('music-track-list'),
+        playerArt: document.getElementById('music-player-art'),
+        playerTitle: document.getElementById('music-player-title'),
+        playerCategory: document.getElementById('music-player-category'),
+        playerAudio: document.getElementById('music-player-audio'),
+        pagination: document.getElementById('music-pagination'),
+        previousPage: document.getElementById('music-page-previous'),
+        nextPage: document.getElementById('music-page-next'),
+        pageStatus: document.getElementById('music-page-status'),
         admin: document.getElementById('music-admin'),
         adminGate: document.getElementById('music-admin-gate'),
         gateStatus: document.getElementById('music-gate-status'),
@@ -14,6 +22,8 @@
         migration: document.getElementById('music-migration'),
         importButton: document.getElementById('music-import-legacy'),
         uploadForm: document.getElementById('music-upload-form'),
+        titleInput: document.querySelector('#music-upload-form [name="title"]'),
+        audioInput: document.querySelector('#music-upload-form [name="audio"]'),
         uploadButton: document.getElementById('music-upload-button'),
         uploadStatus: document.getElementById('music-upload-status')
     };
@@ -61,6 +71,10 @@
     let currentUser = null;
     let tracks = [];
     let activeCategory = 'all';
+    let titleManuallyEdited = false;
+    let currentPage = 1;
+    let selectedTrackId = null;
+    const pageSize = 8;
 
     function isAdmin() {
         return Boolean(currentUser && currentUser.uid === window.CORE_DRAWING_ADMIN_UID);
@@ -68,6 +82,12 @@
 
     function extensionOf(file) {
         return file.name.split('.').pop().toLowerCase();
+    }
+
+    function updateTitleFromAudio() {
+        const audioFile = elements.audioInput.files[0];
+        if (!audioFile || titleManuallyEdited) return;
+        elements.titleInput.value = audioFile.name.replace(/\.[^.]+$/, '');
     }
 
     function errorMessage(error) {
@@ -91,6 +111,7 @@
 
     function setActiveTab(category) {
         activeCategory = category;
+        currentPage = 1;
         elements.tabs.forEach((tab) => {
             const active = tab.dataset.category === category;
             tab.classList.toggle('is-active', active);
@@ -110,8 +131,16 @@
 
     function renderTracks() {
         const visibleTracks = filteredTracks();
+        const pageCount = Math.max(1, Math.ceil(visibleTracks.length / pageSize));
+        currentPage = Math.min(currentPage, pageCount);
+        const startIndex = (currentPage - 1) * pageSize;
+        const pageTracks = visibleTracks.slice(startIndex, startIndex + pageSize);
         elements.trackList.replaceChildren();
         elements.footerCount.textContent = `${tracks.length} TRACK${tracks.length === 1 ? '' : 'S'} INDEXED`;
+        elements.pagination.hidden = visibleTracks.length <= pageSize;
+        elements.previousPage.disabled = currentPage <= 1;
+        elements.nextPage.disabled = currentPage >= pageCount;
+        elements.pageStatus.textContent = `PAGE ${currentPage} OF ${pageCount}`;
 
         if (!visibleTracks.length) {
             const empty = document.createElement('p');
@@ -123,14 +152,15 @@
             return;
         }
 
-        visibleTracks.forEach((track, index) => {
+        pageTracks.forEach((track, index) => {
             const row = document.createElement('article');
             row.className = 'music-track';
             row.dataset.category = track.category === 'released' ? 'released' : 'unreleased';
+            row.classList.toggle('is-selected', track.id === selectedTrackId);
 
             const number = document.createElement('span');
             number.className = 'music-track-number';
-            number.textContent = String(index + 1).padStart(2, '0');
+            number.textContent = String(startIndex + index + 1).padStart(2, '0');
 
             const art = document.createElement('div');
             art.className = 'music-track-art';
@@ -158,16 +188,47 @@
             category.textContent = track.category === 'released' ? 'Released' : 'Unreleased';
             info.append(title, category);
 
-            const audio = document.createElement('audio');
-            audio.controls = true;
-            audio.preload = 'none';
-            audio.src = track.audioURL;
-            audio.setAttribute('aria-label', `Play ${track.title || 'untitled track'}`);
+            const selectButton = document.createElement('button');
+            selectButton.className = 'music-track-select';
+            selectButton.type = 'button';
+            selectButton.textContent = track.id === selectedTrackId && !elements.playerAudio.paused ? 'Pause' : 'Play';
+            selectButton.setAttribute('aria-label', `${selectButton.textContent} ${track.title || 'untitled track'}`);
+            selectButton.addEventListener('click', () => playTrack(track));
 
-            row.append(number, art, info, audio);
+            row.append(number, art, info, selectButton);
             if (isAdmin()) row.append(createAdminControls(track));
             elements.trackList.append(row);
         });
+    }
+
+    async function playTrack(track) {
+        if (track.id === selectedTrackId && !elements.playerAudio.paused) {
+            elements.playerAudio.pause();
+            renderTracks();
+            return;
+        }
+        if (track.id !== selectedTrackId) {
+            selectedTrackId = track.id;
+            elements.playerAudio.src = track.audioURL;
+            elements.playerTitle.textContent = track.title || 'Untitled track';
+            elements.playerCategory.textContent = track.category === 'released' ? 'Released' : 'Unreleased';
+            elements.playerArt.replaceChildren();
+            if (track.coverURL) {
+                const image = document.createElement('img');
+                image.src = track.coverURL;
+                image.alt = '';
+                elements.playerArt.append(image);
+            } else {
+                elements.playerArt.textContent = 'G.';
+            }
+        }
+        renderTracks();
+        try {
+            await elements.playerAudio.play();
+        } catch {
+            elements.status.textContent = 'Could not play this track. Check the audio file and Storage URL.';
+        }
+        renderTracks();
     }
 
     function createAdminControls(track) {
@@ -344,6 +405,7 @@
                 coverFile: coverFile.size ? coverFile : null
             });
             elements.uploadForm.reset();
+            titleManuallyEdited = false;
             elements.uploadStatus.textContent = 'Track added to the archive.';
             await loadTracks();
         } catch (error) {
@@ -366,6 +428,10 @@
             };
             await database.collection('musicTracks').doc(track.id).update(updated);
             Object.assign(track, updated);
+            if (track.id === selectedTrackId) {
+                elements.playerTitle.textContent = track.title || 'Untitled track';
+                elements.playerCategory.textContent = track.category === 'released' ? 'Released' : 'Unreleased';
+            }
             details.open = false;
             elements.status.textContent = 'Track details updated.';
             renderTracks();
@@ -385,6 +451,14 @@
                 });
             }
             await database.collection('musicTracks').doc(track.id).delete();
+            if (track.id === selectedTrackId) {
+                selectedTrackId = null;
+                elements.playerAudio.pause();
+                elements.playerAudio.removeAttribute('src');
+                elements.playerTitle.textContent = 'Choose a track';
+                elements.playerCategory.textContent = 'GREMLIN';
+                elements.playerArt.textContent = 'G.';
+            }
             elements.status.textContent = 'Track removed.';
             await loadTracks();
         } catch (error) {
@@ -474,7 +548,24 @@
     }
 
     elements.tabs.forEach((tab) => tab.addEventListener('click', () => setActiveTab(tab.dataset.category)));
-    elements.search.addEventListener('input', renderTracks);
+    elements.search.addEventListener('input', () => {
+        currentPage = 1;
+        renderTracks();
+    });
+    elements.previousPage.addEventListener('click', () => {
+        currentPage = Math.max(1, currentPage - 1);
+        renderTracks();
+    });
+    elements.nextPage.addEventListener('click', () => {
+        currentPage += 1;
+        renderTracks();
+    });
+    elements.playerAudio.addEventListener('play', renderTracks);
+    elements.playerAudio.addEventListener('pause', renderTracks);
+    elements.audioInput.addEventListener('change', updateTitleFromAudio);
+    elements.titleInput.addEventListener('input', () => {
+        titleManuallyEdited = true;
+    });
     elements.uploadForm.addEventListener('submit', handleUpload);
     elements.importButton.addEventListener('click', importLegacyTracks);
     elements.signIn.addEventListener('click', async () => {

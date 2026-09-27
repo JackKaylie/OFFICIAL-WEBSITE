@@ -13,27 +13,25 @@
 <body class="subpage music-body">
     <header class="music-header">
         <a href="../index.html" class="back-home-btn">&larr; BACK TO CORE</a>
-        <span class="music-header-mark">GREMLIN / AUDIO INDEX</span>
+        <span class="music-header-mark">GREMLIN / MUSIC</span>
     </header>
 
     <main class="music-page" id="music-app">
-        <section class="music-intro" aria-labelledby="music-title">
-            <p class="music-kicker">FIELD RECORDINGS / BEATS / RELEASES</p>
-            <h1 id="music-title">AUDIO<br><span>ARCHIVE</span></h1>
-            <div class="music-intro-bottom">
-                <p>GREMLIN. Tracks, sketches, and finished work.</p>
-                <p class="music-artist-note">AVAILABLE ON STREAMING PLATFORMS</p>
-            </div>
-        </section>
-
         <section class="music-library" aria-label="Music library">
             <div class="music-library-heading">
-                <div>
-                    <p class="music-kicker">CATALOG</p>
-                    <h2>Listen in</h2>
-                </div>
+                <h1 id="music-title">Music</h1>
                 <p id="music-library-status" class="music-status" role="status" aria-live="polite">Connecting to the archive...</p>
             </div>
+
+            <section class="music-player" aria-label="Selected track player">
+                <div class="music-player-art" id="music-player-art" aria-hidden="true">G.</div>
+                <div class="music-player-info">
+                    <span class="music-player-label">NOW SELECTED</span>
+                    <h2 id="music-player-title">Choose a track</h2>
+                    <span id="music-player-category" class="music-track-category">GREMLIN</span>
+                </div>
+                <audio id="music-player-audio" controls preload="none" aria-label="Selected track audio player"></audio>
+            </section>
 
             <div class="music-toolbar">
                 <div class="music-tabs" role="tablist" aria-label="Filter tracks">
@@ -48,6 +46,11 @@
             </div>
 
             <div class="music-track-list" id="music-track-list" aria-live="polite"></div>
+            <nav class="music-pagination" id="music-pagination" aria-label="Track pages">
+                <button class="music-page-button" id="music-page-previous" type="button" aria-label="Previous page">PREVIOUS</button>
+                <span id="music-page-status" class="music-page-status">PAGE 1</span>
+                <button class="music-page-button" id="music-page-next" type="button" aria-label="Next page">NEXT</button>
+            </nav>
         </section>
 
         <section class="music-admin" id="music-admin" hidden aria-labelledby="music-admin-title">
