@@ -358,7 +358,6 @@
     align-items: center;
 }
 
-.music-migration,
 .music-upload-form {
     background: rgba(9, 12, 10, 0.72);
     border: 1px solid var(--music-line);
@@ -366,21 +365,12 @@
     padding: 20px;
 }
 
-.music-migration {
-    align-items: center;
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-}
-
-.music-migration h3,
 .music-form-heading h3 {
     color: var(--music-ink);
     font-size: 1rem;
     margin: 0 0 7px;
 }
 
-.music-migration p,
 .music-form-heading p,
 .music-field small {
     color: var(--music-muted);
@@ -574,7 +564,6 @@
         grid-row: 1;
     }
 
-    .music-migration,
     .music-auth-controls {
         align-items: flex-start;
         flex-direction: column;

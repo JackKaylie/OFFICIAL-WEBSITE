@@ -19,38 +19,12 @@
         authStatus: document.getElementById('music-auth-status'),
         signIn: document.getElementById('music-sign-in'),
         signOut: document.getElementById('music-sign-out'),
-        migration: document.getElementById('music-migration'),
-        importButton: document.getElementById('music-import-legacy'),
         uploadForm: document.getElementById('music-upload-form'),
         titleInput: document.querySelector('#music-upload-form [name="title"]'),
         audioInput: document.querySelector('#music-upload-form [name="audio"]'),
         uploadButton: document.getElementById('music-upload-button'),
         uploadStatus: document.getElementById('music-upload-status')
     };
-
-    const legacyTracks = [
-        { title: 'POTENTIAL', file: 'netanyahu.wav', category: 'released', cover: '../SONG COVER.png' },
-        { title: 'HALCYON', file: 'RNADOM 1.mp3', category: 'released', cover: '../HALCYON ART.jpg' },
-        { title: 'MALEFIC', file: 'MALEFIC.mp3' },
-        { title: 'INTERCALATION', file: 'INTERCALATION_3.mp3' },
-        { title: 'UNNAMED', file: 'SANDMAN A$AP ROCKY TYPE BEAT_2.mp3' },
-        { title: 'HELL SHELL REMIX', file: 'HELL SHELL REMAKE.mp3' },
-        { title: 'UNNAMED', file: 'SCP067.mp3' },
-        { title: 'UNNAMED', file: 'PURPLEDEMON.mp3' },
-        { title: 'UNNAMED', file: 'jessie won.mp3' },
-        { title: 'UNNAMED', file: 'BLAH BLAH.mp3' },
-        { title: 'UNNAMED', file: 'NEW BEAT 8-6-2025.mp3' },
-        { title: 'HOMIXIDE GANG TYPE BEAT', file: 'HOMIXIDE GANG TYPE BEAT.mp3' },
-        { title: 'NOSTALGIC SYNTHEWAVE', file: 'NOSTALGIC SYNTHEWAVE.mp3' },
-        { title: 'UNNAMED', file: 'OFF THE YART.mp3' },
-        { title: 'UNNAMED', file: 'B STUDENT ACTIVITIES.mp3' },
-        { title: 'UNNAMED', file: 'D STUDENT ACTIVITIES.mp3' },
-        { title: 'UNNAMED', file: 'F STUDENT ACTIVITIES.mp3' },
-        { title: 'UNNAMED', file: 'MESSING WITH VITAL 2.mp3' },
-        { title: 'UNNAMED', file: 'RANDOM NEW.wav' },
-        { title: 'UNNAMED', file: 'new 2.mp3' },
-        { title: 'FREDDIE DREDD TYPE BEAT', file: 'NEWSONG_FREDDIE.mp3' }
-    ].map((track) => ({ category: 'unreleased', ...track }));
 
     const audioTypes = {
         mp3: 'audio/mpeg',
@@ -289,7 +263,6 @@
             }));
             elements.status.textContent = `${tracks.length} track${tracks.length === 1 ? '' : 's'} in the archive`;
             renderTracks();
-            if (isAdmin()) updateMigrationAvailability();
         } catch (error) {
             const message = error.code === 'permission-denied'
                 ? 'Track access is blocked. Publish the provided Firestore rules.'
@@ -320,20 +293,11 @@
         if (admin) {
             elements.authStatus.textContent = `Signed in as ${user.displayName || user.email || 'site admin'}`;
             elements.uploadForm.hidden = false;
-            elements.migration.hidden = false;
-            updateMigrationAvailability();
         } else {
             elements.gateStatus.textContent = 'This Google account is not the configured site admin.';
             elements.authStatus.textContent = 'This account does not have music management access.';
         }
         renderTracks();
-    }
-
-    function updateMigrationAvailability() {
-        const importedFiles = new Set(tracks.map((track) => track.legacySource).filter(Boolean));
-        const remaining = legacyTracks.filter((track) => !importedFiles.has(track.file)).length;
-        elements.importButton.disabled = remaining === 0;
-        elements.importButton.textContent = remaining ? `Import ${remaining} existing tracks` : 'Existing tracks imported';
     }
 
     async function uploadObject(path, file, contentType) {
@@ -342,7 +306,7 @@
         return reference.getDownloadURL();
     }
 
-    async function uploadTrack({ title, category, audioFile, coverFile, legacySource }) {
+    async function uploadTrack({ title, category, audioFile, coverFile }) {
         const documentReference = database.collection('musicTracks').doc();
         const audioExtension = extensionOf(audioFile);
         const audioPath = `music/${documentReference.id}/audio.${audioExtension}`;
@@ -369,7 +333,6 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 createdBy: currentUser.uid
             };
-            if (legacySource) record.legacySource = legacySource;
             await documentReference.set(record);
         } catch (error) {
             await Promise.all(uploadedPaths.map((path) => storage.ref(path).delete().catch(() => {})));
@@ -466,68 +429,6 @@
         }
     }
 
-    async function fetchLegacyFile(path, contentType) {
-        const url = new URL(path, window.location.href);
-        const response = await fetch(url.href);
-        if (!response.ok) throw new Error(`Could not fetch ${url.pathname} (${response.status}).`);
-        const blob = await response.blob();
-        return new Blob([blob], { type: contentType });
-    }
-
-    async function importLegacyTracks() {
-        if (!isAdmin()) return;
-        elements.importButton.disabled = true;
-        const importedFiles = new Set(tracks.map((track) => track.legacySource).filter(Boolean));
-        const pending = legacyTracks.filter((track) => !importedFiles.has(track.file));
-        let imported = 0;
-        const failures = [];
-        let accessError = null;
-
-        for (let index = 0; index < pending.length; index += 1) {
-            const legacy = pending[index];
-            elements.uploadStatus.textContent = `Importing ${index + 1} of ${pending.length}: ${legacy.title}`;
-            try {
-                const audioExtension = legacy.file.split('.').pop().toLowerCase();
-                const audioBlob = await fetchLegacyFile(`../SONGS/${encodeURIComponent(legacy.file)}`, audioTypes[audioExtension]);
-                const audioFile = new File([audioBlob], legacy.file, { type: audioTypes[audioExtension] });
-                let coverFile = null;
-                if (legacy.cover) {
-                    const coverExtension = legacy.cover.split('.').pop().toLowerCase();
-                    const coverBlob = await fetchLegacyFile(legacy.cover, imageTypes[coverExtension]);
-                    coverFile = new File([coverBlob], `cover.${coverExtension}`, { type: imageTypes[coverExtension] });
-                }
-                await uploadTrack({
-                    title: legacy.title,
-                    category: legacy.category,
-                    audioFile,
-                    coverFile,
-                    legacySource: legacy.file
-                });
-                imported += 1;
-            } catch (error) {
-                if (['storage/unauthorized', 'storage/bucket-not-found', 'storage/quota-exceeded', 'permission-denied'].includes(error.code)) {
-                    accessError = error;
-                    break;
-                }
-                failures.push(`${legacy.file}: ${errorMessage(error)}`);
-            }
-        }
-
-        if (accessError) {
-            const progress = imported ? `${imported} imported before the import stopped.` : 'Import stopped before the first track.';
-            elements.uploadStatus.textContent = `${progress} ${errorMessage(accessError)}`;
-        } else if (failures.length) {
-            const details = failures.slice(0, 3).join(' ');
-            const remaining = failures.length > 3 ? ` ${failures.length - 3} more file${failures.length - 3 === 1 ? '' : 's'} failed.` : '';
-            elements.uploadStatus.textContent = `${imported} imported; ${failures.length} failed. ${details}${remaining} Check that the old site files are still deployed, then retry.`;
-        } else {
-            elements.uploadStatus.textContent = `${imported} existing track${imported === 1 ? '' : 's'} imported.`;
-        }
-        await loadTracks();
-        elements.importButton.disabled = false;
-        updateMigrationAvailability();
-    }
-
     async function connectFirebase() {
         if (!window.CORE_FIREBASE_CONFIG || !window.firebase?.auth || !window.firebase?.storage) {
             elements.status.textContent = 'Firebase is unavailable. Open this page through the hosted site or a local web server.';
@@ -567,7 +468,6 @@
         titleManuallyEdited = true;
     });
     elements.uploadForm.addEventListener('submit', handleUpload);
-    elements.importButton.addEventListener('click', importLegacyTracks);
     elements.signIn.addEventListener('click', async () => {
         try {
             await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
