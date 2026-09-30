@@ -138,6 +138,26 @@ body::after {
     }
 }
 
+body.feedback-dialog-open,
+body.feedback-dialog-open * {
+    cursor: auto !important;
+}
+
+body.feedback-dialog-open button,
+body.feedback-dialog-open a {
+    cursor: pointer !important;
+}
+
+body.feedback-dialog-open textarea,
+body.feedback-dialog-open input {
+    cursor: text !important;
+}
+
+body.feedback-dialog-open .custom-cursor {
+    opacity: 0 !important;
+    visibility: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
     body {
         animation: none;
@@ -1082,21 +1102,25 @@ footer {
     position: absolute;
     top: 20px;
     left: 20px;
-    color: #dfe5ff;
+    color: #d9c29a;
     text-decoration: none;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 0.9rem;
-    padding: 8px 16px;
-    border: 1px solid rgba(115, 134, 255, 0.35);
+    font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    padding: 10px 20px;
+    background: rgba(10, 14, 20, 0.6);
+    border: 1px solid rgba(217, 194, 154, 0.26);
     border-radius: 999px;
+    backdrop-filter: blur(8px);
     transition: all 0.3s ease;
 }
 
 .back-home-btn:hover {
-    background: rgba(102, 118, 255, 0.08);
-    box-shadow: 0 0 15px rgba(104, 116, 255, 0.35);
-    text-shadow: 0 0 5px rgba(255, 109, 109, 0.9);
+    background: rgba(217, 194, 154, 0.1);
+    border-color: rgba(217, 194, 154, 0.72);
+    box-shadow: 0 0 24px rgba(217, 194, 154, 0.2);
+    transform: translateY(-2px);
 }
 
 .track-container {
@@ -1143,4 +1167,172 @@ footer {
 .custom-audio {
     width: 260px;
     height: 40px;
+}
+
+.feedback-button {
+    position: fixed;
+    right: clamp(18px, 3vw, 40px);
+    bottom: clamp(18px, 3vh, 34px);
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    color: var(--champagne);
+    background: rgba(5, 7, 11, 0.9);
+    border: 1px solid rgba(217, 194, 154, 0.32);
+    border-radius: 999px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.42);
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.feedback-button:hover,
+.feedback-button:focus-visible {
+    background: rgba(217, 194, 154, 0.1);
+    border-color: rgba(217, 194, 154, 0.7);
+    box-shadow: 0 0 24px rgba(217, 194, 154, 0.22);
+    transform: translateY(-2px);
+}
+
+.feedback-button:focus-visible {
+    outline: 2px solid var(--champagne);
+    outline-offset: 4px;
+}
+
+.feedback-icon {
+    font-size: 0.9rem;
+}
+
+.feedback-dialog {
+    width: min(92vw, 440px);
+    padding: 0;
+    color: var(--ice);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+}
+
+.feedback-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(2px);
+}
+
+.feedback-form {
+    display: grid;
+    gap: 14px;
+    padding: 26px 24px 22px;
+    background: rgba(6, 8, 13, 0.94);
+    border: 1px solid rgba(217, 194, 154, 0.32);
+    border-radius: 6px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 24px rgba(217, 194, 154, 0.08);
+}
+
+.feedback-title {
+    margin: 0;
+    color: var(--ice);
+    font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+}
+
+.feedback-subtitle {
+    margin: -6px 0 0;
+    color: rgba(216, 224, 228, 0.62);
+    font-size: 0.8rem;
+}
+
+.feedback-label {
+    display: grid;
+    gap: 7px;
+    color: rgba(216, 224, 228, 0.75);
+    font-family: 'Courier New', monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.feedback-textarea,
+.feedback-input {
+    color: var(--ice);
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(217, 194, 154, 0.28);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    resize: vertical;
+}
+
+.feedback-textarea:focus-visible,
+.feedback-input:focus-visible {
+    outline: 2px solid var(--champagne);
+    outline-offset: 2px;
+}
+
+.feedback-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.feedback-cancel,
+.feedback-submit {
+    padding: 9px 16px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feedback-cancel {
+    color: rgba(216, 224, 228, 0.72);
+    background: transparent;
+    border: 1px solid rgba(216, 224, 228, 0.24);
+}
+
+.feedback-cancel:hover {
+    border-color: rgba(216, 224, 228, 0.5);
+}
+
+.feedback-submit {
+    color: #050708;
+    background: var(--champagne);
+    border: 1px solid var(--champagne);
+}
+
+.feedback-submit:hover {
+    box-shadow: 0 0 20px rgba(217, 194, 154, 0.45);
+}
+
+.feedback-submit:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.feedback-status {
+    margin: 0;
+    min-height: 1.2em;
+    color: var(--champagne);
+    font-family: 'Courier New', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+}
+
+@media (max-width: 600px) {
+    .feedback-button span:not(.feedback-icon) {
+        display: none;
+    }
 }

@@ -155,8 +155,34 @@
     <footer>
         <p class="system-status"><span class="status-dot"></span>SYSTEM <span class="status-divider">/</span> ONLINE</p>
     </footer>
+
+    <button class="feedback-button" id="feedback-button" type="button" aria-haspopup="dialog" aria-controls="feedback-dialog">
+        <span class="feedback-icon" aria-hidden="true">✎</span><span>Feedback</span>
+    </button>
+
+    <dialog class="feedback-dialog" id="feedback-dialog" aria-label="Send feedback">
+        <form class="feedback-form" id="feedback-form">
+            <h2 class="feedback-title">Got feedback or an idea?</h2>
+            <p class="feedback-subtitle">Bugs, suggestions, feature requests — send it my way.</p>
+            <label class="feedback-label" for="feedback-message-input">
+                Message
+                <textarea id="feedback-message-input" class="feedback-textarea" maxlength="2000" rows="5" required placeholder="What's on your mind?"></textarea>
+            </label>
+            <label class="feedback-label" for="feedback-email-input">
+                Email (optional, if you want a reply)
+                <input id="feedback-email-input" class="feedback-input" type="email" maxlength="200" placeholder="you@example.com">
+            </label>
+            <div class="feedback-actions">
+                <button class="feedback-cancel" id="feedback-close" type="button">Cancel</button>
+                <button class="feedback-submit" id="feedback-submit" type="submit">Send Feedback</button>
+            </div>
+            <p class="feedback-status" id="feedback-status" aria-live="polite"></p>
+        </form>
+    </dialog>
+
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="pages/firebase-config.js"></script>
     <script>
         const welcomeAccountStatus = document.getElementById('welcome-account-status');
@@ -205,6 +231,60 @@
         }
 
         initializeWelcomeAccount();
+    </script>
+    <script>
+        function initializeFeedbackWidget() {
+            const feedbackButton = document.getElementById('feedback-button');
+            const feedbackDialog = document.getElementById('feedback-dialog');
+            const feedbackForm = document.getElementById('feedback-form');
+            const feedbackMessage = document.getElementById('feedback-message-input');
+            const feedbackEmail = document.getElementById('feedback-email-input');
+            const feedbackStatus = document.getElementById('feedback-status');
+            const feedbackClose = document.getElementById('feedback-close');
+            const feedbackSubmit = document.getElementById('feedback-submit');
+
+            feedbackButton.addEventListener('click', () => {
+                feedbackStatus.textContent = '';
+                feedbackDialog.showModal();
+                document.body.classList.add('feedback-dialog-open');
+                feedbackMessage.focus();
+            });
+
+            feedbackClose.addEventListener('click', () => feedbackDialog.close());
+            feedbackDialog.addEventListener('cancel', () => { feedbackStatus.textContent = ''; });
+            feedbackDialog.addEventListener('close', () => document.body.classList.remove('feedback-dialog-open'));
+
+            feedbackForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const message = feedbackMessage.value.trim();
+                if (!message) return;
+
+                feedbackSubmit.disabled = true;
+                feedbackStatus.textContent = 'Sending...';
+
+                try {
+                    const config = window.CORE_FIREBASE_CONFIG;
+                    if (!config) throw new Error('no-config');
+                    const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(config);
+                    const firestore = app.firestore();
+                    await firestore.collection('feedback').add({
+                        message: message.slice(0, 2000),
+                        email: feedbackEmail.value.trim().slice(0, 200) || null,
+                        page: window.location.pathname,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    feedbackStatus.textContent = 'Thanks! Feedback sent.';
+                    feedbackForm.reset();
+                    window.setTimeout(() => feedbackDialog.close(), 1200);
+                } catch {
+                    feedbackStatus.textContent = 'Could not send feedback. Try again later.';
+                } finally {
+                    feedbackSubmit.disabled = false;
+                }
+            });
+        }
+
+        initializeFeedbackWidget();
     </script>
     <script>
         const gridCanvas = document.getElementById('background-grid');

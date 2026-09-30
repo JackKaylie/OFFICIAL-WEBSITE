@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,6 +6,12 @@
     <link rel="icon" type="image/png" href="../WEBSITE LOGO.png">
     <title>GAMES</title>
     <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         .games-container {
             width: 100%;
             max-width: 800px;
@@ -15,26 +21,39 @@
         .game-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            gap: 22px;
             margin-top: 20px;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .game-card {
-            padding: 32px 24px;
+            padding: 36px 28px;
             text-align: center;
         }
 
+        body.subpage .game-card.course-card {
+            border-radius: 18px;
+            backdrop-filter: blur(6px);
+        }
+
+        a.game-card,
         button.game-card {
+            display: block;
             width: 100%;
             color: inherit;
             font: inherit;
+            text-decoration: none;
             cursor: pointer;
             transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
+        a.game-card:hover,
+        a.game-card:focus-visible,
         button.game-card:hover,
         button.game-card:focus-visible {
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             border-color: rgba(217, 194, 154, 0.7);
             box-shadow: 0 18px 42px rgba(0, 0, 0, 0.46), 0 0 24px rgba(217, 194, 154, 0.14);
         }
@@ -46,14 +65,17 @@
         }
 
         .game-card h3 {
-            margin: 0 0 8px;
-            letter-spacing: 1px;
+            margin: 0 0 10px;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.01em;
         }
 
         .game-card p {
             margin: 0;
             color: rgba(216, 224, 228, 0.68);
             font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .drawing-library {
@@ -381,216 +403,27 @@
             padding-top: 12px;
         }
 
-        .typing-test {
-            padding: 28px 26px 32px;
-            text-align: left;
-        }
-
-        .typing-stats {
-            display: flex;
-            justify-content: center;
-            gap: 28px;
-            margin-bottom: 22px;
-        }
-
-        .typing-stat {
-            text-align: center;
-        }
-
-        .typing-stat .stat-value {
-            display: block;
-            font-family: 'Courier New', monospace;
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--page-gold);
-            text-shadow: 0 0 14px rgba(217, 194, 154, 0.4);
-        }
-
-        .typing-stat .stat-label {
-            display: block;
-            font-family: 'Courier New', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.2em;
-            color: rgba(216, 224, 228, 0.55);
-            margin-top: 2px;
-        }
-
-        .typing-passage {
-            font-family: 'Courier New', monospace;
-            font-size: 1.15rem;
-            line-height: 1.9;
-            letter-spacing: 0.02em;
-            padding: 20px 22px;
-            border-radius: 4px;
-            background: rgba(4, 6, 10, 0.55);
-            border: 1px solid rgba(217, 194, 154, 0.16);
-            user-select: none;
-        }
-
-        .typing-passage span {
-            color: rgba(216, 224, 228, 0.4);
-            border-bottom: 2px solid transparent;
-        }
-
-        .typing-passage span.is-correct {
-            color: var(--page-ice);
-        }
-
-        .typing-passage span.is-incorrect {
-            color: #ff8a8a;
-            background: rgba(255, 90, 90, 0.12);
-            border-radius: 2px;
-        }
-
-        .typing-passage span.is-current {
-            border-bottom-color: var(--page-gold);
-            color: var(--page-gold);
-        }
-
-        .typing-input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .typing-footer {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 18px;
-        }
-
-        .typing-hint {
-            font-family: 'Courier New', monospace;
-            font-size: 0.68rem;
-            letter-spacing: 0.14em;
-            color: rgba(216, 224, 228, 0.5);
-        }
-
-        .typing-restart,
         .game-back {
-            font-family: 'Courier New', monospace;
-            font-size: 0.65rem;
-            font-weight: 700;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: none;
             color: var(--page-gold);
-            background: rgba(5, 8, 13, 0.68);
-            border: 1px solid var(--page-line);
-            border-radius: 3px;
-            padding: 9px 14px;
+            background: rgba(10, 14, 20, 0.6);
+            border: 1px solid rgba(217, 194, 154, 0.26);
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            padding: 10px 20px;
             cursor: pointer;
             transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
         }
 
-        .typing-restart:hover,
         .game-back:hover {
-            background: rgba(217, 194, 154, 0.08);
+            background: rgba(217, 194, 154, 0.1);
             border-color: rgba(217, 194, 154, 0.72);
             box-shadow: 0 0 24px rgba(217, 194, 154, 0.2);
             transform: translateY(-2px);
-        }
-
-        .game-back-row {
-            display: flex;
-            justify-content: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .typing-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .typing-option {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(216, 224, 228, 0.6);
-            background: rgba(5, 8, 13, 0.5);
-            border: 1px solid rgba(217, 194, 154, 0.18);
-            border-radius: 999px;
-            padding: 7px 13px;
-            cursor: pointer;
-            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
-        }
-
-        .typing-option:hover {
-            border-color: rgba(217, 194, 154, 0.5);
-        }
-
-        .typing-option input {
-            accent-color: var(--page-gold);
-            margin: 0;
-        }
-
-        .typing-option.is-active {
-            color: var(--page-gold);
-            border-color: rgba(217, 194, 154, 0.72);
-            background: rgba(217, 194, 154, 0.08);
-        }
-
-        .typing-word-count {
-            margin-bottom: 14px;
-        }
-
-        .typing-option input[type="radio"] {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .typing-custom-count {
-            width: 46px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            color: inherit;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(217, 194, 154, 0.24);
-            border-radius: 3px;
-            padding: 3px 5px;
-        }
-
-        .typing-font-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .typing-font-label {
-            font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            font-weight: 700;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: rgba(216, 224, 228, 0.6);
-        }
-
-        .typing-font-select {
-            font-family: 'Courier New', monospace;
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            color: var(--page-gold);
-            background: rgba(5, 8, 13, 0.5);
-            border: 1px solid rgba(217, 194, 154, 0.28);
-            border-radius: 4px;
-            padding: 7px 10px;
-            cursor: pointer;
-        }
-
-        .typing-font-select:hover {
-            border-color: rgba(217, 194, 154, 0.6);
         }
 
         @media (max-width: 600px) {
@@ -621,7 +454,7 @@
 
     <!-- Navigation Back -->
     <div class="back-btn">
-        <a href="../index.html">← BACK TO CORE</a>
+        <a href="../index.html">← Back to Core</a>
     </div>
 
     <!-- Main Content -->
@@ -631,24 +464,20 @@
 
         <section class="game-selection" id="game-selection" aria-label="Select a game">
             <div class="game-grid course-grid">
-                <button class="game-card course-card" id="select-typing-test" type="button" aria-controls="typing-test">
-                    <h3 class="course-name">TYPING TEST</h3>
+                <a class="game-card course-card" href="typing-test.html">
+                    <h3 class="course-name">Typing Test</h3>
                     <p>Test your speed and accuracy with a customizable typing challenge.</p>
-                </button>
+                </a>
                 <button class="game-card course-card" id="select-drawing-library" type="button" aria-controls="drawing-library">
-                    <h3 class="course-name">DRAWING REFERENCES</h3>
+                    <h3 class="course-name">Drawing References</h3>
                     <p>Browse curated references and build your drawing practice library.</p>
                 </button>
-                <div class="game-card course-card">
-                    <h3 class="course-name">MORE COMING SOON</h3>
-                    <p>More playable builds and prototypes are on the way.</p>
-                </div>
             </div>
         </section>
 
         <section class="drawing-library course-card" id="drawing-library" aria-labelledby="drawing-library-title" hidden>
             <div class="drawing-library-top">
-                <button class="game-back" id="drawing-back" type="button">← ALL GAMES</button>
+                <button class="game-back" id="drawing-back" type="button">← All Games</button>
                 <div class="drawing-auth-controls">
                     <span class="drawing-status" id="drawing-auth-status" aria-live="polite">Connecting to the reference library...</span>
                     <button class="drawing-sign-in" id="drawing-sign-in" type="button" hidden>Sign in with Google</button>
@@ -710,97 +539,6 @@
             </dialog>
         </section>
 
-        <div class="typing-test course-card" id="typing-test" hidden>
-            <div class="game-back-row">
-                <button class="game-back" id="game-back" type="button">← ALL GAMES</button>
-            </div>
-            <div class="typing-stats">
-                <div class="typing-stat">
-                    <span class="stat-value" id="typing-wpm">0</span>
-                    <span class="stat-label">WPM</span>
-                </div>
-                <div class="typing-stat">
-                    <span class="stat-value" id="typing-accuracy">100%</span>
-                    <span class="stat-label">ACCURACY</span>
-                </div>
-                <div class="typing-stat">
-                    <span class="stat-value" id="typing-time">0.0s</span>
-                    <span class="stat-label">TIME</span>
-                </div>
-            </div>
-
-            <div class="typing-font-row">
-                <label class="typing-font-label" for="typing-font">FONT</label>
-                <select class="typing-font-select" id="typing-font">
-                    <optgroup label="Easy — clear, unambiguous glyphs">
-                        <option value="Consolas, 'Courier New', monospace">Consolas</option>
-                        <option value="'Courier New', Courier, monospace" selected>Courier New</option>
-                        <option value="'Lucida Console', Monaco, monospace">Lucida Console</option>
-                    </optgroup>
-                    <optgroup label="Medium — standard, everyday fonts">
-                        <option value="Arial, Helvetica, sans-serif">Arial</option>
-                        <option value="Verdana, Geneva, sans-serif">Verdana</option>
-                        <option value="Georgia, 'Times New Roman', serif">Georgia</option>
-                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                    </optgroup>
-                    <optgroup label="Hard — decorative, lower legibility">
-                        <option value="Papyrus, fantasy">Papyrus</option>
-                        <option value="Impact, 'Arial Narrow', sans-serif">Impact (Condensed)</option>
-                        <option value="'Brush Script MT', cursive">Brush Script MT</option>
-                        <option value="'Segoe Script', 'Brush Script MT', cursive">Segoe Script</option>
-                    </optgroup>
-                </select>
-            </div>
-
-            <div class="typing-options typing-word-count" id="typing-word-count">
-                <label class="typing-option" data-count="10">
-                    <input type="radio" name="word-count" value="10"> 10 Words
-                </label>
-                <label class="typing-option is-active" data-count="25">
-                    <input type="radio" name="word-count" value="25" checked> 25 Words
-                </label>
-                <label class="typing-option" data-count="50">
-                    <input type="radio" name="word-count" value="50"> 50 Words
-                </label>
-                <label class="typing-option" data-count="custom">
-                    <input type="radio" name="word-count" value="custom"> Custom
-                    <input type="number" id="custom-word-count" class="typing-custom-count" min="1" max="300" value="25">
-                </label>
-            </div>
-
-            <div class="typing-options" id="typing-options">
-                <label class="typing-option is-active" data-option="numbers">
-                    <input type="checkbox" id="opt-numbers" checked> Numbers
-                </label>
-                <label class="typing-option is-active" data-option="punctuation">
-                    <input type="checkbox" id="opt-punctuation" checked> Punctuation
-                </label>
-                <label class="typing-option is-active" data-option="symbols">
-                    <input type="checkbox" id="opt-symbols" checked> Symbols &amp; Brackets
-                </label>
-            </div>
-
-            <div class="typing-options" id="typing-case-options">
-                <label class="typing-option" data-case="normal">
-                    <input type="radio" name="case-mode" value="normal"> NO CAPS
-                </label>
-                <label class="typing-option is-active" data-case="some">
-                    <input type="radio" name="case-mode" value="some" checked> SOME CAPS
-                </label>
-                <label class="typing-option" data-case="all">
-                    <input type="radio" name="case-mode" value="all"> ALL CAPS
-                </label>
-            </div>
-
-            <div class="typing-passage" id="typing-passage" tabindex="0"></div>
-            <textarea class="typing-input" id="typing-input" tabindex="-1" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
-
-            <div class="typing-footer">
-                <span class="typing-hint">START TYPING, OR PRESS TAB THEN ENTER TO RESTART</span>
-                <button class="typing-restart" id="typing-restart" type="button">RESTART</button>
-            </div>
-        </div>
-
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -808,473 +546,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
     <script src="firebase-config.js"></script>
-    <script>
-        const wordBank = [
-            'time', 'year', 'people', 'way', 'day', 'man', 'thing', 'woman', 'life', 'child',
-            'world', 'school', 'state', 'family', 'student', 'group', 'country', 'problem', 'hand', 'part',
-            'place', 'case', 'week', 'company', 'system', 'program', 'question', 'work', 'government', 'number',
-            'night', 'point', 'home', 'water', 'room', 'mother', 'area', 'money', 'story', 'fact',
-            'month', 'lot', 'book', 'eye', 'job', 'word', 'business', 'issue', 'side', 'kind',
-            'head', 'house', 'service', 'friend', 'father', 'power', 'hour', 'game', 'line', 'end',
-            'member', 'law', 'car', 'city', 'community', 'name', 'president', 'team', 'minute', 'idea',
-            'body', 'information', 'back', 'parent', 'face', 'others', 'level', 'office', 'door', 'health',
-            'person', 'art', 'war', 'history', 'party', 'result', 'change', 'morning', 'reason', 'research',
-            'girl', 'guy', 'moment', 'air', 'teacher', 'force', 'education', 'foot', 'boy', 'age',
-            'policy', 'process', 'music', 'market', 'sense', 'nation', 'plan', 'college', 'interest', 'death',
-            'experience', 'effect', 'use', 'class', 'control', 'care', 'field', 'development', 'role', 'effort',
-            'rate', 'heart', 'drug', 'show', 'leader', 'light', 'voice', 'wife', 'police', 'mind',
-            'price', 'report', 'decision', 'son', 'view', 'relationship', 'town', 'road', 'arm', 'value',
-            'staff', 'action', 'age', 'bank', 'culture', 'bird', 'water', 'space', 'table', 'goal',
-            'star', 'season', 'letter', 'dream', 'ocean', 'forest', 'river', 'mountain', 'garden', 'stone',
-            'cloud', 'wind', 'sound', 'color', 'shape', 'paper', 'code', 'signal', 'engine', 'circuit',
-            'quiet', 'bright', 'simple', 'quick', 'strong', 'gentle', 'brave', 'clever', 'happy', 'proud'
-        ];
-
-        const punctuationMarks = ['.', ',', ';', ':', '!', '?'];
-        const bracketPairs = ['()', '[]', '{}', '<>'];
-        const symbolChars = ['@', '#', '$', '%', '^', '&', '*', '-', '_', '+', '=', '/', '\\', '|', '~', '`'];
-        let wordCount = 25;
-
-        function randomItem(list) {
-            return list[Math.floor(Math.random() * list.length)];
-        }
-
-        function randomNumberToken() {
-            const length = 1 + Math.floor(Math.random() * 3);
-            let token = '';
-            for (let i = 0; i < length; i += 1) token += Math.floor(Math.random() * 10);
-            return token;
-        }
-
-        function wrapWithSymbols(word) {
-            if (Math.random() < 0.55) {
-                const pair = randomItem(bracketPairs);
-                return `${pair[0]}${word}${pair[1]}`;
-            }
-            const symbol = randomItem(symbolChars);
-            return Math.random() < 0.5 ? `${symbol}${word}` : `${word}${symbol}`;
-        }
-
-        function generateWords(options) {
-            const tokens = [];
-            const caseMode = options.caseMode || 'normal';
-            let capitalizeNext = true;
-
-            for (let i = 0; i < wordCount; i += 1) {
-                if (options.numbers && Math.random() < 0.15) {
-                    tokens.push(randomNumberToken());
-                    continue;
-                }
-
-                let word = randomItem(wordBank);
-
-                if (options.symbols && Math.random() < 0.12) {
-                    word = wrapWithSymbols(word);
-                }
-
-                if (caseMode === 'all') {
-                    word = word.toUpperCase();
-                } else if (caseMode === 'some') {
-                    const mixedCaseChance = Math.random();
-                    if (capitalizeNext || mixedCaseChance < 0.28) {
-                        word = word.toUpperCase();
-                    } else {
-                        word = word.toLowerCase();
-                    }
-                    capitalizeNext = false;
-                } else if (capitalizeNext) {
-                    word = word.charAt(0).toUpperCase() + word.slice(1);
-                    capitalizeNext = false;
-                }
-
-                if (options.punctuation && Math.random() < 0.18) {
-                    const mark = randomItem(punctuationMarks);
-                    word += mark;
-                    if (mark === '.' || mark === '!' || mark === '?') capitalizeNext = true;
-                }
-
-                tokens.push(word);
-            }
-
-            return tokens.join(' ');
-        }
-
-        const passageEl = document.getElementById('typing-passage');
-        const inputEl = document.getElementById('typing-input');
-        const wpmEl = document.getElementById('typing-wpm');
-        const accuracyEl = document.getElementById('typing-accuracy');
-        const timeEl = document.getElementById('typing-time');
-        const restartBtn = document.getElementById('typing-restart');
-        const gameSelectionEl = document.getElementById('game-selection');
-        const typingTestEl = document.getElementById('typing-test');
-        const selectTypingTestBtn = document.getElementById('select-typing-test');
-        const gameBackBtn = document.getElementById('game-back');
-        const optionCheckboxes = {
-            numbers: document.getElementById('opt-numbers'),
-            punctuation: document.getElementById('opt-punctuation'),
-            symbols: document.getElementById('opt-symbols')
-        };
-        const defaultSettings = {
-            numbers: true,
-            punctuation: true,
-            symbols: true,
-            caseMode: 'some',
-            wordCount: '25',
-            customWordCount: '25',
-            font: "'Courier New', Courier, monospace"
-        };
-        const caseModeRadios = [...document.querySelectorAll('input[name="case-mode"]')];
-        const wordCountRadios = [...document.querySelectorAll('input[name="word-count"]')];
-        const customWordCountInput = document.getElementById('custom-word-count');
-        const fontSelect = document.getElementById('typing-font');
-        const localStateKey = 'core-typing-test-state';
-        let currentUser = null;
-        let localState = { settings: {}, runs: [] };
-
-        let currentPassage = '';
-        let startTime = null;
-        let finished = false;
-        let timerInterval = null;
-        let totalTyped = 0;
-        let totalCorrect = 0;
-
-        function getSettings() {
-            const selectedWordCount = wordCountRadios.find((radio) => radio.checked);
-            const selectedCaseMode = caseModeRadios.find((radio) => radio.checked);
-            return {
-                numbers: optionCheckboxes.numbers.checked,
-                punctuation: optionCheckboxes.punctuation.checked,
-                symbols: optionCheckboxes.symbols.checked,
-                caseMode: selectedCaseMode?.value || 'some',
-                wordCount: selectedWordCount?.value || '25',
-                customWordCount: customWordCountInput.value,
-                font: fontSelect.value
-            };
-        }
-
-        function updateHistoryLabel() {
-        }
-
-        function saveLocalState() {
-            localState.settings = getSettings();
-            localStorage.setItem(localStateKey, JSON.stringify(localState));
-            updateHistoryLabel();
-            if (currentUser && window.coreFirestore) {
-                window.coreFirestore.collection('users').doc(currentUser.uid).set({ settings: localState.settings }, { merge: true }).catch(() => {});
-            }
-        }
-
-        function applySettings(settings) {
-            const mergedSettings = { ...defaultSettings, ...settings };
-
-            Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
-                checkbox.checked = mergedSettings[key] === true;
-                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
-            });
-
-            const defaultCaseMode = mergedSettings.caseMode || 'some';
-            const savedCaseMode = caseModeRadios.find((radio) => radio.value === defaultCaseMode) || caseModeRadios.find((radio) => radio.value === 'some');
-            savedCaseMode.checked = true;
-            caseModeRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
-
-            const savedWordCount = wordCountRadios.find((radio) => radio.value === mergedSettings.wordCount) || wordCountRadios.find((radio) => radio.value === '25');
-            savedWordCount.checked = true;
-            customWordCountInput.value = mergedSettings.customWordCount || '25';
-            fontSelect.value = mergedSettings.font || fontSelect.value;
-            passageEl.style.fontFamily = fontSelect.value;
-        }
-
-        function loadLocalState() {
-            try {
-                const saved = JSON.parse(localStorage.getItem(localStateKey) || '{}');
-                localState = {
-                    settings: saved.settings || {},
-                    runs: Array.isArray(saved.runs) ? saved.runs.slice(0, 25) : []
-                };
-            } catch {
-                localState = { settings: {}, runs: [] };
-            }
-
-            const settings = {
-                numbers: defaultSettings.numbers,
-                punctuation: defaultSettings.punctuation,
-                symbols: defaultSettings.symbols,
-                caseMode: defaultSettings.caseMode,
-                wordCount: defaultSettings.wordCount,
-                customWordCount: defaultSettings.customWordCount,
-                font: defaultSettings.font
-            };
-            applySettings(settings);
-            updateHistoryLabel();
-        }
-
-        function saveCompletedRun() {
-            const elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
-            const run = {
-                wpm: Number(wpmEl.textContent) || 0,
-                accuracy: Number.parseInt(accuracyEl.textContent, 10) || 0,
-                time: Number(elapsed.toFixed(1)),
-                completedAt: new Date().toISOString(),
-                settings: getSettings()
-            };
-            localState.runs.unshift(run);
-            localState.runs = localState.runs.slice(0, 25);
-            saveLocalState();
-            if (currentUser && window.coreFirestore) {
-                window.coreFirestore.collection('users').doc(currentUser.uid).collection('typingRuns').add(run).catch(() => {});
-            }
-        }
-
-        function getSelectedOptions() {
-            return getSettings();
-        }
-
-        function loadPassage() {
-            currentPassage = generateWords(getSelectedOptions());
-            passageEl.innerHTML = '';
-            [...currentPassage].forEach((char) => {
-                const span = document.createElement('span');
-                span.textContent = char;
-                passageEl.appendChild(span);
-            });
-            passageEl.querySelector('span').classList.add('is-current');
-        }
-
-        function resetTest() {
-            clearInterval(timerInterval);
-            startTime = null;
-            finished = false;
-            totalTyped = 0;
-            totalCorrect = 0;
-            inputEl.value = '';
-            wpmEl.textContent = '0';
-            accuracyEl.textContent = '100%';
-            timeEl.textContent = '0.0s';
-            loadPassage();
-            inputEl.focus();
-            hideCustomCursor();
-        }
-
-        function hideCustomCursor() {
-            window.dispatchEvent(new Event('typing-test:hide-cursor'));
-        }
-
-        function updateTimer() {
-            if (!startTime) return;
-            const elapsed = (Date.now() - startTime) / 1000;
-            timeEl.textContent = `${elapsed.toFixed(1)}s`;
-        }
-
-        function updateStats(typedValue) {
-            const elapsedMinutes = startTime ? (Date.now() - startTime) / 60000 : 0;
-            const wordsTyped = typedValue.length / 5;
-            const wpm = elapsedMinutes > 0 ? Math.round(wordsTyped / elapsedMinutes) : 0;
-            wpmEl.textContent = String(Math.max(0, wpm));
-
-            const accuracy = totalTyped > 0 ? Math.round((totalCorrect / totalTyped) * 100) : 100;
-            accuracyEl.textContent = `${accuracy}%`;
-        }
-
-        function renderPassage(typedValue) {
-            const chars = passageEl.querySelectorAll('span');
-            chars.forEach((span, index) => {
-                span.classList.remove('is-correct', 'is-incorrect', 'is-current');
-                if (index < typedValue.length) {
-                    span.classList.add(typedValue[index] === currentPassage[index] ? 'is-correct' : 'is-incorrect');
-                } else if (index === typedValue.length) {
-                    span.classList.add('is-current');
-                }
-            });
-        }
-
-        inputEl.addEventListener('input', () => {
-            if (finished) return;
-            const typedValue = inputEl.value;
-
-            if (!startTime && typedValue.length > 0) {
-                startTime = Date.now();
-                timerInterval = window.setInterval(updateTimer, 100);
-                hideCustomCursor();
-            }
-
-            totalTyped = typedValue.length;
-            totalCorrect = [...typedValue].filter((char, index) => char === currentPassage[index]).length;
-
-            renderPassage(typedValue);
-            updateStats(typedValue);
-
-            if (typedValue.length >= currentPassage.length) {
-                finished = true;
-                clearInterval(timerInterval);
-                updateTimer();
-                inputEl.blur();
-                saveCompletedRun();
-            }
-        });
-
-        passageEl.addEventListener('click', () => inputEl.focus());
-        passageEl.addEventListener('focus', () => inputEl.focus());
-        restartBtn.addEventListener('click', resetTest);
-
-        selectTypingTestBtn.addEventListener('click', () => {
-            gameSelectionEl.hidden = true;
-            typingTestEl.hidden = false;
-            resetTest();
-        });
-
-        gameBackBtn.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            inputEl.blur();
-            typingTestEl.hidden = true;
-            gameSelectionEl.hidden = false;
-        });
-
-        // Tab jumps straight to Restart so Tab + Enter restarts without needing to click the text
-        function jumpToRestartOnTab(event) {
-            if (event.key === 'Tab' && !event.shiftKey) {
-                event.preventDefault();
-                restartBtn.focus();
-            }
-        }
-
-        inputEl.addEventListener('keydown', jumpToRestartOnTab);
-        passageEl.addEventListener('keydown', jumpToRestartOnTab);
-
-        Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
-            checkbox.addEventListener('change', () => {
-                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
-                saveLocalState();
-                resetTest();
-            });
-        });
-
-        caseModeRadios.forEach((radio) => {
-            radio.addEventListener('change', () => {
-                caseModeRadios.forEach((option) => option.closest('.typing-option').classList.toggle('is-active', option.checked));
-                saveLocalState();
-                resetTest();
-            });
-        });
-
-        function applyWordCount() {
-            const selected = wordCountRadios.find((radio) => radio.checked);
-            if (!selected) return;
-
-            wordCountRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio === selected));
-
-            if (selected.value === 'custom') {
-                const custom = parseInt(customWordCountInput.value, 10);
-                wordCount = Number.isFinite(custom) && custom > 0 ? Math.min(custom, 300) : 25;
-            } else {
-                wordCount = parseInt(selected.value, 10);
-            }
-
-            resetTest();
-            saveLocalState();
-        }
-
-        wordCountRadios.forEach((radio) => {
-            radio.addEventListener('change', applyWordCount);
-        });
-
-        customWordCountInput.addEventListener('click', () => {
-            wordCountRadios.find((radio) => radio.value === 'custom').checked = true;
-        });
-
-        customWordCountInput.addEventListener('input', () => {
-            wordCountRadios.find((radio) => radio.value === 'custom').checked = true;
-            applyWordCount();
-        });
-
-        fontSelect.addEventListener('change', () => {
-            passageEl.style.fontFamily = fontSelect.value;
-            saveLocalState();
-        });
-        passageEl.style.fontFamily = fontSelect.value;
-
-        loadLocalState();
-        loadPassage();
-
-        function initializeGoogleSignIn() {
-            const config = window.CORE_FIREBASE_CONFIG;
-            if (!config) return;
-
-            try {
-                firebase.initializeApp(config);
-                const auth = firebase.auth();
-                const firestore = firebase.firestore();
-                window.coreFirestore = firestore;
-
-                auth.onAuthStateChanged(async (user) => {
-                    currentUser = user;
-
-                    if (!user) return;
-                    try {
-                        const snapshot = await firestore.collection('users').doc(user.uid).get();
-                        const cloudSettings = snapshot.exists ? snapshot.data().settings : null;
-                        if (cloudSettings) {
-                            localState.settings = { ...localState.settings, ...cloudSettings };
-                            applySettings(localState.settings);
-                            saveLocalState();
-                            resetTest();
-                        } else {
-                            await firestore.collection('users').doc(user.uid).set({ settings: getSettings() }, { merge: true });
-                        }
-
-                        const runsSnapshot = await firestore.collection('users').doc(user.uid)
-                            .collection('typingRuns').orderBy('completedAt', 'desc').limit(25).get();
-                        localState.runs = runsSnapshot.docs.map((runDoc) => runDoc.data());
-                        localStorage.setItem(localStateKey, JSON.stringify(localState));
-                        updateHistoryLabel();
-                    } catch {}
-                });
-            } catch {}
-        }
-
-        initializeGoogleSignIn();
-    </script>
-
     <script src="drawing-references.js"></script>
     <script src="page-motion.js"></script>
-    <script>
-        // deferred the same way page-motion.js is, so our pointermove listener registers
-        // after its listener and can override the cursor's "is-visible" class on the same event
-        function initializeCursorSuppression() {
-            let suppressed = false;
-            let originX = null;
-            let originY = null;
-            const MOVE_THRESHOLD = 12;
-
-            window.addEventListener('typing-test:hide-cursor', () => {
-                suppressed = true;
-                originX = null;
-                originY = null;
-                document.querySelector('.custom-cursor')?.classList.remove('is-visible');
-            });
-
-            window.addEventListener('pointermove', (event) => {
-                if (!suppressed) return;
-
-                if (originX === null) {
-                    originX = event.clientX;
-                    originY = event.clientY;
-                }
-
-                if (Math.hypot(event.clientX - originX, event.clientY - originY) > MOVE_THRESHOLD) {
-                    suppressed = false;
-                    return;
-                }
-
-                document.querySelector('.custom-cursor')?.classList.remove('is-visible');
-            });
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeCursorSuppression, { once: true });
-        } else {
-            initializeCursorSuppression();
-        }
-    </script>
 
 </body>
 </html>

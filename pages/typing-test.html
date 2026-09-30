@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../WEBSITE LOGO.png">
+    <title>TYPING TEST</title>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        .typing-page {
+            width: 100%;
+            max-width: none;
+            text-align: center;
+        }
+
+        body.subpage .typing-page {
+            max-width: none;
+            width: 100%;
+            min-height: 100vh;
+            padding: 26px clamp(16px, 6vw, 100px) 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        body.subpage.typing-page-body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .fullscreen-toggle {
+            position: fixed !important;
+            top: 18px;
+            right: 20px;
+            z-index: 20;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            width: max-content;
+            align-self: auto;
+            border-radius: 999px;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--page-gold);
+            background: rgba(10, 14, 20, 0.6);
+            border: 1px solid rgba(217, 194, 154, 0.26);
+            backdrop-filter: blur(8px);
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+        }
+
+        .fullscreen-toggle:hover {
+            background: rgba(217, 194, 154, 0.1);
+            border-color: rgba(217, 194, 154, 0.65);
+            transform: translateY(-2px);
+        }
+
+        .fullscreen-toggle:focus-visible {
+            outline: 2px solid var(--page-gold);
+            outline-offset: 4px;
+        }
+
+        body.subpage.typing-page-body .back-btn {
+            flex: 0 0 auto;
+            align-self: flex-start;
+            margin: 0;
+            max-width: none;
+            width: auto;
+            padding: 18px 20px 0;
+        }
+
+        body.subpage.typing-page-body .typing-page {
+            flex: 1 1 auto;
+            min-height: 0;
+            padding-top: 6px;
+            padding-bottom: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #typing-test {
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+            text-align: left;
+        }
+
+        .typing-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 8px;
+        }
+
+        .typing-totals {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin-bottom: 16px;
+        }
+
+        .typing-total {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .typing-total .total-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--page-gold);
+        }
+
+        .typing-total .total-label {
+            font-size: 0.56rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: rgba(216, 224, 228, 0.45);
+        }
+
+        .typing-stat {
+            text-align: center;
+        }
+
+        .typing-stat .stat-value {
+            display: block;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(1.5rem, 3.2vh, 2.4rem);
+            font-weight: 700;
+            color: var(--page-gold);
+            text-shadow: 0 0 14px rgba(217, 194, 154, 0.4);
+        }
+
+        .typing-stat .stat-label {
+            display: block;
+            font-family: 'Courier New', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            color: rgba(216, 224, 228, 0.55);
+            margin-top: 2px;
+        }
+
+        .typing-passage {
+            font-family: 'Courier New', monospace;
+            font-size: clamp(1rem, 2.4vh, 1.6rem);
+            line-height: 1.65;
+            letter-spacing: 0.02em;
+            padding: clamp(14px, 2.4vh, 28px);
+            border-radius: 4px;
+            background: rgba(4, 6, 10, 0.55);
+            border: 1px solid rgba(217, 194, 154, 0.16);
+            user-select: none;
+        }
+
+        .typing-passage span {
+            color: rgba(216, 224, 228, 0.4);
+            border-bottom: 2px solid transparent;
+        }
+
+        .typing-passage span.is-correct {
+            color: var(--page-ice);
+        }
+
+        .typing-passage span.is-incorrect {
+            color: #ff8a8a;
+            background: rgba(255, 90, 90, 0.12);
+            border-radius: 2px;
+        }
+
+        .typing-passage span.is-current {
+            border-bottom-color: var(--page-gold);
+            color: var(--page-gold);
+        }
+
+        .typing-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .typing-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 14px;
+            text-align: center;
+        }
+
+        .typing-hint {
+            font-family: 'Courier New', monospace;
+            font-size: 0.68rem;
+            letter-spacing: 0.14em;
+            color: rgba(216, 224, 228, 0.5);
+        }
+
+        .typing-restart {
+            font-family: 'Courier New', monospace;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--page-gold);
+            background: rgba(5, 8, 13, 0.68);
+            border: 1px solid var(--page-line);
+            border-radius: 3px;
+            padding: 9px 14px;
+            cursor: pointer;
+            transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .typing-restart:hover {
+            background: rgba(217, 194, 154, 0.08);
+            border-color: rgba(217, 194, 154, 0.72);
+            box-shadow: 0 0 24px rgba(217, 194, 154, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .typing-restart:focus-visible {
+            outline: 2px solid var(--page-gold);
+            outline-offset: 4px;
+        }
+
+        .typing-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .typing-option {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(216, 224, 228, 0.6);
+            background: rgba(5, 8, 13, 0.5);
+            border: 1px solid rgba(217, 194, 154, 0.18);
+            border-radius: 999px;
+            padding: 7px 13px;
+            cursor: pointer;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+
+        .typing-option:hover {
+            border-color: rgba(217, 194, 154, 0.5);
+        }
+
+        .typing-option input {
+            accent-color: var(--page-gold);
+            margin: 0;
+        }
+
+        .typing-option.is-active {
+            color: var(--page-gold);
+            border-color: rgba(217, 194, 154, 0.72);
+            background: rgba(217, 194, 154, 0.08);
+        }
+
+        .typing-word-count {
+            margin-bottom: 8px;
+        }
+
+        .typing-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .typing-custom-count {
+            width: 46px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: inherit;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(217, 194, 154, 0.24);
+            border-radius: 3px;
+            padding: 3px 5px;
+        }
+
+        .typing-font-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .typing-font-label {
+            font-family: 'Courier New', monospace;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(216, 224, 228, 0.6);
+        }
+
+        .typing-font-select {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: var(--page-gold);
+            background: rgba(5, 8, 13, 0.5);
+            border: 1px solid rgba(217, 194, 154, 0.28);
+            border-radius: 4px;
+            padding: 7px 10px;
+            cursor: pointer;
+        }
+
+        .typing-font-select:hover {
+            border-color: rgba(217, 194, 154, 0.6);
+        }
+
+        @media (max-width: 700px) {
+            body.subpage .typing-page {
+                padding: 12px 16px 20px;
+            }
+
+            body.subpage.typing-page-body .typing-page {
+                padding-top: 4px;
+                padding-bottom: 8px;
+            }
+
+            .typing-stats {
+                gap: 22px;
+                margin-bottom: 6px;
+            }
+
+            .typing-totals {
+                gap: 18px;
+                margin-bottom: 10px;
+            }
+
+            .fullscreen-toggle {
+                top: 12px;
+                right: 12px;
+                padding: 8px 12px;
+                font-size: 0.62rem;
+            }
+        }
+
+    </style>
+    <link rel="stylesheet" href="page-theme.css">
+</head>
+<body class="subpage typing-page-body">
+
+    <!-- Navigation Back -->
+    <div class="back-btn">
+        <a href="games.html">← Back to Games</a>
+    </div>
+
+    <button class="fullscreen-toggle" id="fullscreen-toggle" type="button">⛶ Fullscreen</button>
+
+    <!-- Main Content -->
+    <div class="typing-page">
+        <div id="typing-test">
+            <div class="typing-stats">
+                <div class="typing-stat">
+                    <span class="stat-value" id="typing-wpm">0</span>
+                    <span class="stat-label">WPM</span>
+                </div>
+                <div class="typing-stat">
+                    <span class="stat-value" id="typing-accuracy">100%</span>
+                    <span class="stat-label">ACCURACY</span>
+                </div>
+                <div class="typing-stat">
+                    <span class="stat-value" id="typing-time">0.0s</span>
+                    <span class="stat-label">TIME</span>
+                </div>
+            </div>
+
+            <div class="typing-totals" id="typing-totals">
+                <div class="typing-total">
+                    <span class="total-value" id="typing-total-started">0</span>
+                    <span class="total-label">Started</span>
+                </div>
+                <div class="typing-total">
+                    <span class="total-value" id="typing-total-completed">0</span>
+                    <span class="total-label">Completed</span>
+                </div>
+            </div>
+
+            <div class="typing-font-row">
+                <label class="typing-font-label" for="typing-font">FONT</label>
+                <select class="typing-font-select" id="typing-font">
+                    <optgroup label="Easy — clear, unambiguous glyphs">
+                        <option value="Consolas, 'Courier New', monospace">Consolas</option>
+                        <option value="'Courier New', Courier, monospace" selected>Courier New</option>
+                        <option value="'Lucida Console', Monaco, monospace">Lucida Console</option>
+                    </optgroup>
+                    <optgroup label="Medium — standard, everyday fonts">
+                        <option value="Arial, Helvetica, sans-serif">Arial</option>
+                        <option value="Verdana, Geneva, sans-serif">Verdana</option>
+                        <option value="Georgia, 'Times New Roman', serif">Georgia</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    </optgroup>
+                    <optgroup label="Hard — decorative, lower legibility">
+                        <option value="Papyrus, fantasy">Papyrus</option>
+                        <option value="Impact, 'Arial Narrow', sans-serif">Impact (Condensed)</option>
+                        <option value="'Brush Script MT', cursive">Brush Script MT</option>
+                        <option value="'Segoe Script', 'Brush Script MT', cursive">Segoe Script</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="typing-options typing-word-count" id="typing-word-count">
+                <label class="typing-option" data-count="10">
+                    <input type="radio" name="word-count" value="10"> 10 Words
+                </label>
+                <label class="typing-option is-active" data-count="25">
+                    <input type="radio" name="word-count" value="25" checked> 25 Words
+                </label>
+                <label class="typing-option" data-count="50">
+                    <input type="radio" name="word-count" value="50"> 50 Words
+                </label>
+                <label class="typing-option" data-count="custom">
+                    <input type="radio" name="word-count" value="custom"> Custom
+                    <input type="number" id="custom-word-count" class="typing-custom-count" min="1" max="300" value="25">
+                </label>
+            </div>
+
+            <div class="typing-options" id="typing-options">
+                <label class="typing-option is-active" data-option="numbers">
+                    <input type="checkbox" id="opt-numbers" checked> Numbers
+                </label>
+                <label class="typing-option is-active" data-option="punctuation">
+                    <input type="checkbox" id="opt-punctuation" checked> Punctuation
+                </label>
+                <label class="typing-option is-active" data-option="symbols">
+                    <input type="checkbox" id="opt-symbols" checked> Symbols &amp; Brackets
+                </label>
+                <label class="typing-option is-active" data-option="camelCase">
+                    <input type="checkbox" id="opt-camelcase" checked> camelCase
+                </label>
+                <label class="typing-option is-active" data-option="snakeCase">
+                    <input type="checkbox" id="opt-snakecase" checked> snake_case
+                </label>
+                <label class="typing-option is-active" data-option="kebabCase">
+                    <input type="checkbox" id="opt-kebabcase" checked> kebab-case
+                </label>
+                <label class="typing-option is-active" data-option="operators">
+                    <input type="checkbox" id="opt-operators" checked> Code Operators
+                </label>
+                <label class="typing-option is-active" data-option="cli">
+                    <input type="checkbox" id="opt-cli" checked> Flags &amp; Paths
+                </label>
+            </div>
+
+            <div class="typing-options" id="typing-case-options">
+                <label class="typing-option" data-case="normal">
+                    <input type="radio" name="case-mode" value="normal"> NO CAPS
+                </label>
+                <label class="typing-option is-active" data-case="some">
+                    <input type="radio" name="case-mode" value="some" checked> SOME CAPS
+                </label>
+                <label class="typing-option" data-case="all">
+                    <input type="radio" name="case-mode" value="all"> ALL CAPS
+                </label>
+            </div>
+
+            <div class="typing-passage" id="typing-passage" tabindex="0"></div>
+            <textarea class="typing-input" id="typing-input" tabindex="-1" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+
+            <div class="typing-footer">
+                <span class="typing-hint">START TYPING, OR PRESS TAB THEN ENTER TO RESTART</span>
+                <button class="typing-restart" id="typing-restart" type="button">RESTART</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        const wordBank = [
+            'time', 'year', 'people', 'way', 'day', 'man', 'thing', 'woman', 'life', 'child',
+            'world', 'school', 'state', 'family', 'student', 'group', 'country', 'problem', 'hand', 'part',
+            'place', 'case', 'week', 'company', 'system', 'program', 'question', 'work', 'government', 'number',
+            'night', 'point', 'home', 'water', 'room', 'mother', 'area', 'money', 'story', 'fact',
+            'month', 'lot', 'book', 'eye', 'job', 'word', 'business', 'issue', 'side', 'kind',
+            'head', 'house', 'service', 'friend', 'father', 'power', 'hour', 'game', 'line', 'end',
+            'member', 'law', 'car', 'city', 'community', 'name', 'president', 'team', 'minute', 'idea',
+            'body', 'information', 'back', 'parent', 'face', 'others', 'level', 'office', 'door', 'health',
+            'person', 'art', 'war', 'history', 'party', 'result', 'change', 'morning', 'reason', 'research',
+            'girl', 'guy', 'moment', 'air', 'teacher', 'force', 'education', 'foot', 'boy', 'age',
+            'policy', 'process', 'music', 'market', 'sense', 'nation', 'plan', 'college', 'interest', 'death',
+            'experience', 'effect', 'use', 'class', 'control', 'care', 'field', 'development', 'role', 'effort',
+            'rate', 'heart', 'drug', 'show', 'leader', 'light', 'voice', 'wife', 'police', 'mind',
+            'price', 'report', 'decision', 'son', 'view', 'relationship', 'town', 'road', 'arm', 'value',
+            'staff', 'action', 'age', 'bank', 'culture', 'bird', 'water', 'space', 'table', 'goal',
+            'star', 'season', 'letter', 'dream', 'ocean', 'forest', 'river', 'mountain', 'garden', 'stone',
+            'cloud', 'wind', 'sound', 'color', 'shape', 'paper', 'code', 'signal', 'engine', 'circuit',
+            'quiet', 'bright', 'simple', 'quick', 'strong', 'gentle', 'brave', 'clever', 'happy', 'proud'
+        ];
+
+        const punctuationMarks = ['.', ',', ';', ':', '!', '?'];
+        const bracketPairs = ['()', '[]', '{}', '<>'];
+        const symbolChars = ['@', '#', '$', '%', '^', '&', '*', '-', '_', '+', '=', '/', '\\', '|', '~', '`'];
+        const codeOperators = ['=>', '===', '!==', '==', '!=', '&&', '||', '::', '->', '+=', '-=', '*=', '/=', '**', '??', '?.', '<=', '>=', '++', '--', '...'];
+        const fileExtensions = ['js', 'ts', 'py', 'rb', 'go', 'rs', 'java', 'cpp', 'c', 'json', 'yml', 'sh', 'md', 'txt', 'css', 'html'];
+        const pathPrefixes = ['./', '../', '~/', '/'];
+        const identifierStyles = ['camelCase', 'snakeCase', 'kebabCase'];
+        let wordCount = 25;
+
+        function randomItem(list) {
+            return list[Math.floor(Math.random() * list.length)];
+        }
+
+        function randomNumberToken() {
+            const length = 1 + Math.floor(Math.random() * 3);
+            let token = '';
+            for (let i = 0; i < length; i += 1) token += Math.floor(Math.random() * 10);
+            return token;
+        }
+
+        function wrapWithSymbols(word) {
+            if (Math.random() < 0.55) {
+                const pair = randomItem(bracketPairs);
+                return `${pair[0]}${word}${pair[1]}`;
+            }
+            const symbol = randomItem(symbolChars);
+            return Math.random() < 0.5 ? `${symbol}${word}` : `${word}${symbol}`;
+        }
+
+        function buildIdentifier(style) {
+            const partCount = 2 + Math.floor(Math.random() * 2);
+            const parts = [];
+            for (let i = 0; i < partCount; i += 1) parts.push(randomItem(wordBank).toLowerCase());
+
+            if (style === 'camelCase') {
+                return parts.map((part, i) => (i === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1))).join('');
+            }
+            if (style === 'snakeCase') {
+                return parts.join('_');
+            }
+            if (style === 'kebabCase') {
+                return parts.join('-');
+            }
+            return parts.join('');
+        }
+
+        // generic flag/path/env-var shapes built from the word bank, not real commands
+        function buildFlagToken() {
+            const word = randomItem(wordBank).toLowerCase();
+            return Math.random() < 0.4 ? `-${word.charAt(0)}` : `--${word}`;
+        }
+
+        function buildPathToken() {
+            const depth = 1 + Math.floor(Math.random() * 2);
+            const segments = [];
+            for (let i = 0; i < depth; i += 1) segments.push(randomItem(wordBank).toLowerCase());
+            let path = randomItem(pathPrefixes) + segments.join('/');
+            if (Math.random() < 0.6) path += `.${randomItem(fileExtensions)}`;
+            return path;
+        }
+
+        function buildEnvToken() {
+            return `$${randomItem(wordBank).toUpperCase()}`;
+        }
+
+        function buildCliToken() {
+            const roll = Math.random();
+            if (roll < 0.4) return buildFlagToken();
+            if (roll < 0.8) return buildPathToken();
+            return buildEnvToken();
+        }
+
+        function generateWords(options) {
+            const tokens = [];
+            const caseMode = options.caseMode || 'normal';
+            const enabledIdentifierStyles = identifierStyles.filter((style) => options[style]);
+            let capitalizeNext = true;
+
+            for (let i = 0; i < wordCount; i += 1) {
+                if (options.numbers && Math.random() < 0.15) {
+                    tokens.push(randomNumberToken());
+                    continue;
+                }
+
+                if (options.operators && Math.random() < 0.12) {
+                    tokens.push(randomItem(codeOperators));
+                    continue;
+                }
+
+                if (options.cli && Math.random() < 0.12) {
+                    tokens.push(buildCliToken());
+                    continue;
+                }
+
+                if (enabledIdentifierStyles.length && Math.random() < 0.2) {
+                    tokens.push(buildIdentifier(randomItem(enabledIdentifierStyles)));
+                    continue;
+                }
+
+                let word = randomItem(wordBank);
+
+                if (options.symbols && Math.random() < 0.12) {
+                    word = wrapWithSymbols(word);
+                }
+
+                if (caseMode === 'all') {
+                    word = word.toUpperCase();
+                } else if (caseMode === 'some') {
+                    const mixedCaseChance = Math.random();
+                    if (capitalizeNext || mixedCaseChance < 0.28) {
+                        word = word.toUpperCase();
+                    } else {
+                        word = word.toLowerCase();
+                    }
+                    capitalizeNext = false;
+                } else if (capitalizeNext) {
+                    word = word.charAt(0).toUpperCase() + word.slice(1);
+                    capitalizeNext = false;
+                }
+
+                if (options.punctuation && Math.random() < 0.18) {
+                    const mark = randomItem(punctuationMarks);
+                    word += mark;
+                    if (mark === '.' || mark === '!' || mark === '?') capitalizeNext = true;
+                }
+
+                tokens.push(word);
+            }
+
+            return tokens.join(' ');
+        }
+
+        const passageEl = document.getElementById('typing-passage');
+        const inputEl = document.getElementById('typing-input');
+        const wpmEl = document.getElementById('typing-wpm');
+        const accuracyEl = document.getElementById('typing-accuracy');
+        const timeEl = document.getElementById('typing-time');
+        const restartBtn = document.getElementById('typing-restart');
+        const optionCheckboxes = {
+            numbers: document.getElementById('opt-numbers'),
+            punctuation: document.getElementById('opt-punctuation'),
+            symbols: document.getElementById('opt-symbols'),
+            camelCase: document.getElementById('opt-camelcase'),
+            snakeCase: document.getElementById('opt-snakecase'),
+            kebabCase: document.getElementById('opt-kebabcase'),
+            operators: document.getElementById('opt-operators'),
+            cli: document.getElementById('opt-cli')
+        };
+        const defaultSettings = {
+            numbers: true,
+            punctuation: true,
+            symbols: true,
+            camelCase: true,
+            snakeCase: true,
+            kebabCase: true,
+            operators: true,
+            cli: true,
+            caseMode: 'some',
+            wordCount: '25',
+            customWordCount: '25',
+            font: "'Courier New', Courier, monospace"
+        };
+        const caseModeRadios = [...document.querySelectorAll('input[name="case-mode"]')];
+        const wordCountRadios = [...document.querySelectorAll('input[name="word-count"]')];
+        const customWordCountInput = document.getElementById('custom-word-count');
+        const fontSelect = document.getElementById('typing-font');
+        const localStateKey = 'core-typing-test-state';
+        const totalStartedEl = document.getElementById('typing-total-started');
+        const totalCompletedEl = document.getElementById('typing-total-completed');
+        let currentUser = null;
+        let localState = { settings: {}, runs: [], stats: { started: 0, completed: 0 } };
+
+        let currentPassage = '';
+        let startTime = null;
+        let finished = false;
+        let timerInterval = null;
+        let totalTyped = 0;
+        let totalCorrect = 0;
+
+        function getSettings() {
+            const selectedWordCount = wordCountRadios.find((radio) => radio.checked);
+            const selectedCaseMode = caseModeRadios.find((radio) => radio.checked);
+            return {
+                numbers: optionCheckboxes.numbers.checked,
+                punctuation: optionCheckboxes.punctuation.checked,
+                symbols: optionCheckboxes.symbols.checked,
+                camelCase: optionCheckboxes.camelCase.checked,
+                snakeCase: optionCheckboxes.snakeCase.checked,
+                kebabCase: optionCheckboxes.kebabCase.checked,
+                operators: optionCheckboxes.operators.checked,
+                cli: optionCheckboxes.cli.checked,
+                caseMode: selectedCaseMode?.value || 'some',
+                wordCount: selectedWordCount?.value || '25',
+                customWordCount: customWordCountInput.value,
+                font: fontSelect.value
+            };
+        }
+
+        function updateHistoryLabel() {
+        }
+
+        function saveLocalState() {
+            localState.settings = getSettings();
+            localStorage.setItem(localStateKey, JSON.stringify(localState));
+            updateHistoryLabel();
+            if (currentUser && window.coreFirestore) {
+                window.coreFirestore.collection('users').doc(currentUser.uid).set({ settings: localState.settings, stats: localState.stats }, { merge: true }).catch(() => {});
+            }
+        }
+
+        function updateTotalsDisplay() {
+            totalStartedEl.textContent = String(localState.stats.started);
+            totalCompletedEl.textContent = String(localState.stats.completed);
+        }
+
+        function applySettings(settings) {
+            const mergedSettings = { ...defaultSettings, ...settings };
+
+            Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
+                checkbox.checked = mergedSettings[key] === true;
+                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+            });
+
+            const defaultCaseMode = mergedSettings.caseMode || 'some';
+            const savedCaseMode = caseModeRadios.find((radio) => radio.value === defaultCaseMode) || caseModeRadios.find((radio) => radio.value === 'some');
+            savedCaseMode.checked = true;
+            caseModeRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
+
+            const savedWordCount = wordCountRadios.find((radio) => radio.value === mergedSettings.wordCount) || wordCountRadios.find((radio) => radio.value === '25');
+            savedWordCount.checked = true;
+            customWordCountInput.value = mergedSettings.customWordCount || '25';
+            fontSelect.value = mergedSettings.font || fontSelect.value;
+            passageEl.style.fontFamily = fontSelect.value;
+        }
+
+        function loadLocalState() {
+            try {
+                const saved = JSON.parse(localStorage.getItem(localStateKey) || '{}');
+                localState = {
+                    settings: saved.settings || {},
+                    runs: Array.isArray(saved.runs) ? saved.runs.slice(0, 25) : [],
+                    stats: {
+                        started: Number(saved.stats?.started) || 0,
+                        completed: Number(saved.stats?.completed) || 0
+                    }
+                };
+            } catch {
+                localState = { settings: {}, runs: [], stats: { started: 0, completed: 0 } };
+            }
+
+            const settings = {
+                numbers: defaultSettings.numbers,
+                punctuation: defaultSettings.punctuation,
+                symbols: defaultSettings.symbols,
+                camelCase: defaultSettings.camelCase,
+                snakeCase: defaultSettings.snakeCase,
+                kebabCase: defaultSettings.kebabCase,
+                operators: defaultSettings.operators,
+                cli: defaultSettings.cli,
+                caseMode: defaultSettings.caseMode,
+                wordCount: defaultSettings.wordCount,
+                customWordCount: defaultSettings.customWordCount,
+                font: defaultSettings.font,
+                ...localState.settings
+            };
+            applySettings(settings);
+            updateHistoryLabel();
+            updateTotalsDisplay();
+        }
+
+        function saveCompletedRun() {
+            const elapsed = startTime ? (Date.now() - startTime) / 1000 : 0;
+            const run = {
+                wpm: Number(wpmEl.textContent) || 0,
+                accuracy: Number.parseInt(accuracyEl.textContent, 10) || 0,
+                time: Number(elapsed.toFixed(1)),
+                completedAt: new Date().toISOString(),
+                settings: getSettings()
+            };
+            localState.runs.unshift(run);
+            localState.runs = localState.runs.slice(0, 25);
+            localState.stats.completed += 1;
+            updateTotalsDisplay();
+            saveLocalState();
+            if (currentUser && window.coreFirestore) {
+                window.coreFirestore.collection('users').doc(currentUser.uid).collection('typingRuns').add(run).catch(() => {});
+            }
+        }
+
+        function getSelectedOptions() {
+            return getSettings();
+        }
+
+        function loadPassage() {
+            currentPassage = generateWords(getSelectedOptions());
+            passageEl.innerHTML = '';
+            [...currentPassage].forEach((char) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                passageEl.appendChild(span);
+            });
+            passageEl.querySelector('span').classList.add('is-current');
+        }
+
+        function resetTest() {
+            clearInterval(timerInterval);
+            startTime = null;
+            finished = false;
+            totalTyped = 0;
+            totalCorrect = 0;
+            inputEl.value = '';
+            wpmEl.textContent = '0';
+            accuracyEl.textContent = '100%';
+            timeEl.textContent = '0.0s';
+            loadPassage();
+            inputEl.focus();
+            hideCustomCursor();
+        }
+
+        function hideCustomCursor() {
+            window.dispatchEvent(new Event('typing-test:hide-cursor'));
+        }
+
+        function updateTimer() {
+            if (!startTime) return;
+            const elapsed = (Date.now() - startTime) / 1000;
+            timeEl.textContent = `${elapsed.toFixed(1)}s`;
+        }
+
+        function updateStats(typedValue) {
+            const elapsedMinutes = startTime ? (Date.now() - startTime) / 60000 : 0;
+            const wordsTyped = typedValue.length / 5;
+            const wpm = elapsedMinutes > 0 ? Math.round(wordsTyped / elapsedMinutes) : 0;
+            wpmEl.textContent = String(Math.max(0, wpm));
+
+            const accuracy = totalTyped > 0 ? Math.round((totalCorrect / totalTyped) * 100) : 100;
+            accuracyEl.textContent = `${accuracy}%`;
+        }
+
+        function renderPassage(typedValue) {
+            const chars = passageEl.querySelectorAll('span');
+            chars.forEach((span, index) => {
+                span.classList.remove('is-correct', 'is-incorrect', 'is-current');
+                if (index < typedValue.length) {
+                    span.classList.add(typedValue[index] === currentPassage[index] ? 'is-correct' : 'is-incorrect');
+                } else if (index === typedValue.length) {
+                    span.classList.add('is-current');
+                }
+            });
+        }
+
+        inputEl.addEventListener('input', () => {
+            if (finished) return;
+            const typedValue = inputEl.value;
+
+            if (!startTime && typedValue.length > 0) {
+                startTime = Date.now();
+                timerInterval = window.setInterval(updateTimer, 100);
+                hideCustomCursor();
+                localState.stats.started += 1;
+                updateTotalsDisplay();
+                saveLocalState();
+            }
+
+            totalTyped = typedValue.length;
+            totalCorrect = [...typedValue].filter((char, index) => char === currentPassage[index]).length;
+
+            renderPassage(typedValue);
+            updateStats(typedValue);
+
+            if (typedValue.length >= currentPassage.length) {
+                finished = true;
+                clearInterval(timerInterval);
+                updateTimer();
+                inputEl.blur();
+                saveCompletedRun();
+            }
+        });
+
+        passageEl.addEventListener('click', () => inputEl.focus());
+        passageEl.addEventListener('focus', () => inputEl.focus());
+        restartBtn.addEventListener('click', resetTest);
+
+        const fullscreenBtn = document.getElementById('fullscreen-toggle');
+        function updateFullscreenLabel() {
+            fullscreenBtn.textContent = document.fullscreenElement ? '⤢ Exit Fullscreen' : '⛶ Fullscreen';
+        }
+        fullscreenBtn.addEventListener('click', () => {
+            if (document.fullscreenElement) {
+                document.exitFullscreen?.();
+            } else {
+                document.documentElement.requestFullscreen?.().catch(() => {});
+            }
+        });
+        document.addEventListener('fullscreenchange', updateFullscreenLabel);
+
+        // Tab jumps straight to Restart so Tab + Enter restarts without needing to click the text
+        function jumpToRestartOnTab(event) {
+            if (event.key === 'Tab' && !event.shiftKey) {
+                event.preventDefault();
+                restartBtn.focus();
+            }
+        }
+
+        inputEl.addEventListener('keydown', jumpToRestartOnTab);
+        passageEl.addEventListener('keydown', jumpToRestartOnTab);
+
+        Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
+            checkbox.addEventListener('change', () => {
+                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+                saveLocalState();
+                resetTest();
+            });
+        });
+
+        caseModeRadios.forEach((radio) => {
+            radio.addEventListener('change', () => {
+                caseModeRadios.forEach((option) => option.closest('.typing-option').classList.toggle('is-active', option.checked));
+                saveLocalState();
+                resetTest();
+            });
+        });
+
+        function applyWordCount() {
+            const selected = wordCountRadios.find((radio) => radio.checked);
+            if (!selected) return;
+
+            wordCountRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio === selected));
+
+            if (selected.value === 'custom') {
+                const custom = parseInt(customWordCountInput.value, 10);
+                wordCount = Number.isFinite(custom) && custom > 0 ? Math.min(custom, 300) : 25;
+            } else {
+                wordCount = parseInt(selected.value, 10);
+            }
+
+            resetTest();
+            saveLocalState();
+        }
+
+        wordCountRadios.forEach((radio) => {
+            radio.addEventListener('change', applyWordCount);
+        });
+
+        customWordCountInput.addEventListener('click', () => {
+            wordCountRadios.find((radio) => radio.value === 'custom').checked = true;
+        });
+
+        customWordCountInput.addEventListener('input', () => {
+            wordCountRadios.find((radio) => radio.value === 'custom').checked = true;
+            applyWordCount();
+        });
+
+        fontSelect.addEventListener('change', () => {
+            passageEl.style.fontFamily = fontSelect.value;
+            saveLocalState();
+        });
+        passageEl.style.fontFamily = fontSelect.value;
+
+        loadLocalState();
+        resetTest();
+
+        function initializeGoogleSignIn() {
+            const config = window.CORE_FIREBASE_CONFIG;
+            if (!config) return;
+
+            try {
+                firebase.initializeApp(config);
+                const auth = firebase.auth();
+                const firestore = firebase.firestore();
+                window.coreFirestore = firestore;
+
+                auth.onAuthStateChanged(async (user) => {
+                    currentUser = user;
+
+                    if (!user) return;
+                    try {
+                        const snapshot = await firestore.collection('users').doc(user.uid).get();
+                        const cloudData = snapshot.exists ? snapshot.data() : null;
+                        const cloudSettings = cloudData?.settings || null;
+                        const cloudStats = cloudData?.stats || null;
+
+                        if (cloudStats) {
+                            localState.stats = {
+                                started: Math.max(localState.stats.started, Number(cloudStats.started) || 0),
+                                completed: Math.max(localState.stats.completed, Number(cloudStats.completed) || 0)
+                            };
+                            updateTotalsDisplay();
+                        }
+
+                        if (cloudSettings) {
+                            localState.settings = { ...localState.settings, ...cloudSettings };
+                            applySettings(localState.settings);
+                            saveLocalState();
+                            resetTest();
+                        } else {
+                            await firestore.collection('users').doc(user.uid).set({ settings: getSettings(), stats: localState.stats }, { merge: true });
+                        }
+
+                        const runsSnapshot = await firestore.collection('users').doc(user.uid)
+                            .collection('typingRuns').orderBy('completedAt', 'desc').limit(25).get();
+                        localState.runs = runsSnapshot.docs.map((runDoc) => runDoc.data());
+                        localStorage.setItem(localStateKey, JSON.stringify(localState));
+                        updateHistoryLabel();
+                    } catch {}
+                });
+            } catch {}
+        }
+
+        initializeGoogleSignIn();
+    </script>
+
+    <script src="page-motion.js"></script>
+    <script>
+        // deferred the same way page-motion.js is, so our pointermove listener registers
+        // after its listener and can override the cursor's "is-visible" class on the same event
+        function initializeCursorSuppression() {
+            let suppressed = false;
+            let originX = null;
+            let originY = null;
+            const MOVE_THRESHOLD = 12;
+
+            window.addEventListener('typing-test:hide-cursor', () => {
+                suppressed = true;
+                originX = null;
+                originY = null;
+                document.querySelector('.custom-cursor')?.classList.remove('is-visible');
+            });
+
+            window.addEventListener('pointermove', (event) => {
+                if (!suppressed) return;
+
+                if (originX === null) {
+                    originX = event.clientX;
+                    originY = event.clientY;
+                }
+
+                if (Math.hypot(event.clientX - originX, event.clientY - originY) > MOVE_THRESHOLD) {
+                    suppressed = false;
+                    return;
+                }
+
+                document.querySelector('.custom-cursor')?.classList.remove('is-visible');
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCursorSuppression, { once: true });
+        } else {
+            initializeCursorSuppression();
+        }
+    </script>
+
+</body>
+</html>

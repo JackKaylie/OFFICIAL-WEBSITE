@@ -23,5 +23,14 @@ service cloud.firestore {
 			allow read: if true;
 			allow create, update, delete: if isDrawingAdmin();
 		}
+
+		match /feedback/{feedbackId} {
+			allow read, update, delete: if isDrawingAdmin();
+			allow create: if request.resource.data.message is string
+				&& request.resource.data.message.size() > 0
+				&& request.resource.data.message.size() <= 2000
+				&& request.resource.data.page is string
+				&& request.resource.data.page.size() <= 300;
+		}
 	}
 }
