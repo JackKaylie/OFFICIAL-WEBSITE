@@ -30,6 +30,8 @@ Checking every child item completes its compartment; checking the parent checkbo
 
 Checkmarks reset at midnight in the device's local timezone, including while the page is open and when returning after a missed day. Task titles, notes, and steps remain. Streaks count consecutive completed calendar days; a missed day breaks the streak.
 
+The checklist editor's Streak (days) field lets you correct the displayed streak total. Today's completion is included in that total, and future daily completions continue increasing it normally. A checklist completed today has a minimum streak of 1; an incomplete checklist can be reset to 0.
+
 Dailies are saved in this browser's local storage, not synced with Google or other devices. Clearing site data removes them. If storage is blocked or full, the page displays a warning and changes only survive in the current tab.
 
 ## Music library

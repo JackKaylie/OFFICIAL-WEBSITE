@@ -4,10 +4,12 @@
     const dialog = document.getElementById('habit-dialog');
     const form = document.getElementById('habit-form');
     const titleInput = document.getElementById('habit-title');
+    const streakInput = document.getElementById('habit-streak');
     const notesInput = document.getElementById('habit-notes');
     const stepsInput = document.getElementById('habit-steps');
     const storageStatus = document.getElementById('habit-storage');
     let editingId = null;
+    let initialStreak = 0;
     let filter = 'all';
     let resetTimer;
     let state;
@@ -224,6 +226,9 @@
         document.getElementById('habit-dialog-title').textContent = habit ? 'Edit Checklist' : 'New Checklist';
         document.getElementById('habit-delete').hidden = !habit;
         titleInput.value = habit?.title || '';
+        initialStreak = (habit?.streak || 0) + (habit?.done ? 1 : 0);
+        streakInput.value = String(initialStreak);
+        streakInput.setCustomValidity('');
         notesInput.value = habit?.notes || '';
         stepsInput.value = habit?.steps.map((step) => step.title).join('\n') || '';
         document.body.classList.add('habit-dialog-open');
@@ -244,10 +249,17 @@
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         titleInput.setCustomValidity('');
+        streakInput.setCustomValidity('');
         const title = titleInput.value.trim();
         if (!title) {
             titleInput.setCustomValidity('Enter a checklist name.');
             titleInput.reportValidity();
+            return;
+        }
+        const enteredStreak = streakInput.valueAsNumber;
+        if (!Number.isSafeInteger(enteredStreak) || enteredStreak < 0 || enteredStreak > 999999) {
+            streakInput.setCustomValidity('Enter a whole-number streak from 0 to 999999.');
+            streakInput.reportValidity();
             return;
         }
         refreshDay();
@@ -257,10 +269,17 @@
             const match = remainingSteps.findIndex((step) => step.title === stepTitle);
             return { title: stepTitle, done: match >= 0 ? remainingSteps.splice(match, 1)[0].done : false };
         });
+        const done = steps.length ? steps.every((step) => step.done) : existing?.done || false;
+        const streakEdited = enteredStreak !== initialStreak;
+        if (streakEdited && done && enteredStreak === 0) {
+            streakInput.setCustomValidity('A checklist completed today has a streak of at least 1 day.');
+            streakInput.reportValidity();
+            return;
+        }
         const habit = {
             id: existing?.id || crypto.randomUUID(), title, notes: notesInput.value.trim(), steps,
-            done: steps.length ? steps.every((step) => step.done) : existing?.done || false,
-            streak: existing?.streak || 0,
+            done,
+            streak: streakEdited ? enteredStreak - (done ? 1 : 0) : existing?.streak || 0,
             collapsed: existing?.collapsed === true
         };
         if (existing) state.habits[state.habits.indexOf(existing)] = habit;
@@ -271,6 +290,7 @@
         document.getElementById(`daily-${habit.id}`)?.focus();
     });
     titleInput.addEventListener('input', () => titleInput.setCustomValidity(''));
+    streakInput.addEventListener('input', () => streakInput.setCustomValidity(''));
     document.getElementById('habit-add').addEventListener('click', () => openEditor());
     document.getElementById('habit-cancel').addEventListener('click', () => dialog.close());
     document.getElementById('habit-delete').addEventListener('click', () => {

@@ -36,6 +36,7 @@
         <form id="habit-form">
             <div class="habit-dialog-heading"><h2 id="habit-dialog-title">New Checklist</h2><button class="habit-icon" id="habit-cancel" type="button" title="Close" aria-label="Close"><i data-lucide="x" aria-hidden="true"></i></button></div>
             <label>Checklist name<input id="habit-title" maxlength="120" placeholder="Morning Routine" required></label>
+            <label>Streak (days)<input id="habit-streak" type="number" min="0" max="999999" step="1" value="0" required></label>
             <label>Notes<textarea id="habit-notes" maxlength="500" rows="2" placeholder="Optional"></textarea></label>
             <label>Checklist items<textarea id="habit-steps" maxlength="2000" rows="6" placeholder="Brush teeth&#10;Shower&#10;Make bed"></textarea></label>
             <div class="habit-form-actions"><button class="habit-delete" id="habit-delete" type="button" hidden><i data-lucide="trash-2" aria-hidden="true"></i>Delete</button><button class="habit-add" type="submit"><i data-lucide="check" aria-hidden="true"></i>Save Checklist</button></div>
