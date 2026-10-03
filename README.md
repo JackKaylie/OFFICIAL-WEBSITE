@@ -9,6 +9,8 @@ Serve this folder through a local web server or its HTTPS hosted URL. Firebase a
 
 ## Drawing reference library
 
+Drawing References has its own page at [pages/drawing-references.html](pages/drawing-references.html), linked from Games.
+
 Images are stored in Firebase Storage; source, license, and completion status are stored in Firestore. The public can browse the reference library and completed drawings, while only the configured admin can upload or remove images and update completion status.
 
 1. In Firebase Console, enable Google sign-in, create Firestore, and enable Firebase Storage for this project.
@@ -19,6 +21,16 @@ Images are stored in Firebase Storage; source, license, and completion status ar
 6. Reload the page. The admin upload form will be available for JPEG, PNG, or WebP images up to 10 MB each. Add a license/permission and source URL where applicable. Use the Library and Completed Drawings tabs to track finished drawings.
 
 The rule files preserve per-user access for typing-test settings and runs, allow public reads of the reference library, and restrict reference writes/deletes to the one admin UID. Do not replace the admin checks with unrestricted authenticated or public writes.
+
+## Habit tracker
+
+Open Games > Habit Tracker or [pages/habit-tracker.html](pages/habit-tracker.html). Add named daily checklist compartments such as Morning Routine or Phone Apps, each with its own inner checklist, notes, item completion count, and streak. Use Add Checklist to create a compartment, and its inline Add item field to add child items. Edit a compartment to rename it, update notes, or change its items (one per line). Compartments can be collapsed or expanded, and that preference is saved.
+
+Checking every child item completes its compartment; checking the parent checkbox completes every child item. Adding a new item makes the compartment incomplete again. The All, Due, and Done tabs filter today's compartments.
+
+Checkmarks reset at midnight in the device's local timezone, including while the page is open and when returning after a missed day. Task titles, notes, and steps remain. Streaks count consecutive completed calendar days; a missed day breaks the streak.
+
+Dailies are saved in this browser's local storage, not synced with Google or other devices. Clearing site data removes them. If storage is blocked or full, the page displays a warning and changes only survive in the current tab.
 
 ## Music library
 

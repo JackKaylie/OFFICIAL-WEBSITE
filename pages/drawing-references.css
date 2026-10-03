@@ -1,0 +1,48 @@
+.drawing-library { text-align: left; }
+body.subpage .drawing-library-title { font-size: 1.7rem; letter-spacing: 0; margin-top: 0; }
+.drawing-auth-controls, .drawing-browser-controls, .drawing-dialog-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.drawing-status, .drawing-admin-note { color: rgba(216, 224, 228, 0.7); font-size: 0.85rem; line-height: 1.6; }
+.drawing-status { min-height: 1.4em; }
+.drawing-browser-controls { margin: 24px 0; }
+.drawing-view-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.drawing-view-tab, .drawing-upload-button, .drawing-sign-in, .drawing-sign-out, .drawing-random, .drawing-delete {
+    min-height: 38px; padding: 8px 12px; color: var(--page-gold); background: rgba(5, 8, 13, 0.68);
+    border: 1px solid var(--page-line); border-radius: 3px; font-family: 'Courier New', monospace;
+    font-size: 0.75rem; cursor: pointer;
+}
+.drawing-view-tab[aria-selected="true"] { border-color: var(--page-gold); background: rgba(217, 194, 154, 0.08); }
+.drawing-library :focus-visible { outline: 2px solid var(--page-gold); outline-offset: 3px; }
+.drawing-upload-label { display: grid; gap: 7px; color: var(--page-ice); font-size: 0.8rem; }
+.drawing-select, .drawing-upload-input { min-width: 0; width: 100%; min-height: 38px; color: var(--page-ice); background: #080b10; border: 1px solid var(--page-line); border-radius: 3px; padding: 8px 10px; }
+.drawing-reference-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+.drawing-reference-card { min-width: 0; overflow: hidden; border: 1px solid var(--page-line); border-radius: 4px; background: rgba(5, 8, 13, 0.54); }
+.drawing-reference-open { display: block; width: 100%; aspect-ratio: 4 / 3; padding: 0; overflow: hidden; border: 0; background: #080b10; cursor: pointer; }
+.drawing-reference-open img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform 0.25s ease; }
+.drawing-reference-open:hover img { transform: scale(1.035); }
+.drawing-reference-info { padding: 12px; }
+.drawing-reference-info h3 { margin: 0 0 5px; color: var(--page-ice); font-size: 0.95rem; overflow-wrap: anywhere; }
+.drawing-reference-meta, .drawing-reference-source { margin: 0; color: rgba(216, 224, 228, 0.65); font-size: 0.76rem; overflow-wrap: anywhere; }
+.drawing-reference-source { display: inline-block; margin-top: 7px; color: var(--page-gold); }
+.drawing-complete { display: flex; align-items: center; gap: 7px; min-height: 32px; margin-top: 10px; color: var(--page-ice); font-size: 0.8rem; }
+.drawing-complete input, .drawing-check { accent-color: var(--page-gold); }
+.drawing-completion-status { display: block; margin-top: 10px; color: var(--page-gold); font-size: 0.8rem; }
+.drawing-upload-section { margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--page-line); }
+.drawing-upload-section h2 { font-size: 1.1rem; }
+.drawing-upload-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.drawing-upload-wide { grid-column: 1 / -1; }
+.drawing-upload-check { display: flex; align-items: flex-start; gap: 9px; color: var(--page-ice); font-size: 0.82rem; line-height: 1.5; }
+.drawing-check { flex: 0 0 auto; margin-top: 3px; }
+.drawing-library button:disabled { cursor: default; opacity: 0.5; }
+.drawing-delete { min-height: 30px; margin-top: 10px; color: #ffaaaa; border-color: rgba(255, 138, 138, 0.35); }
+.drawing-admin-uid { color: var(--page-gold); overflow-wrap: anywhere; }
+.drawing-dialog { width: min(94vw, 1100px); max-width: none; max-height: 92vh; padding: 14px; color: var(--page-ice); background: #080b10; border: 1px solid var(--page-line); border-radius: 4px; }
+.drawing-dialog::backdrop { background: rgba(0, 0, 0, 0.86); }
+body.drawing-dialog-open, body.drawing-dialog-open * { cursor: auto !important; }
+body.drawing-dialog-open .custom-cursor { opacity: 0 !important; visibility: hidden; }
+.drawing-dialog img { display: block; max-width: 100%; max-height: calc(92vh - 100px); margin: 0 auto; object-fit: contain; }
+.drawing-dialog-footer { padding-top: 12px; }
+#drawing-dialog-caption { overflow-wrap: anywhere; min-width: 0; }
+@media (max-width: 600px) {
+    .drawing-auth-controls { align-items: flex-start; flex-direction: column; }
+    .drawing-upload-form { grid-template-columns: minmax(0, 1fr); }
+}

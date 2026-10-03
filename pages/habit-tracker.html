@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker | CORE</title>
+    <link rel="icon" type="image/png" href="../WEBSITE LOGO.png">
+    <link rel="stylesheet" href="page-theme.css">
+    <link rel="stylesheet" href="habit-tracker.css">
+    <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+    <script src="habit-tracker.js" defer></script>
+</head>
+<body class="subpage">
+    <div class="back-btn"><a href="games.html">&larr; All Games</a></div>
+    <main class="school-container habit-tracker">
+        <header class="habit-heading">
+            <div><p class="habit-kicker">DAILY ROUTINE</p><h1>Habit Tracker</h1></div>
+            <p class="habit-date" id="habit-date"></p>
+        </header>
+        <section class="habit-summary" aria-label="Daily progress">
+            <div class="habit-summary-top"><strong id="habit-progress-label" aria-live="polite">0 / 0 completed</strong><span id="habit-reset">Resets at midnight</span></div>
+            <progress id="habit-progress" value="0" max="1" aria-label="Dailies completed today"></progress>
+        </section>
+        <div class="habit-toolbar">
+            <div class="habit-tabs" role="tablist" aria-label="Filter dailies">
+                <button type="button" role="tab" aria-selected="true" aria-controls="habit-list" data-filter="all">All</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="habit-list" data-filter="due">Due</button>
+                <button type="button" role="tab" aria-selected="false" aria-controls="habit-list" data-filter="done">Done</button>
+            </div>
+            <button class="habit-add" id="habit-add" type="button"><i data-lucide="plus" aria-hidden="true"></i>Add Checklist</button>
+        </div>
+        <section id="habit-list" class="habit-list" aria-label="Dailies"></section>
+        <p class="habit-storage" id="habit-storage" role="status">Saved on this browser</p>
+    </main>
+    <dialog class="habit-dialog" id="habit-dialog" aria-labelledby="habit-dialog-title">
+        <form id="habit-form">
+            <div class="habit-dialog-heading"><h2 id="habit-dialog-title">New Checklist</h2><button class="habit-icon" id="habit-cancel" type="button" title="Close" aria-label="Close"><i data-lucide="x" aria-hidden="true"></i></button></div>
+            <label>Checklist name<input id="habit-title" maxlength="120" placeholder="Morning Routine" required></label>
+            <label>Notes<textarea id="habit-notes" maxlength="500" rows="2" placeholder="Optional"></textarea></label>
+            <label>Checklist items<textarea id="habit-steps" maxlength="2000" rows="6" placeholder="Brush teeth&#10;Shower&#10;Make bed"></textarea></label>
+            <div class="habit-form-actions"><button class="habit-delete" id="habit-delete" type="button" hidden><i data-lucide="trash-2" aria-hidden="true"></i>Delete</button><button class="habit-add" type="submit"><i data-lucide="check" aria-hidden="true"></i>Save Checklist</button></div>
+        </form>
+    </dialog>
+    <script src="page-motion.js"></script>
+</body>
+</html>

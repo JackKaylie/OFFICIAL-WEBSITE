@@ -93,7 +93,8 @@ body.subpage {
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior-y: auto;
-    padding: 0;
+    margin: 0;
+    padding: calc(80px + env(safe-area-inset-top, 0px)) 0 0;
     position: relative;
     touch-action: auto;
     animation: subpageAtmosphere 32s ease-in-out infinite alternate;
@@ -131,11 +132,11 @@ body.subpage > *:not(.custom-cursor) {
     z-index: 1;
 }
 
-body.subpage.page-entering > *:not(.custom-cursor) {
+body.subpage.page-entering > *:not(.custom-cursor):not(.back-btn) {
     animation: pageContentIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-body.subpage.page-leaving > *:not(.custom-cursor) {
+body.subpage.page-leaving > *:not(.custom-cursor):not(.back-btn) {
     animation: pageContentOut 0.32s ease-in both;
     pointer-events: none;
 }
@@ -156,6 +157,7 @@ body.subpage header {
 
 body.subpage .back-home-btn,
 body.subpage .back-btn a {
+    position: static;
     background: rgba(10, 14, 20, 0.6);
     border: 1px solid rgba(217, 194, 154, 0.26);
     border-radius: 999px;
@@ -163,6 +165,8 @@ body.subpage .back-btn a {
     backdrop-filter: blur(8px);
     color: var(--page-gold);
     display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
     font-size: 0.72rem;
     font-weight: 600;
@@ -178,14 +182,25 @@ body.subpage .back-btn a:hover {
     background: rgba(217, 194, 154, 0.1);
     border-color: rgba(217, 194, 154, 0.72);
     box-shadow: 0 0 24px rgba(217, 194, 154, 0.2);
-    transform: translateY(-2px);
+    transform: none;
 }
 
 body.subpage .back-btn {
-    margin: 0 auto 38px;
-    max-width: 1100px;
-    padding: 28px 28px 0;
+    --back-inset: 24px;
+    position: fixed;
+    top: calc(var(--back-inset) + env(safe-area-inset-top, 0px));
+    left: calc(var(--back-inset) + env(safe-area-inset-left, 0px));
+    z-index: 30;
+    margin: 0;
+    max-width: none;
+    padding: 0;
     width: auto;
+}
+
+@media (max-width: 600px) {
+    body.subpage .back-btn {
+        --back-inset: 16px;
+    }
 }
 
 body.subpage .content-sections,

@@ -1,9 +1,6 @@
 (() => {
     const elements = {
-        menu: document.getElementById('game-selection'),
         library: document.getElementById('drawing-library'),
-        openLibrary: document.getElementById('select-drawing-library'),
-        back: document.getElementById('drawing-back'),
         authStatus: document.getElementById('drawing-auth-status'),
         signIn: document.getElementById('drawing-sign-in'),
         signOut: document.getElementById('drawing-sign-out'),
@@ -35,17 +32,6 @@
 
     function isAdmin() {
         return Boolean(currentUser && currentUser.uid === window.CORE_DRAWING_ADMIN_UID);
-    }
-
-    function showLibrary() {
-        elements.menu.hidden = true;
-        elements.library.hidden = false;
-        document.getElementById('drawing-library-title').focus();
-    }
-
-    function showGameMenu() {
-        elements.library.hidden = true;
-        elements.menu.hidden = false;
     }
 
     function showDialog(reference) {
@@ -346,8 +332,6 @@
         }
     }
 
-    elements.openLibrary.addEventListener('click', showLibrary);
-    elements.back.addEventListener('click', showGameMenu);
     elements.libraryTab.addEventListener('click', () => {
         activeView = 'library';
         renderReferences();

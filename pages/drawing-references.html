@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drawing References | CORE</title>
+    <link rel="icon" type="image/png" href="../WEBSITE LOGO.png">
+    <link rel="stylesheet" href="page-theme.css">
+    <link rel="stylesheet" href="drawing-references.css">
+</head>
+<body class="subpage">
+    <div class="back-btn"><a href="games.html">&larr; All Games</a></div>
+    <main class="school-container drawing-library" id="drawing-library" aria-labelledby="drawing-library-title">
+        <h1 class="header-title drawing-library-title" id="drawing-library-title">Drawing References</h1>
+        <div class="drawing-auth-controls">
+            <span class="drawing-status" id="drawing-auth-status" aria-live="polite">Connecting to the reference library...</span>
+            <button class="drawing-sign-in" id="drawing-sign-in" type="button" hidden>Sign in with Google</button>
+            <button class="drawing-sign-out" id="drawing-sign-out" type="button" hidden>Sign out</button>
+        </div>
+        <p class="drawing-status" id="drawing-library-status" aria-live="polite">Loading references...</p>
+        <div class="drawing-browser-controls">
+            <div class="drawing-view-tabs" role="tablist" aria-label="Drawing references">
+                <button class="drawing-view-tab" id="drawing-tab-library" type="button" role="tab" aria-selected="true" aria-controls="drawing-reference-grid">Library</button>
+                <button class="drawing-view-tab" id="drawing-tab-completed" type="button" role="tab" aria-selected="false" aria-controls="drawing-reference-grid">Completed Drawings</button>
+            </div>
+            <button class="drawing-random" id="drawing-random" type="button" disabled>Random reference</button>
+        </div>
+        <div class="drawing-reference-grid" id="drawing-reference-grid"></div>
+        <section class="drawing-upload-section" id="drawing-upload-section" hidden aria-labelledby="drawing-upload-title">
+            <h2 id="drawing-upload-title">Add references</h2>
+            <p class="drawing-admin-note" id="drawing-admin-note"></p>
+            <form class="drawing-upload-form" id="drawing-upload-form" hidden>
+                <label class="drawing-upload-label">License / permission
+                    <select class="drawing-select" id="drawing-license" required>
+                        <option value="Created by me">Created by me</option>
+                        <option value="Public domain">Public domain</option>
+                        <option value="CC BY">CC BY</option>
+                        <option value="CC BY-SA">CC BY-SA</option>
+                        <option value="Permission granted">Permission granted</option>
+                        <option value="Other">Other (document source)</option>
+                    </select>
+                </label>
+                <label class="drawing-upload-label">Source URL (optional)
+                    <input class="drawing-upload-input" id="drawing-source" type="url" maxlength="1000" placeholder="https://...">
+                </label>
+                <label class="drawing-upload-label drawing-upload-wide">Image files (JPEG, PNG, or WebP; up to 10 MB each)
+                    <input class="drawing-upload-input" id="drawing-files" type="file" accept="image/jpeg,image/png,image/webp" multiple required>
+                </label>
+                <label class="drawing-upload-check drawing-upload-wide">
+                    <input class="drawing-check" id="drawing-rights-confirmation" type="checkbox" required>
+                    <span>I have the rights or permission to publish these images and have recorded the correct source and license.</span>
+                </label>
+                <button class="drawing-upload-button drawing-upload-wide" id="drawing-upload-button" type="submit">Upload references</button>
+            </form>
+            <p class="drawing-status" id="drawing-upload-status" aria-live="polite"></p>
+        </section>
+        <dialog class="drawing-dialog" id="drawing-dialog" aria-label="Drawing reference">
+            <img id="drawing-dialog-image" alt="">
+            <div class="drawing-dialog-footer">
+                <span id="drawing-dialog-caption"></span>
+                <button class="drawing-sign-out" id="drawing-dialog-close" type="button">Close</button>
+            </div>
+        </dialog>
+    </main>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="drawing-references.js"></script>
+    <script src="page-motion.js"></script>
+</body>
+</html>
