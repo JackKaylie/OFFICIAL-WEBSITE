@@ -104,6 +104,13 @@
             margin-bottom: 16px;
         }
 
+        .typing-bests {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            margin: -8px 0 16px;
+        }
+
         .typing-total {
             display: flex;
             align-items: baseline;
@@ -156,6 +163,8 @@
             background: rgba(4, 6, 10, 0.55);
             border: 1px solid rgba(217, 194, 154, 0.16);
             user-select: none;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
         }
 
         .typing-passage span {
@@ -294,10 +303,45 @@
 
         .typing-font-row {
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: center;
             gap: 10px;
             margin-bottom: 10px;
+        }
+
+        .typing-textarea {
+            display: block;
+            width: min(100%, 720px);
+            min-height: 82px;
+            margin: 0 auto 10px;
+            padding: 10px 12px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 0.78rem;
+            line-height: 1.5;
+            color: var(--page-ice);
+            background: rgba(5, 8, 13, 0.72);
+            border: 1px solid rgba(217, 194, 154, 0.28);
+            border-radius: 4px;
+        }
+
+        .typing-textarea:focus-visible {
+            outline: 2px solid var(--page-gold);
+            outline-offset: 2px;
+        }
+
+        .typing-mode-options {
+            margin-bottom: 8px;
+        }
+
+        .typing-options[hidden],
+        .typing-textarea[hidden] {
+            display: none;
+        }
+
+        #typing-custom-panel {
+            text-align: center;
         }
 
         .typing-font-label {
@@ -344,6 +388,11 @@
             .typing-totals {
                 gap: 18px;
                 margin-bottom: 10px;
+            }
+
+            .typing-bests {
+                gap: 18px;
+                margin-bottom: 12px;
             }
 
             .fullscreen-toggle {
@@ -395,7 +444,25 @@
                 </div>
             </div>
 
+            <div class="typing-bests" id="typing-bests">
+                <div class="typing-total">
+                    <span class="total-value" id="typing-best-wpm">0</span>
+                    <span class="total-label">Best WPM</span>
+                </div>
+                <div class="typing-total">
+                    <span class="total-value" id="typing-best-accuracy">0%</span>
+                    <span class="total-label">Best Accuracy</span>
+                </div>
+            </div>
+
             <div class="typing-font-row">
+                <label class="typing-font-label" for="typing-preset">LEVEL</label>
+                <select class="typing-font-select" id="typing-preset">
+                    <option value="easy">Easy</option>
+                    <option value="standard" selected>Standard</option>
+                    <option value="hard">Hard</option>
+                    <option value="custom">Custom</option>
+                </select>
                 <label class="typing-font-label" for="typing-font">FONT</label>
                 <select class="typing-font-select" id="typing-font">
                     <optgroup label="Easy — clear, unambiguous glyphs">
@@ -418,6 +485,18 @@
                 </select>
             </div>
 
+            <div class="typing-options typing-mode-options" id="typing-mode-options">
+                <label class="typing-option is-active">
+                    <input type="radio" name="test-mode" value="words" checked> Words
+                </label>
+                <label class="typing-option">
+                    <input type="radio" name="test-mode" value="time"> Time
+                </label>
+                <label class="typing-option">
+                    <input type="radio" name="test-mode" value="custom"> Custom Text
+                </label>
+            </div>
+
             <div class="typing-options typing-word-count" id="typing-word-count">
                 <label class="typing-option" data-count="10">
                     <input type="radio" name="word-count" value="10"> 10 Words
@@ -434,7 +513,27 @@
                 </label>
             </div>
 
+            <div class="typing-options" id="typing-time-options" hidden>
+                <label class="typing-option">
+                    <input type="radio" name="time-limit" value="30"> 30 Seconds
+                </label>
+                <label class="typing-option is-active">
+                    <input type="radio" name="time-limit" value="60" checked> 60 Seconds
+                </label>
+                <label class="typing-option">
+                    <input type="radio" name="time-limit" value="120"> 120 Seconds
+                </label>
+            </div>
+
+            <div id="typing-custom-panel" hidden>
+                <textarea class="typing-textarea" id="typing-custom-text" maxlength="3000" aria-label="Custom practice text" placeholder="Paste or type text to practice">The quick brown fox jumps over the lazy dog.</textarea>
+                <button class="typing-restart" id="typing-apply-custom" type="button">USE TEXT</button>
+            </div>
+
             <div class="typing-options" id="typing-options">
+                <label class="typing-option is-active" data-option="all-difficulty">
+                    <input type="checkbox" id="opt-all-difficulty" checked> All Difficulty
+                </label>
                 <label class="typing-option is-active" data-option="numbers">
                     <input type="checkbox" id="opt-numbers" checked> Numbers
                 </label>
@@ -517,6 +616,8 @@
         const pathPrefixes = ['./', '../', '~/', '/'];
         const identifierStyles = ['camelCase', 'snakeCase', 'kebabCase'];
         let wordCount = 25;
+        let testMode = 'words';
+        let timeLimit = 60;
 
         function randomItem(list) {
             return list[Math.floor(Math.random() * list.length)];
@@ -581,13 +682,13 @@
             return buildEnvToken();
         }
 
-        function generateWords(options) {
+        function generateWords(options, count = wordCount) {
             const tokens = [];
             const caseMode = options.caseMode || 'normal';
             const enabledIdentifierStyles = identifierStyles.filter((style) => options[style]);
-            let capitalizeNext = true;
+            let capitalizeNext = caseMode !== 'normal';
 
-            for (let i = 0; i < wordCount; i += 1) {
+            for (let i = 0; i < count; i += 1) {
                 if (options.numbers && Math.random() < 0.15) {
                     tokens.push(randomNumberToken());
                     continue;
@@ -624,7 +725,7 @@
                         word = word.toLowerCase();
                     }
                     capitalizeNext = false;
-                } else if (capitalizeNext) {
+                } else if (caseMode === 'some' && capitalizeNext) {
                     word = word.charAt(0).toUpperCase() + word.slice(1);
                     capitalizeNext = false;
                 }
@@ -638,7 +739,8 @@
                 tokens.push(word);
             }
 
-            return tokens.join(' ');
+            const passage = tokens.join(' ');
+            return caseMode === 'normal' ? passage.toLowerCase() : passage;
         }
 
         const passageEl = document.getElementById('typing-passage');
@@ -647,6 +749,12 @@
         const accuracyEl = document.getElementById('typing-accuracy');
         const timeEl = document.getElementById('typing-time');
         const restartBtn = document.getElementById('typing-restart');
+        const allDifficultyCheckbox = document.getElementById('opt-all-difficulty');
+        const presetSelect = document.getElementById('typing-preset');
+        const customTextInput = document.getElementById('typing-custom-text');
+        const applyCustomTextBtn = document.getElementById('typing-apply-custom');
+        const bestWpmEl = document.getElementById('typing-best-wpm');
+        const bestAccuracyEl = document.getElementById('typing-best-accuracy');
         const optionCheckboxes = {
             numbers: document.getElementById('opt-numbers'),
             punctuation: document.getElementById('opt-punctuation'),
@@ -661,25 +769,31 @@
             numbers: true,
             punctuation: true,
             symbols: true,
-            camelCase: true,
-            snakeCase: true,
-            kebabCase: true,
-            operators: true,
-            cli: true,
+            camelCase: false,
+            snakeCase: false,
+            kebabCase: false,
+            operators: false,
+            cli: false,
+            preset: 'standard',
             caseMode: 'some',
             wordCount: '25',
             customWordCount: '25',
+            testMode: 'words',
+            timeLimit: '60',
+            customText: 'The quick brown fox jumps over the lazy dog.',
             font: "'Courier New', Courier, monospace"
         };
         const caseModeRadios = [...document.querySelectorAll('input[name="case-mode"]')];
         const wordCountRadios = [...document.querySelectorAll('input[name="word-count"]')];
+        const testModeRadios = [...document.querySelectorAll('input[name="test-mode"]')];
+        const timeLimitRadios = [...document.querySelectorAll('input[name="time-limit"]')];
         const customWordCountInput = document.getElementById('custom-word-count');
         const fontSelect = document.getElementById('typing-font');
         const localStateKey = 'core-typing-test-state';
         const totalStartedEl = document.getElementById('typing-total-started');
         const totalCompletedEl = document.getElementById('typing-total-completed');
         let currentUser = null;
-        let localState = { settings: {}, runs: [], stats: { started: 0, completed: 0 } };
+        let localState = { settings: {}, runs: [], stats: { started: 0, completed: 0, bestWpm: 0, bestAccuracy: 0 } };
 
         let currentPassage = '';
         let startTime = null;
@@ -691,6 +805,8 @@
         function getSettings() {
             const selectedWordCount = wordCountRadios.find((radio) => radio.checked);
             const selectedCaseMode = caseModeRadios.find((radio) => radio.checked);
+            const selectedTestMode = testModeRadios.find((radio) => radio.checked);
+            const selectedTimeLimit = timeLimitRadios.find((radio) => radio.checked);
             return {
                 numbers: optionCheckboxes.numbers.checked,
                 punctuation: optionCheckboxes.punctuation.checked,
@@ -700,11 +816,42 @@
                 kebabCase: optionCheckboxes.kebabCase.checked,
                 operators: optionCheckboxes.operators.checked,
                 cli: optionCheckboxes.cli.checked,
+                preset: presetSelect.value,
                 caseMode: selectedCaseMode?.value || 'some',
                 wordCount: selectedWordCount?.value || '25',
                 customWordCount: customWordCountInput.value,
+                testMode: selectedTestMode?.value || 'words',
+                timeLimit: selectedTimeLimit?.value || '60',
+                customText: customTextInput.value,
                 font: fontSelect.value
             };
+        }
+
+        function updateModeControls() {
+            testMode = testModeRadios.find((radio) => radio.checked)?.value || 'words';
+            document.getElementById('typing-word-count').hidden = testMode !== 'words';
+            document.getElementById('typing-time-options').hidden = testMode !== 'time';
+            document.getElementById('typing-custom-panel').hidden = testMode !== 'custom';
+            document.getElementById('typing-options').hidden = testMode === 'custom';
+            document.getElementById('typing-case-options').hidden = testMode === 'custom';
+        }
+
+        function getCloudSafeSettings() {
+            const settings = getSettings();
+            delete settings.customText;
+            return settings;
+        }
+
+        function updatePersonalBests() {
+            bestWpmEl.textContent = String(localState.stats.bestWpm || 0);
+            bestAccuracyEl.textContent = `${localState.stats.bestAccuracy || 0}%`;
+        }
+
+        function updateAllDifficultyControl() {
+            const enabledCount = Object.values(optionCheckboxes).filter((checkbox) => checkbox.checked).length;
+            allDifficultyCheckbox.checked = enabledCount === Object.keys(optionCheckboxes).length;
+            allDifficultyCheckbox.indeterminate = enabledCount > 0 && !allDifficultyCheckbox.checked;
+            allDifficultyCheckbox.closest('.typing-option').classList.toggle('is-active', allDifficultyCheckbox.checked);
         }
 
         function updateHistoryLabel() {
@@ -715,7 +862,7 @@
             localStorage.setItem(localStateKey, JSON.stringify(localState));
             updateHistoryLabel();
             if (currentUser && window.coreFirestore) {
-                window.coreFirestore.collection('users').doc(currentUser.uid).set({ settings: localState.settings, stats: localState.stats }, { merge: true }).catch(() => {});
+                window.coreFirestore.collection('users').doc(currentUser.uid).set({ settings: getCloudSafeSettings(), stats: localState.stats }, { merge: true }).catch(() => {});
             }
         }
 
@@ -731,6 +878,7 @@
                 checkbox.checked = mergedSettings[key] === true;
                 checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
             });
+            updateAllDifficultyControl();
 
             const defaultCaseMode = mergedSettings.caseMode || 'some';
             const savedCaseMode = caseModeRadios.find((radio) => radio.value === defaultCaseMode) || caseModeRadios.find((radio) => radio.value === 'some');
@@ -740,8 +888,21 @@
             const savedWordCount = wordCountRadios.find((radio) => radio.value === mergedSettings.wordCount) || wordCountRadios.find((radio) => radio.value === '25');
             savedWordCount.checked = true;
             customWordCountInput.value = mergedSettings.customWordCount || '25';
+            wordCount = savedWordCount.value === 'custom'
+                ? Math.min(parseInt(customWordCountInput.value, 10) || 25, 300)
+                : parseInt(savedWordCount.value, 10);
+            const savedTestMode = testModeRadios.find((radio) => radio.value === mergedSettings.testMode) || testModeRadios[0];
+            savedTestMode.checked = true;
+            testModeRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
+            const savedTimeLimit = timeLimitRadios.find((radio) => radio.value === String(mergedSettings.timeLimit)) || timeLimitRadios.find((radio) => radio.value === '60');
+            savedTimeLimit.checked = true;
+            timeLimit = parseInt(savedTimeLimit.value, 10);
+            timeLimitRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
+            customTextInput.value = mergedSettings.customText ?? defaultSettings.customText;
+            presetSelect.value = mergedSettings.preset || 'custom';
             fontSelect.value = mergedSettings.font || fontSelect.value;
             passageEl.style.fontFamily = fontSelect.value;
+            updateModeControls();
         }
 
         function loadLocalState() {
@@ -752,11 +913,13 @@
                     runs: Array.isArray(saved.runs) ? saved.runs.slice(0, 25) : [],
                     stats: {
                         started: Number(saved.stats?.started) || 0,
-                        completed: Number(saved.stats?.completed) || 0
+                        completed: Number(saved.stats?.completed) || 0,
+                        bestWpm: Number(saved.stats?.bestWpm) || 0,
+                        bestAccuracy: Number(saved.stats?.bestAccuracy) || 0
                     }
                 };
             } catch {
-                localState = { settings: {}, runs: [], stats: { started: 0, completed: 0 } };
+                localState = { settings: {}, runs: [], stats: { started: 0, completed: 0, bestWpm: 0, bestAccuracy: 0 } };
             }
 
             const settings = {
@@ -768,15 +931,20 @@
                 kebabCase: defaultSettings.kebabCase,
                 operators: defaultSettings.operators,
                 cli: defaultSettings.cli,
+                preset: Object.keys(localState.settings).length ? 'custom' : defaultSettings.preset,
                 caseMode: defaultSettings.caseMode,
                 wordCount: defaultSettings.wordCount,
                 customWordCount: defaultSettings.customWordCount,
+                testMode: defaultSettings.testMode,
+                timeLimit: defaultSettings.timeLimit,
+                customText: defaultSettings.customText,
                 font: defaultSettings.font,
                 ...localState.settings
             };
             applySettings(settings);
             updateHistoryLabel();
             updateTotalsDisplay();
+            updatePersonalBests();
         }
 
         function saveCompletedRun() {
@@ -786,12 +954,15 @@
                 accuracy: Number.parseInt(accuracyEl.textContent, 10) || 0,
                 time: Number(elapsed.toFixed(1)),
                 completedAt: new Date().toISOString(),
-                settings: getSettings()
+                settings: getCloudSafeSettings()
             };
             localState.runs.unshift(run);
             localState.runs = localState.runs.slice(0, 25);
             localState.stats.completed += 1;
+            localState.stats.bestWpm = Math.max(localState.stats.bestWpm || 0, run.wpm);
+            localState.stats.bestAccuracy = Math.max(localState.stats.bestAccuracy || 0, run.accuracy);
             updateTotalsDisplay();
+            updatePersonalBests();
             saveLocalState();
             if (currentUser && window.coreFirestore) {
                 window.coreFirestore.collection('users').doc(currentUser.uid).collection('typingRuns').add(run).catch(() => {});
@@ -803,7 +974,12 @@
         }
 
         function loadPassage() {
-            currentPassage = generateWords(getSelectedOptions());
+            const options = getSelectedOptions();
+            if (testMode === 'custom') {
+                currentPassage = customTextInput.value.trim() ? customTextInput.value : defaultSettings.customText;
+            } else {
+                currentPassage = generateWords(options, testMode === 'time' ? 100 : wordCount);
+            }
             passageEl.innerHTML = '';
             [...currentPassage].forEach((char) => {
                 const span = document.createElement('span');
@@ -823,8 +999,9 @@
             wpmEl.textContent = '0';
             accuracyEl.textContent = '100%';
             timeEl.textContent = '0.0s';
+            if (testMode === 'time') timeEl.textContent = `${timeLimit.toFixed(1)}s`;
             loadPassage();
-            inputEl.focus();
+            inputEl.focus({ preventScroll: true });
             hideCustomCursor();
         }
 
@@ -835,7 +1012,33 @@
         function updateTimer() {
             if (!startTime) return;
             const elapsed = (Date.now() - startTime) / 1000;
-            timeEl.textContent = `${elapsed.toFixed(1)}s`;
+            if (testMode === 'time') {
+                const remaining = Math.max(0, timeLimit - elapsed);
+                timeEl.textContent = `${remaining.toFixed(1)}s`;
+                if (remaining <= 0) finishTest();
+            } else {
+                timeEl.textContent = `${elapsed.toFixed(1)}s`;
+            }
+        }
+
+        function finishTest() {
+            if (finished) return;
+            finished = true;
+            clearInterval(timerInterval);
+            if (testMode === 'time') timeEl.textContent = '0.0s';
+            else updateTimer();
+            inputEl.blur();
+            saveCompletedRun();
+        }
+
+        function appendTimedPassage() {
+            const extension = ` ${generateWords(getSelectedOptions(), 100)}`;
+            currentPassage += extension;
+            [...extension].forEach((char) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                passageEl.appendChild(span);
+            });
         }
 
         function updateStats(typedValue) {
@@ -880,11 +1083,12 @@
             updateStats(typedValue);
 
             if (typedValue.length >= currentPassage.length) {
-                finished = true;
-                clearInterval(timerInterval);
-                updateTimer();
-                inputEl.blur();
-                saveCompletedRun();
+                if (testMode === 'time') {
+                    while (typedValue.length >= currentPassage.length) appendTimedPassage();
+                    renderPassage(typedValue);
+                } else {
+                    finishTest();
+                }
             }
         });
 
@@ -919,14 +1123,28 @@
         Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
             checkbox.addEventListener('change', () => {
                 checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+                updateAllDifficultyControl();
+                presetSelect.value = 'custom';
                 saveLocalState();
                 resetTest();
             });
         });
 
+        allDifficultyCheckbox.addEventListener('change', () => {
+            Object.values(optionCheckboxes).forEach((checkbox) => {
+                checkbox.checked = allDifficultyCheckbox.checked;
+                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+            });
+            updateAllDifficultyControl();
+            presetSelect.value = 'custom';
+            saveLocalState();
+            resetTest();
+        });
+
         caseModeRadios.forEach((radio) => {
             radio.addEventListener('change', () => {
                 caseModeRadios.forEach((option) => option.closest('.typing-option').classList.toggle('is-active', option.checked));
+                presetSelect.value = 'custom';
                 saveLocalState();
                 resetTest();
             });
@@ -945,6 +1163,7 @@
                 wordCount = parseInt(selected.value, 10);
             }
 
+            presetSelect.value = 'custom';
             resetTest();
             saveLocalState();
         }
@@ -962,8 +1181,70 @@
             applyWordCount();
         });
 
+        function applyPreset(preset) {
+            const presetSettings = {
+                easy: {
+                    numbers: false, punctuation: false, symbols: false, camelCase: false,
+                    snakeCase: false, kebabCase: false, operators: false, cli: false,
+                    caseMode: 'normal', wordCount: '10'
+                },
+                standard: {
+                    numbers: true, punctuation: true, symbols: true, camelCase: false,
+                    snakeCase: false, kebabCase: false, operators: false, cli: false,
+                    caseMode: 'some', wordCount: '25'
+                },
+                hard: {
+                    numbers: true, punctuation: true, symbols: true, camelCase: true,
+                    snakeCase: true, kebabCase: true, operators: true, cli: true,
+                    caseMode: 'all', wordCount: '50'
+                }
+            }[preset];
+            if (!presetSettings) return;
+
+            Object.entries(optionCheckboxes).forEach(([key, checkbox]) => {
+                checkbox.checked = presetSettings[key];
+                checkbox.closest('.typing-option').classList.toggle('is-active', checkbox.checked);
+            });
+            const presetCaseMode = caseModeRadios.find((radio) => radio.value === presetSettings.caseMode);
+            presetCaseMode.checked = true;
+            caseModeRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
+            const presetWordCount = wordCountRadios.find((radio) => radio.value === presetSettings.wordCount);
+            presetWordCount.checked = true;
+            wordCountRadios.forEach((radio) => radio.closest('.typing-option').classList.toggle('is-active', radio.checked));
+            wordCount = parseInt(presetSettings.wordCount, 10);
+            updateAllDifficultyControl();
+            saveLocalState();
+            resetTest();
+        }
+
+        presetSelect.addEventListener('change', () => applyPreset(presetSelect.value));
+
+        testModeRadios.forEach((radio) => {
+            radio.addEventListener('change', () => {
+                testModeRadios.forEach((option) => option.closest('.typing-option').classList.toggle('is-active', option.checked));
+                updateModeControls();
+                saveLocalState();
+                resetTest();
+            });
+        });
+
+        timeLimitRadios.forEach((radio) => {
+            radio.addEventListener('change', () => {
+                timeLimitRadios.forEach((option) => option.closest('.typing-option').classList.toggle('is-active', option.checked));
+                timeLimit = parseInt(radio.value, 10);
+                saveLocalState();
+                resetTest();
+            });
+        });
+
+        applyCustomTextBtn.addEventListener('click', () => {
+            saveLocalState();
+            resetTest();
+        });
+
         fontSelect.addEventListener('change', () => {
             passageEl.style.fontFamily = fontSelect.value;
+            presetSelect.value = 'custom';
             saveLocalState();
         });
         passageEl.style.fontFamily = fontSelect.value;
@@ -994,9 +1275,12 @@
                         if (cloudStats) {
                             localState.stats = {
                                 started: Math.max(localState.stats.started, Number(cloudStats.started) || 0),
-                                completed: Math.max(localState.stats.completed, Number(cloudStats.completed) || 0)
+                                completed: Math.max(localState.stats.completed, Number(cloudStats.completed) || 0),
+                                bestWpm: Math.max(localState.stats.bestWpm || 0, Number(cloudStats.bestWpm) || 0),
+                                bestAccuracy: Math.max(localState.stats.bestAccuracy || 0, Number(cloudStats.bestAccuracy) || 0)
                             };
                             updateTotalsDisplay();
+                            updatePersonalBests();
                         }
 
                         if (cloudSettings) {
@@ -1005,7 +1289,7 @@
                             saveLocalState();
                             resetTest();
                         } else {
-                            await firestore.collection('users').doc(user.uid).set({ settings: getSettings(), stats: localState.stats }, { merge: true });
+                            await firestore.collection('users').doc(user.uid).set({ settings: getCloudSafeSettings(), stats: localState.stats }, { merge: true });
                         }
 
                         const runsSnapshot = await firestore.collection('users').doc(user.uid)
