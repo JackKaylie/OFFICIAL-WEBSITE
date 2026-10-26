@@ -99,7 +99,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-top: 4px;
             width: 100%;
             max-width: 460px;
@@ -115,7 +115,7 @@
             width: 100%;
             max-width: 100%;
             border-radius: 999px;
-            border: 1px solid rgba(217, 194, 154, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             background: rgba(18, 23, 32, 0.55);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
@@ -123,10 +123,11 @@
         }
 
         .aim-size-label {
-            font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.18em;
-            color: var(--page-gold);
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: rgba(216, 224, 228, 0.55);
         }
 
         .aim-size-slider {
@@ -135,7 +136,7 @@
             width: clamp(160px, 32vw, 260px);
             height: 4px;
             border-radius: 999px;
-            background: linear-gradient(90deg, var(--page-gold) var(--fill, 50%), rgba(216, 224, 228, 0.18) var(--fill, 50%));
+            background: linear-gradient(90deg, #f5f5f5 var(--fill, 50%), rgba(255, 255, 255, 0.16) var(--fill, 50%));
             outline: none;
             cursor: pointer;
         }
@@ -146,9 +147,9 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: #f5e3b4;
-            border: 2px solid rgba(10, 14, 20, 0.85);
-            box-shadow: 0 0 0 1px rgba(217, 194, 154, 0.55), 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(217, 194, 154, 0.45);
+            background: #ffffff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.25);
             transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
         }
 
@@ -160,9 +161,9 @@
             width: 18px;
             height: 18px;
             border-radius: 50%;
-            background: #f5e3b4;
-            border: 2px solid rgba(10, 14, 20, 0.85);
-            box-shadow: 0 0 0 1px rgba(217, 194, 154, 0.55), 0 2px 8px rgba(0, 0, 0, 0.5), 0 0 10px rgba(217, 194, 154, 0.45);
+            background: #ffffff;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.25);
             transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease;
         }
 
@@ -171,15 +172,16 @@
         }
 
         .aim-size-slider:focus-visible {
-            outline: 2px solid var(--page-gold);
+            outline: 2px solid rgba(255, 255, 255, 0.6);
             outline-offset: 6px;
         }
 
         .aim-size-value {
-            min-width: 44px;
+            min-width: 52px;
             text-align: center;
-            font-family: 'Courier New', monospace;
-            font-size: 0.82rem;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
             color: var(--page-ice);
         }
 
@@ -199,17 +201,21 @@
         }
 
         .aim-stat-value {
-            font-family: 'Courier New', monospace;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
             font-size: clamp(1.25rem, 3vw, 1.75rem);
             color: var(--page-ice);
             text-shadow: 0 0 14px rgba(216, 224, 228, 0.32);
         }
 
         .aim-stat-label {
-            font-family: 'Courier New', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.18em;
-            color: var(--page-gold);
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.64rem;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: rgba(216, 224, 228, 0.5);
         }
 
         .aim-arena {
@@ -292,13 +298,14 @@
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             overflow-y: auto;
+            -webkit-font-smoothing: antialiased;
         }
 
         .aim-screen h2 {
             margin: 0;
             font-family: 'Orbitron', 'Trebuchet MS', sans-serif;
             font-size: clamp(1.4rem, 3.6vw, 2.1rem);
-            letter-spacing: 0.12em;
+            letter-spacing: 0.08em;
             color: var(--page-ice);
             text-shadow: 0 0 18px rgba(216, 224, 228, 0.28), 0 0 34px rgba(91, 125, 167, 0.22);
         }
@@ -312,14 +319,33 @@
         }
 
         .aim-hint {
-            color: var(--page-gold) !important;
-            font-family: 'Courier New', monospace;
-            font-size: 0.68rem !important;
-            letter-spacing: 0.16em;
+            color: rgba(216, 224, 228, 0.5) !important;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.82rem !important;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+        }
+
+        .aim-overview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 30px;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(216, 224, 228, 0.66);
+        }
+
+        .aim-overview b {
+            color: var(--page-ice);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
         }
 
         .aim-final-average {
-            font-family: 'Courier New', monospace;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-weight: 600;
             font-size: clamp(2.4rem, 7vw, 3.6rem);
             color: var(--page-gold);
             text-shadow: 0 0 22px rgba(217, 194, 154, 0.45);
@@ -330,21 +356,23 @@
             flex-wrap: wrap;
             justify-content: center;
             gap: 12px 28px;
-            font-family: 'Courier New', monospace;
-            font-size: 0.78rem;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.82rem;
             color: rgba(216, 224, 228, 0.72);
         }
 
         .aim-new-best {
             display: inline-block;
-            padding: 5px 14px;
+            padding: 6px 18px;
             border-radius: 999px;
             border: 1px solid rgba(217, 194, 154, 0.65);
             background: rgba(217, 194, 154, 0.12);
             color: var(--page-gold);
-            font-family: 'Courier New', monospace;
-            font-size: 0.66rem;
-            letter-spacing: 0.18em;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
         }
         .aim-improvement {
             display: inline-block;
@@ -353,9 +381,11 @@
             border: 1px solid rgba(216, 224, 228, 0.22);
             background: rgba(216, 224, 228, 0.05);
             color: var(--page-ice);
-            font-family: 'Courier New', monospace;
-            font-size: 0.72rem;
-            letter-spacing: 0.06em;
+            font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
         }
 
         .aim-improvement.is-better {
@@ -398,13 +428,6 @@
             height: auto;
         }
 
-        .aim-chart-caption {
-            margin: 6px 0 0;
-            color: var(--page-gold);
-            font-family: 'Courier New', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.16em;
-        }
         .aim-btn {
             display: inline-flex;
             align-items: center;
@@ -481,7 +504,7 @@
     <main class="aim-page">
         <div class="aim-header">
             <h1 class="header-title">Aim Trainer</h1>
-            <p class="header-subtitle">HIT 30 TARGETS AS FAST AS YOU CAN</p>
+            <p class="header-subtitle">HIT EVERY TARGET AS FAST AS YOU CAN</p>
         </div>
 
         <div class="aim-hud" id="aim-hud" hidden>
@@ -505,7 +528,7 @@
             <section class="aim-screen" id="aim-start-screen" aria-label="Start screen">
                 <h2>Aim Trainer</h2>
                 <p>Targets appear one at a time, anywhere in the arena.<br>
-                Hit 30 targets as quickly and accurately as you can.</p>
+                Hit <span id="aim-desc-count">30</span> targets as quickly and accurately as you can.</p>
 
                 <div class="aim-overview" id="aim-overview" hidden>
                     <span>Best <b id="aim-start-best">—</b></span>
@@ -515,25 +538,29 @@
 
                 <div class="aim-chart" id="aim-chart" hidden>
                     <svg id="aim-chart-svg" role="img" aria-label="Line chart of your round averages"></svg>
-                    <p class="aim-chart-caption" id="aim-chart-caption">AVG MS PER ROUND · HIGHER = FASTER</p>
                 </div>
-                <p class="aim-hint" id="aim-no-history">Complete a round to start tracking your progress.</p>
+                <p class="aim-hint" id="aim-no-history">Complete a round to start tracking your progress</p>
 
                 <div class="aim-start-controls">
                     <div class="aim-size-control">
-                        <label class="aim-size-label" for="aim-size-slider">TARGET SIZE</label>
+                        <label class="aim-size-label" for="aim-size-slider">Target size</label>
                         <input class="aim-size-slider" id="aim-size-slider" type="range" min="48" max="160" step="2" value="96" aria-label="Target size in pixels">
                         <span class="aim-size-value" id="aim-size-value">96px</span>
                     </div>
+                    <div class="aim-size-control">
+                        <label class="aim-size-label" for="aim-count-slider">Targets</label>
+                        <input class="aim-size-slider" id="aim-count-slider" type="range" min="5" max="100" step="5" value="30" aria-label="Number of targets per round">
+                        <span class="aim-size-value" id="aim-count-value">30</span>
+                    </div>
                     <button class="aim-btn" id="aim-start-btn" type="button">Start Training</button>
-                    <p class="aim-hint">OR PRESS ENTER</p>
+                    <p class="aim-hint">or press Enter</p>
                 </div>
             </section>
 
             <section class="aim-screen" id="aim-results-screen" aria-label="Results" hidden>
                 <h2>Results</h2>
                 <div class="aim-final-average" id="aim-final-average">0ms</div>
-                <p class="aim-hint">AVERAGE PER TARGET</p>
+                <p class="aim-hint">Average per target</p>
                 <div class="aim-improvement" id="aim-improvement">Baseline set — every round from here tracks your progress.</div>
                 <div class="aim-final-meta">
                     <span id="aim-final-total">Total 0.00s</span>
@@ -558,7 +585,9 @@
             var TARGET_TOTAL = 30;
             var BEST_KEY = 'aim-trainer-best-v1';
             var SIZE_KEY = 'aim-trainer-target-size-v1';
+            var COUNT_KEY = 'aim-trainer-target-count-v1';
             var RUNS_KEY = 'aim-trainer-runs-v1';
+            var targetTotal = 30;
 
             var pageEl = document.querySelector('.aim-page');
             var hudEl = document.getElementById('aim-hud');
@@ -614,7 +643,7 @@
             }
 
             function updateHud() {
-                remainingEl.textContent = String(TARGET_TOTAL - hits);
+                remainingEl.textContent = String(targetTotal - hits);
                 averageEl.textContent = times.length ? formatMs(currentAverage()) : '0ms';
             }
 
@@ -690,7 +719,7 @@
                 var now = performance.now();
                 times.push(now - targetShownAt);
                 hits += 1;
-                if (hits >= TARGET_TOTAL) {
+                if (hits >= targetTotal) {
                     endGame();
                     return;
                 }
@@ -747,7 +776,6 @@
             var finalRunsEl = document.getElementById('aim-final-runs');
             var finalTrendEl = document.getElementById('aim-final-trend');
             var chartEl = document.getElementById('aim-chart');
-            var chartCaptionEl = document.getElementById('aim-chart-caption');
             var chartSvg = document.getElementById('aim-chart-svg');
             var overviewEl = document.getElementById('aim-overview');
             var startBestEl = document.getElementById('aim-start-best');
@@ -795,6 +823,47 @@
 
             applyTargetSize(loadTargetSize());
 
+            // Target count slider — how many targets per round
+            var countSlider = document.getElementById('aim-count-slider');
+            var countValue = document.getElementById('aim-count-value');
+            var COUNT_MIN = 5;
+            var COUNT_MAX = 100;
+
+            function loadTargetCount() {
+                try {
+                    var raw = parseInt(localStorage.getItem(COUNT_KEY), 10);
+                    return Number.isFinite(raw) ? Math.min(COUNT_MAX, Math.max(COUNT_MIN, raw)) : 30;
+                } catch (error) {
+                    return 30;
+                }
+            }
+
+            function saveTargetCount(value) {
+                try {
+                    localStorage.setItem(COUNT_KEY, String(value));
+                } catch (error) {
+                    // Storage unavailable; count simply won't persist.
+                }
+            }
+
+            function applyTargetCount(value) {
+                targetTotal = value;
+                countSlider.value = String(value);
+                countSlider.style.setProperty('--fill', ((value - COUNT_MIN) / (COUNT_MAX - COUNT_MIN)) * 100 + '%');
+                countValue.textContent = String(value);
+                remainingEl.textContent = String(value);
+                var descCount = document.getElementById('aim-desc-count');
+                if (descCount) descCount.textContent = String(value);
+            }
+
+            countSlider.addEventListener('input', function () {
+                var value = parseInt(countSlider.value, 10);
+                applyTargetCount(value);
+                saveTargetCount(value);
+            });
+
+            applyTargetCount(loadTargetCount());
+
             // Round history + progress chart
             function loadRuns() {
                 try {
@@ -815,7 +884,7 @@
 
             function recordRun(avgMs, totalMs) {
                 var runs = loadRuns();
-                runs.push({ avg: avgMs, total: Math.round(totalMs), size: parseInt(sizeSlider.value, 10), at: new Date().toISOString() });
+                runs.push({ avg: avgMs, total: Math.round(totalMs), size: parseInt(sizeSlider.value, 10), count: targetTotal, at: new Date().toISOString() });
                 saveRuns(runs);
                 return runs;
             }
@@ -865,7 +934,6 @@
                 var padT = 18;
                 var padB = 28;
                 chartSvg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
-                chartCaptionEl.textContent = 'YOUR LAST ' + runs.length + ' ROUND' + (runs.length === 1 ? '' : 'S') + ' · HIGHER = FASTER';
 
                 var values = runs.map(function (r) { return r.avg; });
                 var min = Math.min.apply(null, values);
@@ -897,7 +965,7 @@
                     label.setAttribute('text-anchor', 'end');
                     label.setAttribute('fill', 'rgba(216, 224, 228, 0.45)');
                     label.setAttribute('font-size', '10');
-                    label.setAttribute('font-family', 'Courier New, monospace');
+                    label.setAttribute('font-family', 'Trebuchet MS, Segoe UI, sans-serif');
                     label.textContent = Math.max(0, Math.round(v)) + 'ms';
                     chartSvg.appendChild(label);
                 });
@@ -954,7 +1022,7 @@
                         bestLabel.setAttribute('text-anchor', 'middle');
                         bestLabel.setAttribute('fill', '#d9c29a');
                         bestLabel.setAttribute('font-size', '9');
-                        bestLabel.setAttribute('font-family', 'Courier New, monospace');
+                        bestLabel.setAttribute('font-family', 'Trebuchet MS, Segoe UI, sans-serif');
                         bestLabel.textContent = 'BEST';
                         chartSvg.appendChild(bestLabel);
                     }
@@ -966,7 +1034,7 @@
                     firstLabel.setAttribute('y', H - 8);
                     firstLabel.setAttribute('fill', 'rgba(216, 224, 228, 0.4)');
                     firstLabel.setAttribute('font-size', '10');
-                    firstLabel.setAttribute('font-family', 'Courier New, monospace');
+                    firstLabel.setAttribute('font-family', 'Trebuchet MS, Segoe UI, sans-serif');
                     firstLabel.textContent = 'RUN 1';
                     chartSvg.appendChild(firstLabel);
                     var lastLabel = document.createElementNS(NS, 'text');
@@ -975,7 +1043,7 @@
                     lastLabel.setAttribute('text-anchor', 'end');
                     lastLabel.setAttribute('fill', 'rgba(216, 224, 228, 0.4)');
                     lastLabel.setAttribute('font-size', '10');
-                    lastLabel.setAttribute('font-family', 'Courier New, monospace');
+                    lastLabel.setAttribute('font-family', 'Trebuchet MS, Segoe UI, sans-serif');
                     lastLabel.textContent = 'RUN ' + runs.length;
                     chartSvg.appendChild(lastLabel);
                 }
@@ -1001,6 +1069,14 @@
             }
 
             refreshStartScreen();
+
+            // Enter starts a round from the start screen
+            document.addEventListener('keydown', function (event) {
+                if (event.key !== 'Enter' || playing || startScreen.hidden) return;
+                var activeTag = document.activeElement && document.activeElement.tagName;
+                if (activeTag === 'INPUT' || activeTag === 'BUTTON') return;
+                startGame();
+            });
         })();
     </script>
 </body>
